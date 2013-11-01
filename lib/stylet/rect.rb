@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-require_relative "vector"
 
 module Stylet
   class Rect < Vector

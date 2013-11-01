@@ -23,7 +23,7 @@ module Stylet
     def initialize
       @init_code = 0
       @initialized = false
-      self._active_frame = self
+      @@_active_frame = self
     end
 
     def logger

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+require "stylet_math/all"
+
 # gem
 require 'sdl'
 require 'active_support/concern'
@@ -16,11 +18,8 @@ require_relative 'palette'
 require_relative 'vsync_wait'
 require_relative 'check_fps'
 require_relative 'logger'
-require_relative 'vector'
 require_relative 'rect'
-require_relative 'fee'
 require_relative 'collision_support'
-require_relative 'etc'
 
 # 描画系
 require_relative 'core'

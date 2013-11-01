@@ -58,6 +58,6 @@ module Stylet
 end
 
 if $0 == __FILE__
-  require_relative "fee"
+  require "stylet/fee"
   p Stylet::Fee.angle_at(0)
 end

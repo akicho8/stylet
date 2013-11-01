@@ -19,7 +19,9 @@ Gem::Specification.new do |s|
   s.add_dependency "rubysdl"
 
   s.add_dependency "activesupport"
+  s.add_dependency "activemodel"
   s.add_dependency "i18n"
+  s.add_dependency "stylet_math"
 
   s.add_development_dependency "rspec"
   s.add_development_dependency "yard"

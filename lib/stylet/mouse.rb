@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 require 'active_support/core_ext/module/delegation'
 require 'active_support/core_ext/class/attribute_accessors'
-require_relative "vector"
 
 module Stylet
   module Mouse

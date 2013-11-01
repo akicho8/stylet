@@ -95,7 +95,7 @@ module BezierUnitBase
 
     unless @mpoints.empty?
       # 物体をいったりきたりさせる
-      if true
+      if false
         # ○の表示
         pos = 0.5 + (Stylet::Fee.sin(@win.count / 256.0) * 0.5)
         xy = __bezier_point(pos)
