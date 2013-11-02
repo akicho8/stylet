@@ -57,7 +57,7 @@ module BezierUnitBase
 
     @cpoints = []           # ポイント配列
     @dragging_current = nil # 現在どのポイントをドラッグしているか？
-    @line_count = 3       # 軌跡確認用弧線の構成ライン数初期値(確認用)
+    @line_count = 50       # 軌跡確認用弧線の構成ライン数初期値(確認用)
 
     setup
     update_title
@@ -125,6 +125,22 @@ module BezierUnitBase
         end
       end
       @win.vputs "#{@cpoints.size} (B+ C-)"
+
+      # begin
+      #   # 垂直の線
+      #   p0 = @win.rect.center + Stylet::Vector.new(0,  @win.rect.h / 3)
+      #   p1 = @win.rect.center + Stylet::Vector.new(0, -@win.rect.h / 3)
+      # 
+      #   # l = a*(x3-2*x2+x1)+b*(y3-2*y2+y1)
+      #   # m = 2*(a*(x2-x1)+b*(y2-y1))
+      #   # n = a*x1+b*y1+c
+      # 
+      #   # l = a*(x3-2*x2+x1)+b*(y3-2*y2+y1)
+      #   # m = 2*(a*(x2-x1)+b*(y2-y1))
+      #   # n = a*x1+b*y1+c
+      # 
+      #   @win.draw_line(p0, p1)
+      # end
     end
   end
 
