@@ -9,7 +9,7 @@ class BezierUnit
     when true
       # 横に配置
       n = 2
-      @mpoints += Array.new(n + 1){|i|
+      @cpoints += Array.new(n + 1){|i|
         x = (@win.rect.width * 0.1) + ((@win.rect.width * 0.8) / n * i)
         y = @win.rect.hy
         MovablePoint.new(self, Stylet::Vector.new(x, y))
@@ -18,7 +18,7 @@ class BezierUnit
       # 円状に配置
       n = 5
       r = hy * 0.9
-      @mpoints += Array.new(n){|i|
+      @cpoints += Array.new(n){|i|
         MovablePoint.new(self, @win.rect.center + Stylet::Vector.angle_at(1.0 / n * i).scale(r))
       }
     end

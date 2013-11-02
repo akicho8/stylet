@@ -55,9 +55,9 @@ module BezierUnitBase
   def initialize(win)
     @win = win
 
-    @mpoints = []           # ポイント配列
+    @cpoints = []           # ポイント配列
     @dragging_current = nil # 現在どのポイントをドラッグしているか？
-    @line_count = 160       # 軌跡確認用弧線の構成ライン数初期値(確認用)
+    @line_count = 3       # 軌跡確認用弧線の構成ライン数初期値(確認用)
 
     setup
     update_title
@@ -69,7 +69,7 @@ module BezierUnitBase
 
   def update
     # ポイント位置のドラッグと描画
-    @mpoints.each{|e|e.update}
+    @cpoints.each{|e|e.update}
 
     if false
       # 構成ライン数の減算
@@ -82,18 +82,15 @@ module BezierUnitBase
     # ドラッグ中またはAボタンを押したときは詳細表示
     if @dragging_current || @win.button.btA.press?
       # 弧線の描画
-      xys = mpoints_all
-      @line_count.times{|i|
-        p0 = xys[i]
-        p1 = xys[i.next]
+      mpoints_all.each_cons(2) do |p0, p1|
         @win.draw_line(p0, p1)
-      }
+      end
     end
 
     # ポイントの番号の表示
-    @mpoints.each_with_index{|e, i|@win.vputs(i, :vector => e.pos)}
+    @cpoints.each_with_index{|e, i|@win.vputs(i, :vector => e.pos)}
 
-    unless @mpoints.empty?
+    unless @cpoints.empty?
       # 物体をいったりきたりさせる
       if false
         # ○の表示
@@ -112,27 +109,27 @@ module BezierUnitBase
 
       if @win.button.btB.trigger?
         # 最後に制御点の追加
-        @mpoints = [
-          @mpoints.first(@mpoints.size - 1),
-          MovablePoint.new(self, @mpoints.last.pos + Stylet::Vector.new(-30, 0)),
-          @mpoints.last,
+        @cpoints = [
+          @cpoints.first(@cpoints.size - 1),
+          MovablePoint.new(self, @cpoints.last.pos + Stylet::Vector.new(-30, 0)),
+          @cpoints.last,
         ].flatten
         update_title
       end
       if @win.button.btC.trigger?
         # 最後の制御点を削除
-        if @mpoints.size >= 2
-          @mpoints[-2] = nil
-          @mpoints.compact!
+        if @cpoints.size >= 2
+          @cpoints[-2] = nil
+          @cpoints.compact!
           update_title
         end
       end
-      @win.vputs "#{@mpoints.size} (B+ C-)"
+      @win.vputs "#{@cpoints.size} (B+ C-)"
     end
   end
 
   def update_title
-    @win.title = "#{@mpoints.size - 1}次ベジェ曲線"
+    @win.title = "#{@cpoints.size - 1}次ベジェ曲線"
   end
 
   def mpoints_all
@@ -142,7 +139,7 @@ module BezierUnitBase
   end
 
   def __bezier_point(*args)
-    bezier_point(@mpoints.collect{|e|e.pos}, *args)
+    bezier_point(@cpoints.collect{|e|e.pos}, *args)
   end
 
   def bezier_point(*args)
