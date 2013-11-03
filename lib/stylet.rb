@@ -45,9 +45,11 @@ module Kernel
   end
 end
 
-# Stylet.run do
-#   vputs "a"
-#   frame.vputs "b"
-#   frame { vputs "c" }
-#   frame {|f| f.vputs "d" }
-# end
+if $0 == __FILE__
+  Stylet.run do
+    vputs "a"
+    frame.vputs "b"
+    frame { vputs "c" }
+    frame {|f| f.vputs "d" }
+  end
+end

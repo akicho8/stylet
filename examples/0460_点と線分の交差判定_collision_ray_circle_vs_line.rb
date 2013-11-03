@@ -41,7 +41,7 @@ class Ray
       # Dボタンおしっぱなし + マウスで自機角度変更
       if @win.button.btD.press?
         if @win.cursor.point != @p0
-          @vS = (@win.cursor.point - @p0).normalize * @vS.length
+          @vS = (@win.cursor.point - @p0).normalize * @vS.magnitude
         end
       end
     end
@@ -49,7 +49,7 @@ class Ray
     begin
       # 法線取得
       @normal = @pA.normal(@pB).normalize
-      # @win.vputs "Normal: #{@normal.length}"
+      # @win.vputs "Normal: #{@normal.magnitude}"
 
       # 線分ABの法線を見える化(長さに意味はない)
       vN = @normal.normalize.scale(64)
@@ -166,19 +166,19 @@ class Ray
         end
 
         # 速度制限(円が線から飛び出さないようにする)
-        if @vS.length > @radius
+        if @vS.magnitude > @radius
           @vS = @vS.normalize.scale(@radius)
         end
 
         # 点Aと点Bに円がめり込んでいたら押す
         [@pA, @pB].each do |pX|
           diff = @p0 - pX
-          if diff.length > 0
-            if diff.length < @radius
+          if diff.magnitude > 0
+            if diff.magnitude < @radius
               @p0 = pX + diff.normalize.scale(@radius)
               if true
                 # 跳ね返す
-                @vS = diff.normalize.scale(@vS.length)
+                @vS = diff.normalize.scale(@vS.magnitude)
               end
             end
           end
@@ -200,7 +200,7 @@ class Ray
       pS = @vS
       @win.draw_vector(pS, :origin => @p0)
       @win.vputs "vS", :vector => @p0 + pS
-      @win.vputs "Speed Vector: #{@vS.length}"
+      @win.vputs "Speed Vector: #{@vS.magnitude}"
 
       # 線分ABの視覚化
       @win.draw_line(@pA, @pB)

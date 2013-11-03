@@ -10,9 +10,11 @@ class Scene
 
     @pA = @win.rect.center.clone
     @sA = Stylet::Vector.angle_at(Stylet::Fee.clock(8))
+    @rect = Stylet::Rect.centered_create(50)
 
     @radius = 50
     @vertex = 32
+    @gravity = 32
   end
 
   def update
@@ -20,6 +22,14 @@ class Scene
     begin
       # AとBで速度ベクトルの反映
       @pA += @sA.scale(@win.button.btA.repeat_0or1) + @sA.scale(-@win.button.btB.repeat_0or1)
+
+      # 外に出てしまったらスピード反転
+
+      # @win.vputs Stylet::CollisionSupport.rect_include?(@win.rect, @rect.add_vector(@pA)).inspect
+      unless Stylet::CollisionSupport.rect_include?(@win.rect, @rect.add_vector(@pA))
+        @sA = @sA * -1
+      end
+
       # Cボタンおしっぱなし + マウスで自機位置移動
       if @win.button.btC.press?
         @pA = @win.cursor.point.clone
@@ -27,50 +37,39 @@ class Scene
       # Dボタンおしっぱなし + マウスで自機角度変更
       if @win.button.btD.press?
         if @win.cursor.point != @pA
-          @sA = (@win.cursor.point - @pA).normalize * @sA.length
+          @sA = (@win.cursor.point - @pA).normalize * @sA.magnitude
         end
       end
     end
 
-    @win.draw_circle(@pA, :vertex => @vertex, :radius => @radius)
-    @win.draw_vector(@sA.scale(@radius), :origin => @pA)
-  end
+    if @mode == "mode1"
+    end
 
-  def screen_out?
-    false
+    @win.draw_rect(@win.rect)
+    @win.draw_rect(@rect.add_vector(@pA))
+    @win.draw_vector(@sA.scale(@radius / 2), :origin => @pA)
   end
 end
 
 class App < Stylet::Base
   include Helper::CursorWithObjectCollection
 
-  attr_reader :ray_mode
-  attr_reader :reflect_mode
+  attr_reader :mode
 
   def before_run
     super if defined? super
-
-    @ray_mode = true           # true:ドット false:円
-    @reflect_mode = true       # true:反射する
-
-    @objects << Scene.new(self)
     @cursor.vertex = 3
+
+    @modes = ["mode1", "mode2", "mode3"]
+    @mode = @modes.first
+    @objects << Scene.new(self)
   end
 
   def update
     super if defined? super
-
-    if key_down?(SDL::Key::A)
-      @ray_mode = !@ray_mode
-    end
-
     if key_down?(SDL::Key::S)
-      @reflect_mode = !@reflect_mode
+      @mode = @modes[@modes.index(@mode).next.modulo(@modes.size)]
     end
-
-    # 操作説明
-    vputs "A:ray=#{@ray_mode} S:reflect=#{@reflect_mode}"
-    vputs "Z:ray++ X:ray-- C:drag V:angle"
   end
 end
 

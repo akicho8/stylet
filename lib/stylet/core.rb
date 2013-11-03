@@ -62,6 +62,13 @@ module Stylet
         @title = options[:title]
       end
       before_run
+      main_loop(&block)
+      after_run
+    end
+
+    private
+
+    def main_loop(&block)
       catch(:exit) do
         loop do
           polling
@@ -83,7 +90,6 @@ module Stylet
           after_draw
         end
       end
-      after_run
     end
   end
 end

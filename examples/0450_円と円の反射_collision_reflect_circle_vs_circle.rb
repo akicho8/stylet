@@ -49,7 +49,7 @@ class Scene
       # Dボタンおしっぱなし + マウスで自機角度変更
       if @win.button.btD.press?
         if @win.cursor.point != @pA
-          @sA = (@win.cursor.point - @pA).normalize * @sA.length
+          @sA = (@win.cursor.point - @pA).normalize * @sA.magnitude
         end
       end
     end
@@ -58,8 +58,8 @@ class Scene
     # @pB += @sB
 
     @diff = @pB - @pA
-    @rdiff = (@a_radius + @b_radius) - @diff.length
-    @win.vputs "length=#{@diff.length}"
+    @rdiff = (@a_radius + @b_radius) - @diff.magnitude
+    @win.vputs "magnitude=#{@diff.magnitude}"
     @win.vputs "rdiff=#{@rdiff}"
 
     # AとBをお互い離す
@@ -131,13 +131,13 @@ class Scene
 
     @win.draw_circle(@pA, :vertex => @vertex, :radius => @a_radius)
     @win.vputs "A(#{@am})", :vector => @pA
-    @win.draw_vector(@sA.scale(@s_radius), :origin => @pA, :label => @sA.length)
+    @win.draw_vector(@sA.scale(@s_radius), :origin => @pA, :label => @sA.magnitude)
 
     @win.draw_circle(@pB, :vertex => @vertex, :radius => @b_radius)
     @win.vputs "B(#{@bm})", :vector => @pB
-    @win.draw_vector(@sB.scale(@s_radius), :origin => @pB, :label => @sB.length)
+    @win.draw_vector(@sB.scale(@s_radius), :origin => @pB, :label => @sB.magnitude)
 
-    @win.vputs "#{@sA.length} + #{@sA.length} = #{(@sA + @sB).length}"
+    @win.vputs "#{@sA.magnitude} + #{@sA.magnitude} = #{(@sA + @sB).magnitude}"
 
     if false
       if @resp = compute(@pA, @sA, @a_radius, @pB, @sB, @b_radius)

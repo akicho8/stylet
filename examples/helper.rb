@@ -78,6 +78,8 @@ module Helper
   end
 end
 
+require_relative "movable_point"
+
 if $0 == __FILE__
   Class.new(Stylet::Base) do
     include Helper::CursorWithObjectCollection

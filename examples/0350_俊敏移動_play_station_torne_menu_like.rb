@@ -39,7 +39,7 @@ class Ball
       @target = @win.rect.center + Stylet::Vector.angle_at((1.0 / @win.objects.size * @index)) * @everyone_radius
       @pos += (@target - @pos).scale(0.3)
 
-      if (@target - @pos).length < 1.0
+      if (@target - @pos).magnitude < 1.0
         @pos = @target
         @mode = "mode2"
         @mode_count = 0
@@ -59,7 +59,7 @@ class Ball
     # 勝手に動きだす
     if @mode == "mode3"
       if @mode_count == 0
-        @speed = Stylet::Vector.new(Stylet::Etc.wide_rand(1.5), Stylet::Etc.wide_rand(1.0))
+        @speed = Stylet::Vector.new(rand(-1.5..1.5), rand(-1.0..1.0))
       end
       @pos += @speed
     end

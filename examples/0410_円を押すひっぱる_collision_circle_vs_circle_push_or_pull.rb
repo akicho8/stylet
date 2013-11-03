@@ -21,7 +21,7 @@ class Ball
     r2 = ar + br
     if a != b
       diff = b - a
-      rdiff = r2 - diff.length
+      rdiff = r2 - diff.magnitude
       if @win.button.btA.press?
         @win.vputs "PUSH"
         if rdiff > 0
@@ -36,7 +36,7 @@ class Ball
           b += diff.normalize * rdiff    # Aを基点に戻す
         end
       end
-      @win.vputs "DIFF=#{diff.length}"
+      @win.vputs "DIFF=#{diff.magnitude}"
       @win.vputs "RDIFF=#{rdiff}"
     end
 

@@ -31,7 +31,7 @@ module Stylet
       if d.x.nan? || d.y.nan?
         return
       end
-      # return if (p0 - p1).length.zero?
+      # return if (p0 - p1).magnitude.zero?
       # return if p0 == p1
 
       options = {

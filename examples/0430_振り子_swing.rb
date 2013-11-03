@@ -83,7 +83,7 @@ class Swing
 
     # 仮想鉄球の角度と現在の角度の差を求める
     @diff = @dir2 - @dir1
-    # @diff = (@pC - @pA).length
+    # @diff = (@pC - @pA).magnitude
     # @win.vputs @diff
 
     # 加速
@@ -128,7 +128,7 @@ class Swing
     @win.vputs "dir2: #{@dir2}"
     @win.vputs "diff: #{@diff}"
     @win.vputs "speed: #{@speed}"
-    @win.vputs "gravity: #{@gravity.length}"
+    @win.vputs "gravity: #{@gravity.magnitude}"
 
     @win.vputs "Z:g++ X:g-- C:debug V:drag"
   end

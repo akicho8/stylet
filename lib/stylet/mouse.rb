@@ -21,7 +21,7 @@ module Stylet
     # button        ボタンの状態
     # vector        移動ベクトル
     # vector.angle  移動方向
-    # vector.length 移動距離
+    # vector.magnitude 移動距離
     class Info
       cattr_accessor(:sensitivity) { 3 }
 
@@ -55,6 +55,6 @@ if $0 == __FILE__
   require_relative "../stylet"
   Stylet.run do
     vputs "mouse: #{mouse}"
-    draw_vector(mouse.vector, :origin => rect.center, :label => mouse.vector.length)
+    draw_vector(mouse.vector, :origin => rect.center, :label => mouse.vector.magnitude)
   end
 end

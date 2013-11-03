@@ -19,7 +19,7 @@ class Ball
     @reflect = 0
 
     @pos = Stylet::Vector.new(@win.rect.center.x, @win.rect.max_y + @radius * 2)             # 物体初期位置
-    @speed = Stylet::Vector.new(Stylet::Etc.wide_rand(2.0), Stylet::Etc.range_rand(-12, -15)) # 速度ベクトル
+    @speed = Stylet::Vector.new(rand(-2.0..2.0), rand(-15.0..-12)) # 速度ベクトル
     @gravity = Stylet::Vector.new(0, 0.220)                                                        # 重力
   end
 
@@ -44,8 +44,8 @@ class Ball
       # Dボタンおしっぱなし + マウスで角度変更
       if @win.button.btD.press?
         if @win.cursor.point != @pos
-          # @speed = (@win.cursor.point - @pos).normalize * @speed.length
-          @speed = (@win.cursor.point - @pos).normalize * @speed.length
+          # @speed = (@win.cursor.point - @pos).normalize * @speed.magnitude
+          @speed = (@win.cursor.point - @pos).normalize * @speed.magnitude
         end
       end
     end
@@ -59,7 +59,7 @@ class Ball
       if @pos.y > max && @speed.y >= 1
         @speed.y = -@speed.y
         @speed = @speed.scale(0.5)
-        if @speed.length < 1.0
+        if @speed.magnitude < 1.0
           @reflect += 1
         end
       end
@@ -71,7 +71,7 @@ class Ball
       @win.objects.delete(self)
     end
 
-    @win.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => 1.0 / 256 * (@speed.length + @win.count) * @arrow)
+    @win.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => 1.0 / 256 * (@speed.magnitude + @win.count) * @arrow)
   end
 end
 

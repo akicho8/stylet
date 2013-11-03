@@ -55,9 +55,6 @@ module Stylet
       end
     end
 
-    def before_draw
-    end
-
     # ハードウェアがダブルバッファ対応の場合、flipで自動的にVSYNCを待って切り替えるため
     # ハードウェアのフレーム数(60FPS)以上にはならないことに注意
     def after_draw
@@ -127,7 +124,7 @@ module Stylet
         w = w.abs - 1
         h = h.abs - 1
       end
-      @screen.public_send(method, x, y, w, h, Palette[options[:color]])
+      @screen.send(method, x, y, w, h, Palette[options[:color]])
     end
 
     # def fill_rect(x, y, w, h, color = "white")

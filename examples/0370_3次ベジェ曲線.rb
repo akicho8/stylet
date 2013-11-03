@@ -1,0 +1,41 @@
+# -*- coding: utf-8 -*-
+require_relative "bezier"
+
+class App
+  def collection
+    [
+      [
+        Stylet::Vector.new(rect.min_x + rect.w / 8, rect.hy),              # 開始
+        Stylet::Vector.new(rect.min_x + rect.w / 4, rect.hy - rect.h / 4), # 制御(右)
+        Stylet::Vector.new(rect.max_x - rect.w / 4, rect.hy - rect.h / 4), # 制御(左)
+        Stylet::Vector.new(rect.max_x - rect.w / 8, rect.hy),              # 終了
+      ]
+    ]
+  end
+
+  # 三次ベジェ曲線
+  #
+  #   p0: 開始
+  #   p1: 制御
+  #   p2: 制御
+  #   p3: 終了
+  #
+  #        p1           p2
+  #   p0 ------------------- p3
+  #
+  #   用途
+  #   ・激しく曲げたい
+  #   ・終了座標を必ず通る必要がある
+  #   ・計算量をまーまー少なくしたい
+  #   ・クロスさせたい
+  #
+  def bezier_curve(p0, p1, p2, p3, d)
+    o = Stylet::Vector.new(0, 0)
+    o += p0.scale((1 - d) * (1 - d) * (1 - d))
+    o += p1.scale(3 * d * (1 - d) * (1 - d))
+    o += p2.scale(3 * d * d * (1 - d))
+    o += p3.scale(d * d * d)
+  end
+
+  run
+end

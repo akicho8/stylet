@@ -40,7 +40,7 @@ class IccHockeyBall
     # ロックしているときに、ボタンが押されっぱなしなら
     if @lock && @win.button.btA.press?
       @p0 = @win.mouse.point.clone      # 円の座標をマウスと同じにする
-      @power = @win.mouse.vector.length # マウスの直前からの移動距離を速度と考える
+      @power = @win.mouse.vector.magnitude # マウスの直前からの移動距離を速度と考える
       @speed = 0                        # 速度を0とする
       @radius = 0                       # 半径を0とする
     end

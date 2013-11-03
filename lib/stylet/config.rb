@@ -11,7 +11,9 @@ module Stylet
 
     config_accessor(:sound_freq)       { 44100            } # SDLのデフォルトは 22050
 
-    config_accessor(:font_name)        { "luxirr.ttf"     }
+    # config_accessor(:font_name)        { "luxirr.ttf"     }
+    config_accessor(:font_name)        { "ipag-mona.ttf" }
+
     config_accessor(:font_size)        { 18               }
     config_accessor(:font_margin)      { 3                } # 行間
     config_accessor(:font_bold)        { false            }

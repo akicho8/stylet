@@ -19,7 +19,7 @@ class Joint
 
     if @target
       distance = @p0.distance_to(@target.p0)
-      gap = distance - @win.length
+      gap = distance - @win.magnitude
       if gap > 0
         # 相手の方から自分の方へ移動する
         # そのときの移動量を @win.hard_level で調整する
@@ -31,7 +31,7 @@ class Joint
 
         # 固さ 1.0 のときは次のように p0 の方から相手をひっぱる方法でもよいが前者の方が、ゆっくり移動させるなど応用が効く
         # dir = @p0.angle_to(@target.p0)
-        # @target.p0 += Stylet::Vector.angle_at(dir) * @win.length
+        # @target.p0 += Stylet::Vector.angle_at(dir) * @win.magnitude
       end
     end
 
@@ -47,7 +47,7 @@ class Joint
 
     # 胴体の表示
     if @win.body_display
-      @win.draw_circle(@p0, :radius => @win.length / 2, :vertex => 16)
+      @win.draw_circle(@p0, :radius => @win.magnitude / 2, :vertex => 16)
     end
   end
 end
@@ -56,7 +56,7 @@ class App < Stylet::Base
   include Helper::CursorWithObjectCollection
 
   attr_reader :body_display
-  attr_reader :length
+  attr_reader :magnitude
   attr_reader :hard_level
 
   def before_run
@@ -65,7 +65,7 @@ class App < Stylet::Base
     @cursor.display = false     # 三角カーソル非表示
 
     @body_display = true # 胴体描画モード
-    @length = 32         # 線と線の間
+    @magnitude = 32         # 線と線の間
     @hard_level = 1.0    # 幼虫の間接の伸び(堅い1.0〜柔らか0.1)
 
     self.title = "芋虫・多関節・ゴム・紐"
@@ -77,8 +77,8 @@ class App < Stylet::Base
     # 操作
     begin
       # 間接と間接の距離の調整
-      @length += (@button.btA.repeat - @button.btB.repeat)
-      @length = Stylet::Etc.range_limited(@length, (1..80))
+      @magnitude += (@button.btA.repeat - @button.btB.repeat)
+      @magnitude = Stylet::Etc.range_limited(@magnitude, (1..80))
 
       # 固さ調整
       @hard_level += (@button.btC.repeat - @button.btD.repeat) * 0.1
@@ -93,7 +93,7 @@ class App < Stylet::Base
     # 操作説明
     vputs "A:body_display"
     vputs "Z:len++ X:len-- C:hard_level++ V:hard_level--"
-    vputs "length=#{@length}"
+    vputs "magnitude=#{@magnitude}"
     vputs "hard_level=#{@hard_level}"
 
     # 固さ1.0なら紐モード表示

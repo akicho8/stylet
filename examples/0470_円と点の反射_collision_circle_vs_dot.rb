@@ -11,7 +11,7 @@ class Circle
     @radius = 64                                     # 円の半径
 
     @pos = Stylet::Vector.new(@win.rect.center.x, @win.rect.max_y)             # 物体初期位置
-    @speed = Stylet::Vector.new(Stylet::Etc.wide_rand(2.0), Stylet::Etc.range_rand(-12, -15)) # 速度ベクトル
+    @speed = Stylet::Vector.new(rand(-2.0..2.0), rand(-15.0..-12)) # 速度ベクトル
     @gravity = Stylet::Vector.new(0, 0.220)                                                        # 重力
   end
 
@@ -20,10 +20,10 @@ class Circle
     @pos += @speed
 
     diff = @pos - @win.cursor.point
-    if diff.length > 0
-      if diff.length < @radius
+    if diff.magnitude > 0
+      if diff.magnitude < @radius
         @pos = @win.cursor.point + diff.normalize.scale(@radius)
-        @speed = diff.normalize * @speed.length
+        @speed = diff.normalize * @speed.magnitude
       end
     end
 

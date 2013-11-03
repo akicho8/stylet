@@ -78,7 +78,7 @@ module Stylet
     # 
     # p Vector.angle_at(0.0)
 
-    # Stylet::Vector.angle_at(speed.angle + Stylet::Fee.r45) * speed.length
+    # Stylet::Vector.angle_at(speed.angle + Stylet::Fee.r45) * speed.magnitude
     # p Stylet::Fee.angle_at(0.0)
   end
 end

@@ -17,15 +17,15 @@ class Ball
     @scene = scene
 
     @pos = @win.rect.center.clone                                                           # 中心点
-    @speed = Stylet::Vector.new(Stylet::Etc.wide_rand(2.0), Stylet::Etc.range_rand(-6, -8)) # 速度ベクトル
+    @speed = Stylet::Vector.new(rand(-2.0..2), rand(-8.0..-6)) # 速度ベクトル
     @gravity = Stylet::Vector.new(0, 0.20)                                                  # 重力
     if index < 4
       @radius = 8 + ((index + 2) ** 2)                                                      # 半径
     else
-      @radius = Stylet::Etc.range_rand(8, 20)                                               # 半径
+      @radius = rand(8..20)                                               # 半径
     end
     @mass = @radius ** 2                                                                    # 質量は面積と比例することにする(PI*r二乗)
-    @vertex = Stylet::Etc.range_rand(16, 16).to_i                                           # 何角形か？
+    @vertex = 16                                                                   # 何角形か？
   end
 
   #
@@ -35,10 +35,10 @@ class Ball
     # 点Aと点Bに円がめり込んでいたら押す
     [pA, pB].each do |pX|
       diff = @pos - pX
-      if diff.length > 0
-        if diff.length < @radius
+      if diff.magnitude > 0
+        if diff.magnitude < @radius
           @pos = pX + diff.normalize.scale(@radius)
-          @speed = diff.normalize * @speed.length
+          @speed = diff.normalize * @speed.magnitude
         end
       end
     end
@@ -86,7 +86,7 @@ class Ball
 
     # 速度制限(円が線から飛び出さないようにする)
     speed_limit!
-    # if @speed.length > @radius
+    # if @speed.magnitude > @radius
     #   @speed = @speed.normalize.scale(@radius)
     # end
   end
@@ -100,12 +100,12 @@ class Ball
     bmass = oB.mass
 
     diff = pB - pA
-    rdiff = (oA.radius + oB.radius) - diff.length
+    rdiff = (oA.radius + oB.radius) - diff.magnitude
     # Stylet::Base.instance.vputs rdiff
 
     # ここは完全に重なっている。物理的にはこうならないので左右に移動させる
-    if diff.length.zero?
-      arrow = Stylet::Vector.nonzero_random_new
+    if diff.magnitude.zero?
+      arrow = Stylet::Vector.new(*2.times.collect{[1.0, -1.0].sample})
       pA -= arrow * oA.radius
       pB += arrow * oB.radius
       oA.pos = pA
@@ -113,10 +113,10 @@ class Ball
       return true
     end
 
-    # @win.vputs "length=#{diff.length}"
+    # @win.vputs "magnitude=#{diff.magnitude}"
     # @win.vputs "rdiff=#{rdiff}"
 
-    # if diff.length.zero?
+    # if diff.magnitude.zero?
     #   return
     # end
 
@@ -197,14 +197,14 @@ class Ball
 
   def speed_limit!(r = 1.0)
     # 速度制限(円が線から飛び出さないようにする)
-    if @speed.length > (@radius * r)
+    if @speed.magnitude > (@radius * r)
       @speed = @speed.normalize.scale(@radius * r)
     end
   end
 
   def speed_limit2!(v)
     # 速度制限(円が線から飛び出さないようにする)
-    if @speed.length > v
+    if @speed.magnitude > v
       @speed = @speed.normalize.scale(v)
     end
   end
@@ -221,7 +221,7 @@ class Ball
       # Dボタンおしっぱなし + マウスで自機角度変更
       if @win.button.btD.press?
         if @win.cursor.point != @pos
-          @speed = (@win.cursor.point - @pos).normalize * @speed.length.round
+          @speed = (@win.cursor.point - @pos).normalize * @speed.magnitude.round
         end
       end
     end
@@ -249,7 +249,7 @@ class Scene
     # if @win.button.btA.press?
     #   @center = @win.cursor.point.clone
     #   # if @win.cursor.point != @center
-    #   #   @speed = (@win.cursor.point - @pos).normalize * @speed.length
+    #   #   @speed = (@win.cursor.point - @pos).normalize * @speed.magnitude
     #   # end
     # end
 

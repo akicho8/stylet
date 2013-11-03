@@ -59,7 +59,7 @@ end
 
 if $0 == __FILE__
   count = 0
-  Stylet.run do |win|
+  Stylet::Base.run do |win|
     win.vputs(count += 1)
   end
 end

@@ -37,7 +37,7 @@ class Scene
       # Dボタンおしっぱなし + マウスで自機角度変更
       if @win.button.btD.press?
         if @win.cursor.point != @pA
-          @sA = (@win.cursor.point - @pA).normalize * @sA.length
+          @sA = (@win.cursor.point - @pA).normalize * @sA.magnitude
         end
       end
     end
@@ -105,12 +105,12 @@ class Scene
 
     @win.vputs "A", :vector => @pA
     @win.vputs "A: #{@tA.to_a.inspect}"
-    @win.draw_vector(@sA.scale(@speed), :origin => @pA, :label => @sA.length)
+    @win.draw_vector(@sA.scale(@speed), :origin => @pA, :label => @sA.magnitude)
 
     @win.draw_rect(@rB.add_vector(@pB))
     @win.vputs "B", :vector => @pB
     @win.vputs "B: #{@rB.to_a.inspect}"
-    @win.draw_vector(@sB.scale(@speed), :origin => @pB, :label => @sB.length)
+    @win.draw_vector(@sB.scale(@speed), :origin => @pB, :label => @sB.magnitude)
   end
 end
 
