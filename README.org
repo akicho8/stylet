@@ -51,11 +51,11 @@
 ** 速度ベクトルを45度傾ける
 
    : speed + Vector.angle_at(Fee.r45) * speed.magnitude
-   :
+   : 
    : Vector.angle_at(speed.angle + Fee.r45) * speed.magnitude
-   :
+   : 
    : speed.rotate(Fee.r45)
-   :
+   : 
    : speed.rotate2(Fee.r45)
 
 ** p0の速度ベクトルをマウスの方向に設定
@@ -142,12 +142,12 @@
    : # AとBで速度ベクトルの反映
    : @pA += @speed.scale(@win.button.btA.repeat_0or1) + @speed.scale(-@win.button.btB.repeat_0or1)
    : # @pA += @speed.scale(@win.button.btA.repeat) + @speed.scale(-@win.button.btB.repeat) # 加速したいとき
-   :
+   : 
    : # Cボタンおしっぱなし + マウスで自機位置移動
    : if @win.button.btC.press?
    :   @pA = @win.cursor.clone
    : end
-   :
+   : 
    : # Dボタンおしっぱなし + マウスで自機角度変更
    : if @win.button.btD.press?
    :   if @win.cursor != @pA
@@ -181,7 +181,7 @@
    2. →←         負 (v   < 0.0) お互いだいたい逆の方向を向いている
    3. →↓ →↑    零 (0.0)       お互いが直角の関係
 
-* 参考URL
+* 参照
 
   - Flashゲーム講座&アクションスクリプトサンプル集 http://hakuhin.jp/as.html
   - 基礎の基礎編その１ 内積と外積の使い方 http://marupeke296.com/COL_Basic_No1_InnerAndOuterProduct.html

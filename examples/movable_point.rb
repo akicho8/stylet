@@ -19,11 +19,17 @@ module Helper
       # end
     end
 
-    def movable_point_update(points)
+    def movable_point_update(points, options = {})
+      options = {
+        :origin => Stylet::Vector.zero,
+      }.merge(options)
+
+      mpoint = mouse.point - options[:origin]
+
       unless @dragging_current
         if button.btA.trigger?
-          if mpoint = points.find{|e|Stylet::CollisionSupport.squire_collision?(e, mouse.point, :radius => 8)}
-            @dragging_current = mpoint
+          if v = points.find{|e|Stylet::CollisionSupport.squire_collision?(e, mpoint, :radius => 8)}
+            @dragging_current = v
           end
         end
       end
@@ -35,14 +41,14 @@ module Helper
       end
 
       if @dragging_current
-        @dragging_current.copy_from(mouse.point.clone)
+        @dragging_current.copy_from(mpoint)
       end
 
       if @dragging_current
-        draw_circle(@dragging_current, :radius => 8, :vertex => 32)
+        draw_circle(options[:origin] + @dragging_current, :radius => 8, :vertex => 32)
       end
 
-      points.each {|e| draw_circle(e, :radius => 2) }
+      points.each {|e| draw_circle(options[:origin] + e, :radius => 2) }
     end
   end
 end
