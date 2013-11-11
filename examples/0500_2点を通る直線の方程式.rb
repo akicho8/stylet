@@ -6,21 +6,18 @@ require_relative "helper"
 
 class App < Stylet::Base
   include Helper::CursorWithObjectCollection
+  include Helper::MovablePoint
 
-  def before_run
-    super
+  before_main_loop do
     @p0 = rect.center + Stylet::Vector.new(-rect.w / 4, rand(rect.h / 4)) # 左の点
     @p1 = rect.center + Stylet::Vector.new(+rect.w / 4, rand(rect.h / 4)) # 右の点
     self.title = "2点を通る直線の方程式"
     @x_mode = true
   end
 
-  def update
-    super
-
-    # A, B ボタンでそれぞれ移動
-    @p0 = mouse.point.clone if button.btA.press?
-    @p1 = mouse.point.clone if button.btB.press?
+  after_update do
+    movable_point_update([@p0, @p1])
+    [@p0, @p1].each_with_index{|e, i|vputs("p#{i} #{e}", :vector => e)}
 
     if button.btC.trigger?
       @x_mode = !@x_mode
@@ -76,14 +73,9 @@ class App < Stylet::Base
     vputs " 傾き -a/b => #{katamuki}"
     vputs "y切片 -c/b => #{y_seppen}"
 
-    vputs "p0:#{@p0.to_a}"
-    vputs "p1:#{@p1.to_a}"
+    vputs "p0:#{@p0}"
+    vputs "p1:#{@p1}"
     vputs "A:left point move B:right point move C:x y toggle"
-
-    draw_triangle(@p0, :radius => 16)
-    draw_triangle(@p1, :radius => 16)
-    vputs("p0", :vector => @p0)
-    vputs("p1", :vector => @p1)
   end
 
   run

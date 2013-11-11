@@ -30,7 +30,7 @@ class App
   #   ・クロスさせたい
   #
   def bezier_curve(p0, p1, p2, p3, d)
-    o = Stylet::Vector.new(0, 0)
+    o = Stylet::Vector.zero
     o += p0.scale((1 - d) * (1 - d) * (1 - d))
     o += p1.scale(3 * d * (1 - d) * (1 - d))
     o += p2.scale(3 * d * d * (1 - d))
