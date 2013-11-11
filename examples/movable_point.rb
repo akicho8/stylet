@@ -41,7 +41,7 @@ module Helper
       end
 
       if @dragging_current
-        @dragging_current.copy_from(mpoint)
+        @dragging_current.replace(mpoint)
       end
 
       if @dragging_current
