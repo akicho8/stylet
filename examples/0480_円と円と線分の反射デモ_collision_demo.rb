@@ -62,7 +62,7 @@ class Ball
       ac = @pC - pA
       bc = @pC - pB
       if ac.nonzero? && bc.nonzero?
-        @ip2 = Stylet::Vector.inner_product(ac, bc)
+        @ip2 = Stylet::Vector.dot_product(ac, bc)
       else
         raise
       end

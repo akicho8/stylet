@@ -175,7 +175,7 @@
 
 ** 内積の取得
 
-   : v = Vector.inner_product(a, b)
+   : v = Vector.dot_product(a, b)
 
    1. ←← or →→ 正 (0.0 < v)   お互いだいたい同じ方向を向いている
    2. →←         負 (v   < 0.0) お互いだいたい逆の方向を向いている

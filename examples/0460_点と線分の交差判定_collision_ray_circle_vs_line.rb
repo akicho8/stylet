@@ -82,8 +82,8 @@ class Ray
       @ac1 = @pC1 - @pA
       @bc1 = @pC1 - @pB
       if @ac1.nonzero? && @bc1.nonzero?
-        @ip1 = Stylet::Vector.inner_product(@ac1, @bc1)
-        @win.vputs "C1 inner_product(AC1, BC1): #{@ip1} (#{inner_product_state(@ip1)})"
+        @ip1 = Stylet::Vector.dot_product(@ac1, @bc1)
+        @win.vputs "C1 dot_product(AC1, BC1): #{@ip1} (#{dot_product_state(@ip1)})"
 
         @win.draw_vector(@ac1.normalize.scale(20), :origin => @pA + @normal.scale(-20*1), :arrow_size => 8)
         @win.draw_vector(@bc1.normalize.scale(20), :origin => @pB + @normal.scale(-20*1), :arrow_size => 8)
@@ -113,8 +113,8 @@ class Ray
       @ac2 = @pC2 - @pA
       @bc2 = @pC2 - @pB
       if @ac2.nonzero? && @bc2.nonzero?
-        @ip2 = Stylet::Vector.inner_product(@ac2, @bc2)
-        @win.vputs "C2 inner_product(AC2, BC2): #{@ip2} (#{inner_product_state(@ip2)})"
+        @ip2 = Stylet::Vector.dot_product(@ac2, @bc2)
+        @win.vputs "C2 dot_product(AC2, BC2): #{@ip2} (#{dot_product_state(@ip2)})"
 
         # 二つのベクトルがどちらを向いているか視覚化(お互いが衝突していたら線の中にいることがわかる)
         @win.draw_vector(@ac2.normalize.scale(20), :origin => @pA + @normal.scale(-20*2), :arrow_size => 8)
@@ -227,7 +227,7 @@ class Ray
   #   1. ←← or →→ 正 (0.0 < v)   お互いだいたい同じ方向を向いている
   #   2. →←         負 (v   < 0.0) お互いだいたい逆の方向を向いている
   #   3. →↓ →↑    零 (0.0)       お互いが直角の関係
-  def inner_product_state(v)
+  def dot_product_state(v)
     if v < 0
       "IN"
     else
