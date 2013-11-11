@@ -29,7 +29,7 @@ module Stylet
 
       def initialize
         @button      = Struct.new(:a, :b, :c).new
-        @point       = Vector.new(0, 0)
+        @point       = Vector.zero
         @history     = []
       end
 

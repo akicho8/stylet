@@ -61,7 +61,7 @@ class App
   #   ・クロスしまくりたい
   #
   def bezier_curve(*points, d)
-    o = Stylet::Vector.new(0, 0)
+    o = Stylet::Vector.zero
 
     points.size.times{|i|
       p = points[i]

@@ -5,7 +5,7 @@
 module Stylet
   module DrawSupport
     # 多角形描画
-    #   draw_polygon([Vector.new(0, 0), Vector.new(0, 100), Vector.new(50, 50)])
+    #   draw_polygon([Vector.zero, Vector.new(0, 100), Vector.new(50, 50)])
     def draw_polygon(points, options = {})
       points.size.times{|i|
         p0 = points[i]
@@ -20,7 +20,7 @@ module Stylet
     Base.run do |win|
       points = Array.new(3 + rand(3)){Vector.new(rand(win.rect.w), rand(win.rect.h))}
       win.draw_polygon(points)
-      win.draw_polygon([Vector.new(0, 0), Vector.new(0, 100), Vector.new(50, 50)])
+      win.draw_polygon([Vector.zero, Vector.new(0, 100), Vector.new(50, 50)])
       sleep(0.25)
     end
   end

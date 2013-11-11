@@ -12,7 +12,7 @@ class App
         rect.center + Stylet::Vector.new(rect.w / 4, rect.h / 4),
       ], [
         rect.center + Stylet::Vector.new(-100, +100),
-        rect.center + Stylet::Vector.new(0, 0),
+        rect.center + Stylet::Vector.zero,
         rect.center + Stylet::Vector.new(+100, -100),
       ],
     ]
@@ -34,7 +34,7 @@ class App
   #   ・クロスしなくてよい
   #
   def bezier_curve(p0, p1, p2, t)
-    o = Stylet::Vector.new(0, 0)
+    o = Stylet::Vector.zero
     o += p0.scale((1 - t) * (1 - t))
     o += p1.scale(2 * t * (1 - t))
     o += p2.scale(t * t)
