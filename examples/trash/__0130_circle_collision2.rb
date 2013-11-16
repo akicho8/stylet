@@ -45,15 +45,13 @@ class App < Stylet::Base
 
   attr_reader :objects
 
-  def before_run
-    super if defined? super
-    4.times{
+  setup do
+    4.times do
       @objects << Ball.new(self, rect.center)
-    }
+    end
   end
 
-  def update
-    super if defined? super
+  update do
     if object = @objects.first
       object.pos = @mouse.point.clone
     end

@@ -6,14 +6,14 @@ class App < Stylet::Base
   include Helper::CursorWithObjectCollection
   include Helper::MovablePoint
 
-  before_main_loop do
+  setup do
     @line_count = 50        # 軌跡確認用弧線の構成ライン数初期値(確認用)
     @points_count = 0
 
     points_switch
   end
 
-  after_update do
+  update do
     if key_down?(SDL::Key::A)
       points_switch
     end
@@ -80,12 +80,12 @@ class App
     extend ActiveSupport::Concern
 
     included do
-      before_main_loop do
+      setup do
         @lpoints_count = 0
         lpoints_switch
       end
 
-      after_update do
+      update do
         if key_down?(SDL::Key::S)
           lpoints_switch
         end

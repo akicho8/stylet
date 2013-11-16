@@ -11,12 +11,12 @@ class SprineApp < Stylet::Base
   include Helper::CursorWithObjectCollection
   include Helper::MovablePoint
 
-  before_main_loop do
+  setup do
     self.title = "スプライン曲線"
     @points = 5.times.collect { rect.center + Stylet::Vector.rand * rect.height * 0.5}
   end
 
-  after_update do
+  update do
     a = spline_stream(@points, 256) # 点と点の間をN分割する
     a.each_cons(2){|a, b| draw_line(a, b) }
     movable_point_update(@points)

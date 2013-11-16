@@ -78,18 +78,16 @@ end
 class App < Stylet::Base
   include Helper::CursorWithObjectCollection
 
-  def before_run
-    super if defined? super
+  setup do
     @cursor.display = false
     self.title = "加速・放物線・バウンド"
   end
 
-  def update
-    super if defined? super
+  update do
     if @count.modulo(4).zero?
       @objects << Ball.new(self)
     end
   end
-end
 
-App.run
+  run
+end

@@ -8,14 +8,14 @@ class App < Stylet::Base
   include Helper::CursorWithObjectCollection
   include Helper::MovablePoint
 
-  before_main_loop do
+  setup do
     @p0 = rect.center + Stylet::Vector.new(-rect.w / 4, rand(rect.h / 4)) # 左の点
     @p1 = rect.center + Stylet::Vector.new(+rect.w / 4, rand(rect.h / 4)) # 右の点
     self.title = "2点を通る直線の方程式"
     @x_mode = true
   end
 
-  after_update do
+  update do
     movable_point_update([@p0, @p1])
     [@p0, @p1].each_with_index{|e, i|vputs("p#{i} #{e}", :vector => e)}
 

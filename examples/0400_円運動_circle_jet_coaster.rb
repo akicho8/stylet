@@ -33,20 +33,18 @@ class App < Stylet::Base
 
   attr_reader :xc, :yc
 
-  def before_run
-    super if defined? super
+  setup do
     @cursor.display = false
     @objects += Array.new(16){|i|Ball.new(self, i)}
     @xc = 3.0
     @yc = 3.0
   end
 
-  def update
-    super if defined? super
+  update do
     @xc += 0.5 * (@button.btA.repeat + -@button.btB.repeat)
     @yc += 0.5 * (@button.btC.repeat + -@button.btD.repeat)
     vputs [@xc, @yc].inspect
   end
-end
 
-App.run
+  run
+end

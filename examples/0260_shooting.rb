@@ -94,8 +94,7 @@ end
 class App < Stylet::Base
   attr_reader :objects
 
-  def before_run
-    super
+  setup do
     self.title = "二人対戦シューティング(自己申告制)"
     @objects = []
     ship1 = GunShip1.new(self, Stylet::Vector.new(rect.hx, rect.hy - rect.hy * 0.8))
@@ -106,10 +105,9 @@ class App < Stylet::Base
     @objects << ship2
   end
 
-  def update
-    super
+  update do
     @objects.each{|e|e.update}
   end
-end
 
-App.run
+  run
+end

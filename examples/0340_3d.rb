@@ -8,7 +8,7 @@ class App < Stylet::Base
   include Helper::CursorWithObjectCollection
   include Helper::MovablePoint
 
-  before_main_loop do
+  setup do
     @points = []
 
     @points << Stylet::Vector3.new(-200, +200, 75)
@@ -42,7 +42,7 @@ class App < Stylet::Base
     @ydir = 0
   end
 
-  after_update do
+  update do
     @depth += axis.down.repeat - axis.up.repeat
 
     # @pointsA.collect{|p|

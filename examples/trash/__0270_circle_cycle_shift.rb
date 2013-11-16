@@ -21,11 +21,10 @@ end
 class App < Stylet::Base
   include Helper::CursorWithObjectCollection
 
-  def before_run
-    super if defined? super
+  setup do
     @cursor.display = false
     @objects << Ball.new(self)
   end
-end
 
-App.run
+  run
+end

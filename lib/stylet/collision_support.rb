@@ -4,36 +4,27 @@ module Stylet
   module CollisionSupport
     extend self
 
-    #
     #  +--- -r ---+
     #  |     |    |
     # -r -- p0 -- r のなかに p1 の点が含まれているか？
     #  |     |    |
     #  +---- r ---+
-    #
     def squire_collision?(p0, p1, options = {})
-      options = {
-      }.merge(options)
-      raise "options[:radius] required" unless options[:radius]
-      true &&
-        ((p0.x - options[:radius])..(p0.x + options[:radius])).include?(p1.x) &&
-        ((p0.y - options[:radius])..(p0.y + options[:radius])).include?(p1.y) &&
-        true
+      [
+        ((p0.x - options[:radius])..(p0.x + options[:radius])).include?(p1.x),
+        ((p0.y - options[:radius])..(p0.y + options[:radius])).include?(p1.y),
+      ].all?
     end
 
-    #
     # 領域rectの中に点pが含まれているか？
-    #
-    def rect_in?(rect, p, options = {})
-      true &&
-        (rect.min_x <= p.x && p.x <= rect.max_x) &&
-        (rect.min_y <= p.y && p.y <= rect.max_y) &&
-        true
+    def rect_in?(rect, p)
+      [
+        (rect.min_x <= p.x && p.x <= rect.max_x),
+        (rect.min_y <= p.y && p.y <= rect.max_y),
+      ].all?
     end
 
-    #
     # 領域rectの中に点pが含まていない？
-    #
     def rect_out?(rect, p, options = {})
       !rect_in?(rect, p, options)
     end

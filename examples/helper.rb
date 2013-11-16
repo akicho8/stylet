@@ -11,32 +11,29 @@ module Helper
 
     included do
       attr_reader :cursor
-    end
 
-    def before_run
-      super
-      @cursor = CursorSet.new
-      @cursor.point = @mouse.point.clone
-    end
-
-    def update
-      super
-
-      if joy = joys.first
-        update_by_joy(joy)
-      end
-      key_counter_update_all
-
-      if mouse.moved?
+      setup do
+        @cursor = CursorSet.new
         @cursor.point = @mouse.point.clone
       end
 
-      if angle = axis_angle
-        @cursor.point += Stylet::Vector.angle_at(angle) * @cursor.speed
-      end
+      update do
+        if joy = joys.first
+          update_by_joy(joy)
+        end
+        key_counter_update_all
 
-      if @cursor.display
-        draw_circle(@cursor.point, :radius => @cursor.radius, :vertex => @cursor.vertex, :angle => 1.0 / 64 * @count)
+        if mouse.moved?
+          @cursor.point = @mouse.point.clone
+        end
+
+        if angle = axis_angle
+          @cursor.point += Stylet::Vector.angle_at(angle) * @cursor.speed
+        end
+
+        if @cursor.display
+          draw_circle(@cursor.point, :radius => @cursor.radius, :vertex => @cursor.vertex, :angle => 1.0 / 64 * @count)
+        end
       end
     end
 
@@ -57,17 +54,15 @@ module Helper
 
     included do
       attr_reader :objects
-    end
 
-    def before_run
-      super
-      @objects = []
-    end
+      setup do
+        @objects = []
+      end
 
-    def update
-      super
-      @objects.each(&:update)
-      @objects.reject!{|e|e.respond_to?(:screen_out?) && e.screen_out?}
+      update do
+        @objects.each(&:update)
+        @objects.reject!{|e|e.respond_to?(:screen_out?) && e.screen_out?}
+      end
     end
   end
 

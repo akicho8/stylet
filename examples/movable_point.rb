@@ -9,13 +9,13 @@ module Helper
     included do
       attr_accessor :dragging_current
 
-      # before_main_loop do
+      # setup do
       #   # @dpoints << rect.center + Stylet::Vector.new(-rect.w / 4, rect.h / 4)
       #   # @dpoints << rect.center + Stylet::Vector.new(0, -rect.h / 4)
       #   # @dpoints << rect.center + Stylet::Vector.new(rect.w / 4, rect.h / 4)
       # end
 
-      # after_update do
+      # update do
       # end
     end
 
@@ -58,14 +58,14 @@ if $0 == __FILE__
     include Helper::CursorWithObjectCollection
     include Helper::MovablePoint
 
-    before_main_loop do
+    setup do
       @points = []
       @points << rect.center + Stylet::Vector.new(-rect.w / 4, rect.h / 4)
       @points << rect.center + Stylet::Vector.new(0, -rect.h / 4)
       @points << rect.center + Stylet::Vector.new(rect.w / 4, rect.h / 4)
     end
 
-    after_update do
+    update do
       movable_point_update(@points)
       @points.each_with_index{|e, i| vputs("#{i}", :vector => e) }
     end

@@ -242,8 +242,7 @@ class App < Stylet::Base
   attr_reader :ray_mode
   attr_reader :reflect_mode
 
-  def before_run
-    super if defined? super
+  setup do
     self.title = "点と線分の交差判定と反射"
 
     @ray_mode = false          # true:ドット false:円
@@ -253,9 +252,7 @@ class App < Stylet::Base
     @cursor.vertex = 3
   end
 
-  def update
-    super if defined? super
-
+  update do
     if key_down?(SDL::Key::A)
       @ray_mode = !@ray_mode
       @objects.first.mdoe_init
@@ -268,6 +265,6 @@ class App < Stylet::Base
     vputs "A:ray=#{@ray_mode} S:reflect=#{@reflect_mode}"
     vputs "Z:ray++ X:ray-- C:drag V:angle"
   end
-end
 
-App.run
+  run
+end

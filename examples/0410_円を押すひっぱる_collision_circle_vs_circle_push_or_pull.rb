@@ -50,13 +50,12 @@ end
 class App < Stylet::Base
   include Helper::CursorWithObjectCollection
 
-  def before_run
-    super if defined? super
+  setup do
     @objects << Ball.new(self, rect.center.clone)
     @cursor.radius = 100
     @cursor.vertex = 32
     self.title = "円の押し引き"
   end
-end
 
-App.run
+  run
+end

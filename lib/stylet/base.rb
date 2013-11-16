@@ -5,6 +5,7 @@ require "stylet_math/all"
 # gem
 require 'sdl'
 require 'active_support/concern'
+require 'active_support/callbacks'
 
 # ruby library
 require 'pp'

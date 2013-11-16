@@ -20,10 +20,10 @@ module Stylet
       raise "options[:vertex] >= 1" if options[:vertex].to_i.zero?
       raise "zero vector" if options[:vertex].zero?
 
-      points = options[:vertex].times.collect{|i|
+      points = options[:vertex].times.collect do |i|
         a = options[:angle] + 1.0 * i / options[:vertex]
         p0 + Vector.angle_at(a) * options[:radius]
-      }
+      end
       draw_polygon(points, options)
     end
 
@@ -40,10 +40,10 @@ module Stylet
 
   if $0 == __FILE__
     require_relative "../../stylet"
-    Base.run do |win|
-      win.draw_circle(win.rect.center)
-      win.draw_triangle(win.rect.center)
-      win.draw_square(win.rect.center)
+    Base.run do
+      draw_circle(rect.center)
+      draw_triangle(rect.center)
+      draw_square(rect.center)
     end
   end
 end

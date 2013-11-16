@@ -59,8 +59,7 @@ class App < Stylet::Base
   attr_reader :magnitude
   attr_reader :hard_level
 
-  def before_run
-    super if defined? super
+  setup do
     @objects = Array.new(42){|i|Joint.new(self, i, rect.center.clone)}
     @cursor.display = false     # 三角カーソル非表示
 
@@ -71,9 +70,7 @@ class App < Stylet::Base
     self.title = "芋虫・多関節・ゴム・紐"
   end
 
-  def update
-    super if defined? super
-
+  update do
     # 操作
     begin
       # 間接と間接の距離の調整
@@ -103,6 +100,6 @@ class App < Stylet::Base
       vputs "worm mode"
     end
   end
-end
 
-App.run
+  run
+end

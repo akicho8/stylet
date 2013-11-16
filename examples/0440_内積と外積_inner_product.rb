@@ -8,14 +8,14 @@ class App < Stylet::Base
   include Helper::CursorWithObjectCollection
   include Helper::MovablePoint
 
-  before_main_loop do
+  setup do
     @points = []
     @points << Stylet::Vector.angle_at(Stylet::Fee.clock(3)).scale(100)
     @points << Stylet::Vector.angle_at(Stylet::Fee.clock(0)).scale(100)
     self.title = "内積と外積"
   end
 
-  after_update do
+  update do
     movable_point_update(@points, :origin => rect.center)
     @points.each.with_index{|e, i| draw_vector(e, :origin => rect.center, :label => "P#{i} #{e.round(2)}") }
 

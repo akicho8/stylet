@@ -7,15 +7,29 @@ module Stylet
 
     included do
       extend ActiveModel::Callbacks
-      define_model_callbacks :main_loop, :update
+      define_model_callbacks :setup, :update, :main_loop, :terminator => "false"
     end
 
-    def main_loop(&block)
-      run_callbacks(:main_loop) { super(&block) }
+    module ClassMethods
+      def setup(*args, &block)
+        set_callback(:setup, *args, &block)
+      end
+
+      def update(*args, &block)
+        set_callback(:update, *args, &block)
+      end
+    end
+
+    def setup
+      run_callbacks(:setup) { super }
     end
 
     def update
       run_callbacks(:update) { super }
+    end
+
+    def main_loop(&block)
+      run_callbacks(:main_loop) { super(&block) }
     end
   end
 end

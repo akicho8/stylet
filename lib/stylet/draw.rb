@@ -20,19 +20,19 @@ module Stylet
       @check_fps = CheckFPS.new
 
       options = SDL::HWSURFACE | SDL::DOUBLEBUF
-      if Stylet::Config.full_screen
+      if Stylet.config.full_screen
         options |= SDL::FULLSCREEN
       end
-      w, h = Stylet::Config.screen_size
-      @screen ||= SDL::Screen.open(w, h, Stylet::Config.color_depth, options)
+      w, h = Stylet.config.screen_size
+      @screen ||= SDL::Screen.open(w, h, Stylet.config.color_depth, options)
       @rect = Rect.new(0, 0, @screen.w, @screen.h)
       if @title
         self.title = title
       end
 
       unless @backgroud_image
-        if Stylet::Config.background && Stylet::Config.background_image
-          file = Pathname(Stylet::Config.background_image)
+        if Stylet.config.background && Stylet.config.background_image
+          file = Pathname(Stylet.config.background_image)
           unless file.exist?
             file = Pathname("#{__dir__}/assets/#{file}")
           end
@@ -155,11 +155,12 @@ module Stylet
     end
 
     def system_line
-      "#{@count} #{@check_fps.update.fps} FPS"
+      "#{@count} #{@check_fps.fps} FPS"
     end
 
     def before_update
       super
+      @check_fps.update
       vputs(system_line)
     end
 

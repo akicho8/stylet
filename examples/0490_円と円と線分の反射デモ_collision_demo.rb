@@ -318,10 +318,9 @@ end
 class App < Stylet::Base
   include Helper::CursorWithObjectCollection
 
-  def before_run
-    super if defined? super
+  setup do
     @objects << Scene.new(self)
   end
-end
 
-App.run
+  run
+end

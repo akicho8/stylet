@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 require "./setup"
 
-Stylet::Config.configure do |config|
+Stylet.config.configure do |config|
   config.background = true
-  config.background_image = "rails.png"
+  config.background_image = "background.bmp"
 end
 
 Stylet.run(:title => "背景にPNGを描画する例")

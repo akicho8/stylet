@@ -2,23 +2,21 @@
 require "active_support/configurable"
 
 module Stylet
-  module Config
-    include ActiveSupport::Configurable
+  include ActiveSupport::Configurable
 
-    config_accessor(:screen_size)      { [640, 480]       }
-    config_accessor(:full_screen)      { false            }
-    config_accessor(:color_depth)      { 32               }
+  config.screen_size      =  [640, 480]
+  config.full_screen      =  false
+  config.color_depth      =  32
 
-    config_accessor(:sound_freq)       { 44100            } # SDLのデフォルトは 22050
+  config.sound_freq       =  44100  # SDLのデフォルトは 22050
 
-    # config_accessor(:font_name)        { "luxirr.ttf"     }
-    config_accessor(:font_name)        { "ipag-mona.ttf" }
+  # config.font_name      =  "luxirr.ttf"
+  config.font_name        =  "ipag-mona.ttf"
 
-    config_accessor(:font_size)        { 18               }
-    config_accessor(:font_margin)      { 3                } # 行間
-    config_accessor(:font_bold)        { false            }
+  config.font_size        =  18
+  config.font_margin      = 3 # 行
+  config.font_bold        =  false
 
-    config_accessor(:background)       { false            }
-    config_accessor(:background_image) { "background.bmp" }
-  end
+  config.background       =  false
+  config.background_image =  "background.bmp"
 end

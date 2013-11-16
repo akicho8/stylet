@@ -37,6 +37,9 @@ module Stylet
       @initialized = true
     end
 
+    def setup
+    end
+
     def polling
     end
 
@@ -44,9 +47,6 @@ module Stylet
     end
 
     def update
-    end
-
-    def after_update
     end
 
     def after_draw
@@ -61,9 +61,10 @@ module Stylet
       if options[:title]
         @title = options[:title]
       end
-      before_run
+      before_run                # SDL.init(@init_code)
+      setup
       main_loop(&block)
-      after_run
+      after_run                 # @screen.destroy
     end
 
     private
@@ -75,10 +76,10 @@ module Stylet
           if pause?
             next
           end
-          before_draw
+          before_draw           # @__vputs_lines = 0
           background_clear
-          before_update
-          update
+          before_update         # for vputs(system_line)
+          update                # ユーザー用
           if block_given?
             if block.arity == 1
               block.call(self)
@@ -86,8 +87,7 @@ module Stylet
               instance_eval(&block)
             end
           end
-          after_update
-          after_draw
+          after_draw            # for @screen.flip
         end
       end
     end

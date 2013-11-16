@@ -21,16 +21,14 @@ class Player
 end
 
 class App < Stylet::Base
-  def before_run
-    super
+  setup do
     self.title = "キーボードの入力チェック"
     @player = Player.new(self)
   end
 
-  def update
-    super
+  update do
     @player.update
   end
-end
 
-App.run
+  run
+end

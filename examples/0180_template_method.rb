@@ -2,15 +2,13 @@
 require "./setup"
 
 class App < Stylet::Base
-  def before_run
-    super
+  setup do
     self.title = "テンプレートメソッドパターン"
   end
 
-  def update
-    super
+  update do
     vputs "Hello, world."
   end
-end
 
-App.run
+  run
+end

@@ -74,12 +74,11 @@ end
 class App < Stylet::Base
   include Helper::CursorWithObjectCollection
 
-  def before_run
-    super if defined? super
+  setup do
     self.title = "torne風メニュー(PSのシステムにありがちな動き)"
     @cursor.display = false
     @objects = Array.new(8){|i|Ball.new(self, i)}
   end
-end
 
-App.run
+  run
+end

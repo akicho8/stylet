@@ -28,7 +28,7 @@ class App
     list
   end
 
-  after_update do
+  update do
     unless @points.empty?
       if button.btB.trigger?
         # 最後に制御点の追加

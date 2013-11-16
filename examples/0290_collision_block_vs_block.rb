@@ -119,9 +119,7 @@ class App < Stylet::Base
 
   attr_reader :reflect_mode
 
-  def before_run
-    super if defined? super
-
+  setup do
     @ray_mode = true           # true:ドット false:円
     @modes = ["reflect", "move", "none"]
     @reflect_mode = @modes.first
@@ -130,9 +128,7 @@ class App < Stylet::Base
     @cursor.vertex = 3
   end
 
-  def update
-    super if defined? super
-
+  update do
     if key_down?(SDL::Key::S)
       @reflect_mode = @modes[@modes.index(@reflect_mode).next.modulo(@modes.size)]
     end
@@ -141,6 +137,6 @@ class App < Stylet::Base
     vputs "S:reflect=#{@reflect_mode}"
     vputs "Z:++ X:-- C:drag V:angle"
   end
-end
 
-App.run
+  run
+end

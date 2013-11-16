@@ -12,9 +12,9 @@ module Stylet
     def initialize
       super
       @cl_options = {}
-      oparser = OptionParser.new{|oparser|
+      oparser = OptionParser.new do |oparser|
         oparser.on("--shutdown=INTEGER", Integer){|v|@cl_options[:shutdown] = v}
-      }
+      end
       oparser.parse(ARGV)
     end
 

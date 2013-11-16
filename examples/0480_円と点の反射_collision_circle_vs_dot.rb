@@ -35,11 +35,10 @@ end
 class App < Stylet::Base
   include Helper::CursorWithObjectCollection
 
-  def before_run
-    super if defined? super
+  setup do
     @objects << Circle.new(self)
     @cursor.radius = 1
   end
-end
 
-App.run
+  run
+end

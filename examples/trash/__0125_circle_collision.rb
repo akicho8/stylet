@@ -50,7 +50,7 @@ module Helper
     include Stylet::Input::JoystickBinding
     include Stylet::Input::MouseButtonAsCounter
 
-    def before_run
+    setup do
       super if defined? super
       @cursor.point = @mouse.point.clone
       @cursor.speed = 5
@@ -90,16 +90,14 @@ class App < Stylet::Base
 
   attr_reader :radius
 
-  def before_run
-    super if defined? super
+  setup do
     @objects << Ball.new(self, rect.center)
     @radius = 64
   end
 
-  def update
-    super if defined? super
+  update do
     draw_polygon(@mouse.point, :radius => @radius, :vertex => 32)
   end
-end
 
-App.run
+  run
+end

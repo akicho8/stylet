@@ -27,36 +27,31 @@ module Stylet
 
     # p0 から p1 へ矢印の描画
     def draw_arrow(p0, p1, options = {})
-      d = (p0 - p1)
+      d = p0 - p1
       if d.x.nan? || d.y.nan?
         return
       end
-      # return if (p0 - p1).magnitude.zero?
-      # return if p0 == p1
 
       options = {
-        :angle => Fee.r45,               # 傘の開き
+        :angle      => Fee.r45,                  # 傘の開き
         :arrow_size => p0.distance_to(p1) * 0.1, # 傘の大きさは線分の長さに比例
       }.merge(options)
 
-      # 線分の表示
-      draw_line(p0, p1, options)
+      draw_line(p0, p1, options) # 線分の表示
 
       # 傘の表示
       a = p1.angle_to(p0)
       draw_line(p1, p1 + Vector.angle_at(a + options[:angle]).scale(options[:arrow_size]), options)
       draw_line(p1, p1 + Vector.angle_at(a - options[:angle]).scale(options[:arrow_size]), options)
-      # rescue Errno::EDOM
-      #   # sqrt のエラーなんででる？
     end
   end
 
   if $0 == __FILE__
     require_relative "../../stylet"
-    Base.run do |win|
-      win.draw_arrow(win.rect.center, win.rect.center + Vector.new(50, 50))
-      win.draw_vector(Vector.new(100, -100), :origin => win.rect.center, :label => "ok")
-      win.draw_vector(Vector.new(100, 0), :origin => Vector.new(50, 50), :label => "ok")
+    Base.run do
+      draw_arrow(rect.center, rect.center + Vector.new(50, 50))
+      draw_vector(Vector.new(100, -100), :origin => rect.center, :label => "ok")
+      draw_vector(Vector.new(100, 0), :origin => Vector.new(50, 50), :label => "ok")
     end
   end
 end

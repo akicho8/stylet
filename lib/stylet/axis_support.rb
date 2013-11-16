@@ -51,13 +51,12 @@ module Stylet
     #            [D]
     def axis_angle(axis)
       if dir = axis_angle_index(axis)
-        1.0 / 8 * dir
+        1.0 * dir / 8
       end
     end
   end
 end
 
 if $0 == __FILE__
-  require "stylet/fee"
-  p Stylet::Fee.angle_at(0)
+  require_relative "../stylet"
 end

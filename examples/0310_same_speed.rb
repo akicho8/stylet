@@ -56,7 +56,7 @@ class App < Stylet::Base
 
   attr_reader :mode
 
-  def before_run
+  setup do
     super if defined? super
     @cursor.vertex = 3
 
@@ -65,12 +65,11 @@ class App < Stylet::Base
     @objects << Scene.new(self)
   end
 
-  def update
-    super if defined? super
+  update do
     if key_down?(SDL::Key::S)
       @mode = @modes[@modes.index(@mode).next.modulo(@modes.size)]
     end
   end
-end
 
-App.run
+  run
+end
