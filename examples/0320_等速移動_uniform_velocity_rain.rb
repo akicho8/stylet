@@ -7,31 +7,27 @@
 require_relative "helper"
 
 class Ball
-  def initialize(win)
-    @win = win
+  def initialize
     @gravity = Stylet::Vector.new(0, 0.05)
 
     @vertex = 3 + rand(3)
     @radius = 2 + rand(24)
     @arrow = rand(2).zero? ? 1 : -1
 
-    @pos = Stylet::Vector.new(rand(@win.rect.w), @win.rect.min_y - @radius * 2)
-    @speed = Stylet::Vector.angle_at(Stylet::Fee.clock(6)).scale(1 + rand * 2)
-  end
-
-  def reset
+    @pos = Stylet::Vector.new(rand(frame.rect.w), frame.rect.min_y - @radius * 2)
+    @speed = Stylet::Vector.angle_at(Stylet::Fee.clock(rand(5.5..6.5))).scale(rand(1.0..1.5))
   end
 
   def update
     @pos += @speed
 
     # 落ちたら死ぬ
-    max = @win.rect.max_y + @radius * 2
+    max = frame.rect.max_y + @radius * 2
     if @pos.y > max
-      @win.objects.delete(self)
+      frame.objects.delete(self)
     end
 
-    @win.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => 1.0 / 256 * (@speed.magnitude + @win.count) * @arrow)
+    frame.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => 1.0 / 256 * (@speed.magnitude + frame.count) * @arrow)
   end
 end
 
@@ -39,13 +35,13 @@ class App < Stylet::Base
   include Helper::CursorWithObjectCollection
 
   setup do
-    @cursor.display = false
+    cursor.display = false
     self.title = "等速落下"
   end
 
   update do
     if @count.modulo(4).zero?
-      @objects << Ball.new(self)
+      @objects << Ball.new
     end
   end
 

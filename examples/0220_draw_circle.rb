@@ -4,7 +4,7 @@
 #
 require "./setup"
 
-Stylet.run(:title => "円の描画") do |win|
-  win.draw_circle(win.rect.center, :vertex => 256)
+Stylet.run(:title => "円の描画") do
+  draw_circle(rect.center, :vertex => 256)
 end
 

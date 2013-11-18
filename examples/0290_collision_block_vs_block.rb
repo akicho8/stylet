@@ -4,40 +4,44 @@
 #
 require_relative "helper"
 
-class Scene
-  def initialize(win)
-    @win = win
+class App < Stylet::Base
+  include Helper::CursorWithObjectCollection
+
+  setup do
+    self.title = "ブロックとブロックの当たり判定"
 
     # A
-    @pA = @win.rect.center.clone                              # 点
+    @pA = rect.center.clone                              # 点
     @rA = Stylet::Rect.centered_create(40, 40)                # 大きさ
     @sA = Stylet::Vector.angle_at(Stylet::Fee.degree(180 + 90)) # 速度
 
     # B
-    @pB = @win.rect.center.clone                        # 点
+    @pB = rect.center.clone                        # 点
     @rB = Stylet::Rect.centered_create(100, 60)         # 大きさ
     @sB = Stylet::Vector.angle_at(Stylet::Fee.degree(45)) # 速度
 
     @speed = 100    # 速度ベクトル 1.0 を画面上では何ドットで表わすか？
     @max_length = 1 # どれだけめり込んだら当たったとみなすか？
+
+    cursor.vertex = 3
   end
 
-  def update
+  update do
     # 操作
     begin
       # AとBで速度ベクトルの反映
-      @pA += @sA.scale(@win.button.btA.repeat_0or1) + @sA.scale(-@win.button.btB.repeat_0or1)
-      @pB += @sB.scale(@win.button.btA.repeat_0or1) + @sB.scale(-@win.button.btB.repeat_0or1)
+      @pA += @sA.scale(button.btA.repeat_0or1) + @sA.scale(-button.btB.repeat_0or1)
+      @pB += @sB.scale(button.btA.repeat_0or1) + @sB.scale(-button.btB.repeat_0or1)
 
       # Cボタンおしっぱなし + マウスで自機位置移動
-      if @win.button.btC.press?
-        @pA = @win.cursor.point.clone
+      if button.btC.press?
+        @pA = cursor.point.clone
       end
 
       # Dボタンおしっぱなし + マウスで自機角度変更
-      if @win.button.btD.press?
-        if @win.cursor.point != @pA
-          @sA = (@win.cursor.point - @pA).normalize * @sA.magnitude
+      if button.btD.press?
+        if cursor.point != @pA
+          @sA = (cursor.point - @pA).normalize * @sA.magnitude
         end
       end
     end
@@ -61,10 +65,10 @@ class Scene
         _d >= @max_length && # B/A
         true
 
-      # @win.__fill_rect2(@tA)
+      # __fill_rect2(@tA)
 
       faces = {_l => :l, _r => :r, _u => :u, _d => :d}
-      @win.vputs faces.sort.inspect
+      vputs faces.sort.inspect
 
       face = faces.sort.first.last
       diff = case face
@@ -93,49 +97,24 @@ class Scene
       @tB = @rB.add_vector(@pB)
     end
 
-    # @win.screen.fill_rect(10, 10, 0, 0, [255, 255, 255])
-    # @win.draw_rect(@tA, :fill => @collision)
+    # screen.fill_rect(10, 10, 0, 0, [255, 255, 255])
+    # draw_rect(@tA, :fill => @collision)
 
-    @win.draw_rect(@tA, :fill => @collision)
+    draw_rect(@tA, :fill => @collision)
 
-    if @win.button.btC.press? && @collision
+    if button.btC.press? && @collision
       # ゴーストの表示
-      @win.draw_rect(@rA.add_vector(@win.cursor.point))
+      draw_rect(@rA.add_vector(cursor.point))
     end
 
-    @win.vputs "A", :vector => @pA
-    @win.vputs "A: #{@tA.to_a.inspect}"
-    @win.draw_vector(@sA.scale(@speed), :origin => @pA, :label => @sA.magnitude)
+    vputs "A", :vector => @pA
+    vputs "A: #{@tA}"
+    draw_vector(@sA.scale(@speed), :origin => @pA, :label => @sA.magnitude)
 
-    @win.draw_rect(@rB.add_vector(@pB))
-    @win.vputs "B", :vector => @pB
-    @win.vputs "B: #{@rB.to_a.inspect}"
-    @win.draw_vector(@sB.scale(@speed), :origin => @pB, :label => @sB.magnitude)
-  end
-end
-
-class App < Stylet::Base
-  include Helper::CursorWithObjectCollection
-
-  attr_reader :reflect_mode
-
-  setup do
-    @ray_mode = true           # true:ドット false:円
-    @modes = ["reflect", "move", "none"]
-    @reflect_mode = @modes.first
-
-    @objects << Scene.new(self)
-    @cursor.vertex = 3
-  end
-
-  update do
-    if key_down?(SDL::Key::S)
-      @reflect_mode = @modes[@modes.index(@reflect_mode).next.modulo(@modes.size)]
-    end
-
-    # 操作説明
-    vputs "S:reflect=#{@reflect_mode}"
-    vputs "Z:++ X:-- C:drag V:angle"
+    draw_rect(@rB.add_vector(@pB))
+    vputs "B", :vector => @pB
+    vputs "B: #{@rB}"
+    draw_vector(@sB.scale(@speed), :origin => @pB, :label => @sB.magnitude)
   end
 
   run
