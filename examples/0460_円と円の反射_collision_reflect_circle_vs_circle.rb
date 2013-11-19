@@ -17,16 +17,24 @@
 #
 require_relative "helper"
 
-class Scene
-  def initialize(win)
-    @win = win
+class App < Stylet::Base
+  include Helper::CursorWithObjectCollection
 
-    @pA = @win.rect.center.clone + Stylet::Vector.new(80, -70)
+  attr_reader :reflect_mode
+
+  setup do
+    self.title = "円と円の反射"
+    cursor.vertex = 3
+
+    @modes = ["reflect", "move", "none"]
+    @reflect_mode = @modes.first
+
+    @pA = rect.center.clone + Stylet::Vector.new(80, -70)
     @sA = Stylet::Vector.angle_at(Stylet::Fee.clock(6, 15)).scale(1.0)
     @a_radius = 100
     @am = @a_radius ** 2
 
-    @pB = @win.rect.center.clone + Stylet::Vector.new(-120, -80)
+    @pB = rect.center.clone + Stylet::Vector.new(-120, -80)
     @sB = Stylet::Vector.angle_at(Stylet::Fee.clock(4)).scale(1.0)
     @b_radius = 60
     @bm = @b_radius ** 2            # 質量
@@ -36,20 +44,27 @@ class Scene
     @reflect_ratio = 1.0 # 反射係数
   end
 
-  def update
+  update do
+    if key_down?(SDL::Key::S)
+      @reflect_mode = @modes[@modes.index(@reflect_mode).next.modulo(@modes.size)]
+    end
+
+    vputs "S:reflect=#{@reflect_mode}"
+    vputs "Z:ray++ X:ray-- C:drag V:angle"
+
     # 操作
     begin
       # AとBで速度ベクトルの反映
-      @pA += @sA.scale(@win.button.btA.repeat_0or1) + @sA.scale(-@win.button.btB.repeat_0or1)
-      @pB += @sB.scale(@win.button.btA.repeat_0or1) + @sB.scale(-@win.button.btB.repeat_0or1)
+      @pA += @sA.scale(button.btA.repeat_0or1) + @sA.scale(-button.btB.repeat_0or1)
+      @pB += @sB.scale(button.btA.repeat_0or1) + @sB.scale(-button.btB.repeat_0or1)
       # Cボタンおしっぱなし + マウスで自機位置移動
-      if @win.button.btC.press?
-        @pA = @win.cursor.point.clone
+      if button.btC.press?
+        @pA = cursor.point.clone
       end
       # Dボタンおしっぱなし + マウスで自機角度変更
-      if @win.button.btD.press?
-        if @win.cursor.point != @pA
-          @sA = (@win.cursor.point - @pA).normalize * @sA.magnitude
+      if button.btD.press?
+        if cursor.point != @pA
+          @sA = (cursor.point - @pA).normalize * @sA.magnitude
         end
       end
     end
@@ -59,11 +74,11 @@ class Scene
 
     @diff = @pB - @pA
     @rdiff = (@a_radius + @b_radius) - @diff.magnitude
-    @win.vputs "magnitude=#{@diff.magnitude}"
-    @win.vputs "rdiff=#{@rdiff}"
+    vputs "magnitude=#{@diff.magnitude}"
+    vputs "rdiff=#{@rdiff}"
 
     # AとBをお互い離す
-    if @win.reflect_mode == "move"
+    if reflect_mode == "move"
       if @rdiff > 0
         @pA -= @diff.normalize * @rdiff / 2
         @pB += @diff.normalize * @rdiff / 2
@@ -71,7 +86,7 @@ class Scene
     end
 
     # 反射する
-    if @win.reflect_mode == "reflect"
+    if reflect_mode == "reflect"
       if @rdiff > 0
         begin
           # 反射するモードでもいったんお互いを引き離さないと絡まってしまう
@@ -129,28 +144,28 @@ class Scene
       end
     end
 
-    @win.draw_circle(@pA, :vertex => @vertex, :radius => @a_radius)
-    @win.vputs "A(#{@am})", :vector => @pA
-    @win.draw_vector(@sA.scale(@s_radius), :origin => @pA, :label => @sA.magnitude)
+    draw_circle(@pA, :vertex => @vertex, :radius => @a_radius)
+    vputs "A(#{@am})", :vector => @pA
+    draw_vector(@sA.scale(@s_radius), :origin => @pA, :label => @sA.magnitude)
 
-    @win.draw_circle(@pB, :vertex => @vertex, :radius => @b_radius)
-    @win.vputs "B(#{@bm})", :vector => @pB
-    @win.draw_vector(@sB.scale(@s_radius), :origin => @pB, :label => @sB.magnitude)
+    draw_circle(@pB, :vertex => @vertex, :radius => @b_radius)
+    vputs "B(#{@bm})", :vector => @pB
+    draw_vector(@sB.scale(@s_radius), :origin => @pB, :label => @sB.magnitude)
 
-    @win.vputs "#{@sA.magnitude} + #{@sA.magnitude} = #{(@sA + @sB).magnitude}"
+    vputs "#{@sA.magnitude} + #{@sA.magnitude} = #{(@sA + @sB).magnitude}"
 
     if false
       if @resp = compute(@pA, @sA, @a_radius, @pB, @sB, @b_radius)
-        @win.vputs @resp.inspect
-        @win.vputs c_state(@resp)
+        vputs @resp.inspect
+        vputs c_state(@resp)
       end
 
       if @resp
         @pA2 = @pA + @sA.normalize.scale(@resp[:f0])
-        @win.draw_circle(@pA2, :vertex => @vertex, :radius => @a_radius)
+        draw_circle(@pA2, :vertex => @vertex, :radius => @a_radius)
 
         @pB2 = @pB + @sB.normalize.scale(@resp[:f0])
-        @win.draw_circle(@pB2, :vertex => @vertex, :radius => @b_radius)
+        draw_circle(@pB2, :vertex => @vertex, :radius => @b_radius)
       end
     end
   end
@@ -198,32 +213,6 @@ class Scene
     elsif (resp[:f0] * resp[:f1]) < 0
       "merikomi"
     end
-  end
-end
-
-class App < Stylet::Base
-  include Helper::CursorWithObjectCollection
-
-  attr_reader :reflect_mode
-
-  setup do
-    @ray_mode = true           # true:ドット false:円
-    @modes = ["reflect", "move", "none"]
-    @reflect_mode = @modes.first
-
-    @objects << Scene.new(self)
-    @cursor.vertex = 3
-    self.title = "円と円の反射"
-  end
-
-  update do
-    if key_down?(SDL::Key::S)
-      @reflect_mode = @modes[@modes.index(@reflect_mode).next.modulo(@modes.size)]
-    end
-
-    # 操作説明
-    vputs "S:reflect=#{@reflect_mode}"
-    vputs "Z:ray++ X:ray-- C:drag V:angle"
   end
 
   run

@@ -7,47 +7,46 @@ require_relative "helper"
 class Joint
   attr_accessor :p0
 
-  def initialize(win, index, p0)
-    @win = win
+  def initialize(index, p0)
     @index = index    # 自分の番号
     @p0 = p0          # 間接の位置
   end
 
   def update
     # 次の位置の間接を取得
-    @target = @win.objects[@index.next]
+    @target = frame.objects[@index.next]
 
     if @target
       distance = @p0.distance_to(@target.p0)
-      gap = distance - @win.magnitude
+      gap = distance - frame.magnitude
       if gap > 0
         # 相手の方から自分の方へ移動する
-        # そのときの移動量を @win.hard_level で調整する
+        # そのときの移動量を frame.hard_level で調整する
         # 1.0 なら相手との間隔をすべて埋めることになるので紐になる
         # 0.1 ならゆっくりと自分に近付いてくる
-        len = gap * @win.hard_level
+        len = gap * frame.hard_level
         dir = @target.p0.angle_to(@p0)
         @target.p0 += Stylet::Vector.angle_at(dir) * len
 
         # 固さ 1.0 のときは次のように p0 の方から相手をひっぱる方法でもよいが前者の方が、ゆっくり移動させるなど応用が効く
         # dir = @p0.angle_to(@target.p0)
-        # @target.p0 += Stylet::Vector.angle_at(dir) * @win.magnitude
+        # @target.p0 += Stylet::Vector.angle_at(dir) * frame.magnitude
       end
     end
 
     # 頭だけカーソルで動かす
     if @index.zero?
-      @p0 = @win.cursor.point
+      @p0 = frame.cursor.point
     end
 
     # 次の間接まで線を引く
     if @target
-      @win.draw_line(@p0, @target.p0)
+      frame.draw_line(@p0, @target.p0)
     end
 
     # 胴体の表示
-    if @win.body_display
-      @win.draw_circle(@p0, :radius => @win.magnitude / 2, :vertex => 16)
+    if frame.body_display
+      frame.draw_circle(@p0, :radius => frame.magnitude / 2, :vertex => 16)
     end
   end
 end
@@ -60,7 +59,7 @@ class App < Stylet::Base
   attr_reader :hard_level
 
   setup do
-    @objects = Array.new(42){|i|Joint.new(self, i, rect.center.clone)}
+    @objects = Array.new(42){|i|Joint.new(i, rect.center.clone)}
     @cursor.display = false     # 三角カーソル非表示
 
     @body_display = true # 胴体描画モード

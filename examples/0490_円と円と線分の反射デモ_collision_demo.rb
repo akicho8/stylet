@@ -12,11 +12,8 @@ class Ball
   attr_reader :radius           # 円の半径
   attr_reader :mass             # 質量
 
-  def initialize(win, scene, index)
-    @win = win
-    @scene = scene
-
-    @pos = @win.rect.center.clone                                                           # 中心点
+  def initialize(index)
+    @pos = frame.rect.center.clone                                                           # 中心点
     @speed = Stylet::Vector.new(rand(-2.0..2), rand(-8.0..-6)) # 速度ベクトル
     @gravity = Stylet::Vector.new(0, 0.20)                                                  # 重力
     if index < 4
@@ -45,7 +42,7 @@ class Ball
 
     # 法線(正規化済み)
     normal = pA.normal(pB).normalize
-    # @win.draw_line(pA, pA + normal.scale(30))
+    # frame.draw_line(pA, pA + normal.scale(30))
 
     # t と C の取得
     begin
@@ -113,15 +110,15 @@ class Ball
       return true
     end
 
-    # @win.vputs "magnitude=#{diff.magnitude}"
-    # @win.vputs "rdiff=#{rdiff}"
+    # frame.vputs "magnitude=#{diff.magnitude}"
+    # frame.vputs "rdiff=#{rdiff}"
 
     # if diff.magnitude.zero?
     #   return
     # end
 
     # # AとBをお互い離す
-    # if @win.reflect_mode == "move"
+    # if frame.reflect_mode == "move"
     #   if rdiff > 0
     #     pA -= diff.normalize * rdiff / 2
     #     pB += diff.normalize * rdiff / 2
@@ -213,15 +210,15 @@ class Ball
     # 操作
     begin
       # AとBで速度ベクトルの反映
-      @pos += @speed.scale(@win.button.btA.repeat_0or1) + @speed.scale(-@win.button.btB.repeat_0or1)
+      @pos += @speed.scale(frame.button.btA.repeat_0or1) + @speed.scale(-frame.button.btB.repeat_0or1)
       # Cボタンおしっぱなし + マウスで自機位置移動
-      if @win.button.btC.press?
-        @pos = @win.cursor.point.clone
+      if frame.button.btC.press?
+        @pos = frame.cursor.point.clone
       end
       # Dボタンおしっぱなし + マウスで自機角度変更
-      if @win.button.btD.press?
-        if @win.cursor.point != @pos
-          @speed = (@win.cursor.point - @pos).normalize * @speed.magnitude.round
+      if frame.button.btD.press?
+        if frame.cursor.point != @pos
+          @speed = (frame.cursor.point - @pos).normalize * @speed.magnitude.round
         end
       end
     end
@@ -232,41 +229,39 @@ class Ball
     @pos += @speed
 
     # 自機(円)の表示
-    @win.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => @speed.angle)
+    frame.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => @speed.angle)
   end
 end
 
-class Scene
-  def initialize(win)
-    @win = win
-    @balls = Array.new(5){|i|Ball.new(@win, self, i)}
-    @count = 0
-    @center = @win.rect.center
+class App < Stylet::Base
+  include Helper::CursorWithObjectCollection
+
+  setup do
+    @balls = Array.new(5){|i|Ball.new(i)}
+    @center = frame.rect.center
   end
 
-  def update
+  update do
     # # Aボタンおしっぱなし + マウスで自機角度変更
-    # if @win.button.btA.press?
-    #   @center = @win.cursor.point.clone
-    #   # if @win.cursor.point != @center
-    #   #   @speed = (@win.cursor.point - @pos).normalize * @speed.magnitude
+    # if button.btA.press?
+    #   @center = cursor.point.clone
+    #   # if cursor.point != @center
+    #   #   @speed = (cursor.point - @pos).normalize * @speed.magnitude
     #   # end
     # end
-
-    _count = @count
 
     # 線の準備
     @lines = []
     n = 5
     n.times{|i|
-      @lines << @center + Stylet::Vector.angle_at((1.0 / 128 * _count) + 1.0 / n * i) * @win.rect.h * 0.45
+      @lines << @center + Stylet::Vector.angle_at((1.0 / 128 * count) + 1.0 / n * i) * rect.h * 0.45
     }
 
     # 線の準備
     @lines2 = []
     n = 3
     n.times{|i|
-      @lines2 << @center + Stylet::Vector.angle_at((1.0 / 512 * _count) + 1.0 / n * i) * @win.rect.h * 0.1
+      @lines2 << @center + Stylet::Vector.angle_at((1.0 / 512 * count) + 1.0 / n * i) * rect.h * 0.1
     }
 
     # 円と円の当たり判定
@@ -298,28 +293,18 @@ class Scene
     @lines.each_index{|i|
       a = @lines[i]
       b = @lines[i.next.modulo(@lines.size)]
-      @win.draw_line(a, b)
+      draw_line(a, b)
     }
 
     # 線の描画
     @lines2.each_index{|i|
       a = @lines2[i]
       b = @lines2[i.next.modulo(@lines2.size)]
-      @win.draw_line(a, b)
+      draw_line(a, b)
     }
 
     # 球の描画
     @balls.each{|ball|ball.update}
-
-    @count += 1
-  end
-end
-
-class App < Stylet::Base
-  include Helper::CursorWithObjectCollection
-
-  setup do
-    @objects << Scene.new(self)
   end
 
   run

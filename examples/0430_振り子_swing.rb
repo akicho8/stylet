@@ -2,11 +2,6 @@
 #
 # 振り子のアルゴリズム
 #
-require_relative "helper"
-
-#
-# ブランコのアルゴリズム
-#
 # 円の中心
 #    p0 ----- pA (鉄球) ----> dir1 (pAの方向)
 #       \     ↓
@@ -18,36 +13,41 @@ require_relative "helper"
 #             \
 #              dir2 (pBの方向)
 #
-class Swing
-  def initialize(win)
-    @win = win
-    @p0 = @win.rect.center + Stylet::Vector.new(0, -@win.rect.h * 0)   # 円の中心
+require_relative "helper"
+
+class App < Stylet::Base
+  include Helper::CursorWithObjectCollection
+
+  setup do
+    self.title = "振り子"
+
+    @p0 = rect.center + Stylet::Vector.new(0, -rect.h * 0)   # 円の中心
     @dir1 = Stylet::Fee.clock(1) # 角度
     @speed = 0                   # 角速度
     @friction = 0.0              # 摩擦(0.0:なし 1.0:最大)
-    @radius = @win.rect.hy * 0.5 # 糸の長さ
+    @radius = rect.hy * 0.5 # 糸の長さ
     @ball_radius = 32            # 鉄球自体の半径
     @dir2 = nil                  # 振り子の中心(p0)からの重力反映座標(pB)の角度
     @gravity = Stylet::Vector.new(0, 1)   # 重力加速度(整数で指定すること)
     @debug_mode = false
   end
 
-  def update
+  update do
     begin
-      if @win.button.btA.press? || @win.button.btB.press?
+      if button.btA.press? || button.btB.press?
         # 重力調整
-        @gravity += @gravity.normalize.scale(@win.button.btA.repeat) + @gravity.normalize.scale(-@win.button.btB.repeat)
+        @gravity += @gravity.normalize.scale(button.btA.repeat) + @gravity.normalize.scale(-button.btB.repeat)
         @gravity.y = Stylet::Etc.range_limited(@gravity.y, (1..@radius))
         @speed = 0
       end
 
       # Aボタンが押されているときだけ鉄球の位置をカーソルの方向に向ける
-      if @win.button.btD.press?
-        @dir1 = @p0.angle_to(@win.cursor.point)
+      if button.btD.press?
+        @dir1 = @p0.angle_to(cursor.point)
         @speed = 0
       end
 
-      if @win.button.btC.trigger?
+      if button.btC.trigger?
         @debug_mode = !@debug_mode
       end
     end
@@ -84,7 +84,7 @@ class Swing
     # 仮想鉄球の角度と現在の角度の差を求める
     @diff = @dir2 - @dir1
     # @diff = (@pC - @pA).magnitude
-    # @win.vputs @diff
+    # vputs @diff
 
     # 加速
     @speed += @diff
@@ -94,61 +94,52 @@ class Swing
     @dir1 += @speed
 
     # 中心と鉄球の線
-    @win.draw_line(@p0, @pA)
+    draw_line(@p0, @pA)
 
     # 鉄球
-    @win.draw_circle(@pA, :radius => @ball_radius, :vertex => 16)
+    draw_circle(@pA, :radius => @ball_radius, :vertex => 16)
 
     # デバッグモード
-    if @debug_mode || @win.button.btD.press?
+    if @debug_mode || button.btD.press?
       # 仮想鉄球への紐
-      @win.draw_line(@p0, @pA)
+      draw_line(@p0, @pA)
 
       # 実鉄球から仮想鉄球への線
-      # @win.draw_line(@p0, @pB)
-      @win.draw_line(@p0, @pC) # 振り子の中心(p0)から重力反映座標(pC)への線を表示確認
-      @win.draw_line(@pA, @pB)
-      @win.draw_line(@pB, @pC)
-      @win.draw_line(@pA, @pC)
-      @win.vputs "P", :vector => @p0
-      @win.vputs "A", :vector => @pA
-      @win.vputs "B", :vector => @pB
-      @win.vputs "C", :vector => @pC
+      # draw_line(@p0, @pB)
+      draw_line(@p0, @pC) # 振り子の中心(p0)から重力反映座標(pC)への線を表示確認
+      draw_line(@pA, @pB)
+      draw_line(@pB, @pC)
+      draw_line(@pA, @pC)
+      vputs "P", :vector => @p0
+      vputs "A", :vector => @pA
+      vputs "B", :vector => @pB
+      vputs "C", :vector => @pC
 
       # 90度ずらした線を引く
       rad90_line
 
       # 軌道の円周
-      @win.draw_circle(@p0, :radius => @radius, :vertex => 32)
+      draw_circle(@p0, :radius => @radius, :vertex => 32)
 
-      # @win.draw_line(@pB, @pB + (@pA - @pB).scale(2))
+      # draw_line(@pB, @pB + (@pA - @pB).scale(2))
     end
 
-    @win.vputs "dir1: #{@dir1}"
-    @win.vputs "dir2: #{@dir2}"
-    @win.vputs "diff: #{@diff}"
-    @win.vputs "speed: #{@speed}"
-    @win.vputs "gravity: #{@gravity.magnitude}"
+    vputs "dir1: #{@dir1}"
+    vputs "dir2: #{@dir2}"
+    vputs "diff: #{@diff}"
+    vputs "speed: #{@speed}"
+    vputs "gravity: #{@gravity.magnitude}"
 
-    @win.vputs "Z:g++ X:g-- C:debug V:drag"
+    vputs "Z:g++ X:g-- C:debug V:drag"
   end
 
   # 90度ずらした線を引く
   def rad90_line
-    # @win.draw_line(@pB, @pC)
+    # draw_line(@pB, @pC)
     # _r = 256
     # p2 = @pA + Stylet::Vector.angle_at(@dir1 - Stylet::Fee.r90) * _r
     # p3 = @pA + Stylet::Vector.angle_at(@dir1 + Stylet::Fee.r90) * _r
-    # @win.draw_line(p2, p3)
-  end
-end
-
-class App < Stylet::Base
-  include Helper::CursorWithObjectCollection
-
-  setup do
-    @objects << Swing.new(self)
-    self.title = "振り子"
+    # draw_line(p2, p3)
   end
 
   run
