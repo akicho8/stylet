@@ -25,8 +25,6 @@ module Stylet
 
     delegate :index, :to => :object
 
-    private_class_method :new
-
     def initialize(object)
       @object = object
     end
