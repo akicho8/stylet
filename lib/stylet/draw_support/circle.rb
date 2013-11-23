@@ -36,6 +36,20 @@ module Stylet
     def draw_square(p0, options = {})
       draw_circle(p0, {:vertex => 4}.merge(options))
     end
+
+    # 長方形
+    def draw_rectangle(p0, options = {})
+      options = {
+        :radius => 64,       # 半径
+        :angle  => Fee.r270, # 長方形の細長い部分の方向
+        :edge => 1.0 / 16,   # 長方形の細長い先っぽの面の大きさ(0なら一本線。0.125で正方形)
+      }.merge(options)
+      s = options[:edge]
+      points = [-s, s, 1.0 / 2 - s, 1.0 / 2 + s].collect do |rad|
+        p0 + Vector.angle_at(options[:angle] + rad) * options[:radius]
+      end
+      draw_polygon(points, options)
+    end
   end
 
   if $0 == __FILE__
@@ -44,6 +58,7 @@ module Stylet
       draw_circle(rect.center)
       draw_triangle(rect.center)
       draw_square(rect.center)
+      draw_rectangle(rect.center)
     end
   end
 end
