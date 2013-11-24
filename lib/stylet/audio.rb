@@ -68,7 +68,7 @@ module Stylet
       # @files には直接アクセスさせない
       #   Stylet::Audio.instance.se_stock["se"].play
       def [](key)
-        @files[key]
+        @files[key] || NullEffect.new
       end
 
       # 複数ファイルの一括読み込み
@@ -98,8 +98,31 @@ module Stylet
         out << "@files.keys=#{@files.keys.inspect}"
       end
 
+      class SoundEffectBase
+        def play
+        end
+
+        def play_if_stop
+          unless play?
+            play
+          end
+        end
+
+        def play?
+          false
+        end
+
+        def halt
+        end
+
+        alias stop halt
+      end
+
+      class NullEffect < SoundEffectBase
+      end
+
       # 効果音一つ
-      class SoundEffect
+      class SoundEffect < SoundEffectBase
         def initialize(ch, wave)
           @ch = ch
           @wave = wave

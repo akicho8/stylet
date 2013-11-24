@@ -37,7 +37,7 @@ class App < Stylet::Base
       @handle_dir += @handle_adir
       # ハンドルの角度の減速度(1.00なら車体が回りっぱなしになる)
       if @old_pos.truncate == @pos.truncate
-        @handle_dir *= 0.8  # 止まっている場合はハンドルがなかなか効かない(普通の車なら0.0)
+        @handle_dir *= 0.0  # 止まっている場合はハンドルがなかなか効かない(普通の車なら0.0)
       else
         @handle_dir *= 0.94 # 動いている状態ではハンドルが効きやすい
       end

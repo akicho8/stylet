@@ -22,7 +22,9 @@ module Stylet
 
     def before_update
       super
-      @joys.each{|joy|vputs(joy.inspect)}
+      unless Stylet.config.production
+        @joys.each{|joy|vputs(joy.inspect)}
+      end
     end
   end
 end

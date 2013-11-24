@@ -25,8 +25,8 @@ module Stylet
     end
 
     # 領域rectの中に点pが含まていない？
-    def rect_out?(rect, p, options = {})
-      !rect_in?(rect, p, options)
+    def rect_out?(rect, p)
+      !rect_in?(rect, p)
     end
 
     # 長方形aと長方形bの一部が接触しているか？

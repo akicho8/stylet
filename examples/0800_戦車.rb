@@ -2,8 +2,28 @@
 # 戦車
 require_relative "helper"
 
+class Bullet
+  def initialize(pos, dir, speed)
+    @pos = pos
+    @dir = dir
+    @speed = speed
+
+    @size = 8
+    @radius = 0
+  end
+
+  def screen_out?
+    Stylet::CollisionSupport.rect_out?(frame.rect, @pos) || @radius < 0
+  end
+
+  def update
+    @radius += @speed
+    frame.draw_triangle(@pos + Stylet::Vector.angle_at(@dir) * @radius, :radius => @size, :angle => @dir)
+  end
+end
+
 class App < Stylet::Base
-  include Helper::Cursor
+  include Helper::CursorWithObjectCollection
 
   setup do
     self.title = "戦車"
@@ -67,16 +87,27 @@ class App < Stylet::Base
       vputs "速度: #{@speed.round(4)}"
     end
 
-    begin
-      @cannon_dir
-    end
-
     # 移動
     begin
       @old_pos = @pos.clone
       @pos += Stylet::Vector.angle_at(@body_dir) * @speed
     end
 
+    # 砲台
+    begin
+      if joy = joys.first
+        @cannon_vector = joy.adjusted_analog_lever[:left]
+        if @cannon_vector.magnitude > 0.5
+          @cannon_dir = @cannon_vector.angle
+        end
+      end
+    end
+
+    # if button.btA.count.modulo(8) == 1
+    #   frame.objects << Bullet.new(@pos.clone, @pos.angle_to(@target.pos), 4.00)
+    # end
+
+    draw_rectangle(@pos, :angle => @cannon_dir, :radius => 30, :edge => 0.02)
     draw_rectangle(@pos, :angle => @body_dir, :radius => 25, :edge => 0.09)
   end
 
