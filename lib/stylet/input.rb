@@ -2,7 +2,7 @@
 #
 # ・SDLとはほぼ無関係
 # ・入力=キーボードを連想しがちだが入力は思考ルーチンと考える
-# ・キーボード関連がでてくるのは思考ルーチンの省略するためものも
+# ・キーボード関連がでてくるのは思考ルーチンを省略するためものも
 #
 require_relative "input/support"
 require_relative "input/key_one"

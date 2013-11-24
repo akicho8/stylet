@@ -1,10 +1,18 @@
+# -*- coding: utf-8 -*-
 class Stylet::ElecomUsbPadAdapter < Stylet::JoystickAdapter
-  def h_axis_index
-    3
-  end
-
-  def v_axis_index
-    4
+  def lever_on?(dir)
+    case dir
+    when :up
+      axis(4) == -32768
+    when :down
+      axis(4) == +32767
+    when :right
+      axis(3) == +32767
+    when :left
+      axis(3) == -32768
+    else
+      false
+    end
   end
 
   def button_on?(key)
@@ -15,7 +23,11 @@ class Stylet::ElecomUsbPadAdapter < Stylet::JoystickAdapter
       :btD => 2,
     }[key]
     if pos
-      @object.button(pos)
+      button(pos)
     end
+  end
+
+  def analog_lever
+    {}
   end
 end

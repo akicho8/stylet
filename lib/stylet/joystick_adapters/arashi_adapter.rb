@@ -9,7 +9,7 @@ class Stylet::ArashiAdapter < Stylet::JoystickAdapter
       :left  => 7,
     }[dir]
     if pos
-      @object.button(pos)
+      button(pos)
     end
   end
 
@@ -25,7 +25,11 @@ class Stylet::ArashiAdapter < Stylet::JoystickAdapter
       :btD => 14,
     }[key]
     if pos
-      @object.button(pos)
+      button(pos)
     end
+  end
+
+  def analog_lever
+    {:left => [axis(0), axis(1)], :right => [axis(2), axis(3)]}
   end
 end

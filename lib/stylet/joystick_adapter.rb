@@ -23,41 +23,26 @@ module Stylet
 
     attr_reader :object
 
-    delegate :index, :to => :object
+    delegate :index, :axis, :button, :to => :object
 
     def initialize(object)
       @object = object
     end
 
+    def lever_on?(dir)
+      raise NotImplementedError, "#{__method__} is not implemented"
+    end
+
+    def button_on?(key)
+      raise NotImplementedError, "#{__method__} is not implemented"
+    end
+
+    def analog_lever
+      raise NotImplementedError, "#{__method__} is not implemented"
+    end
+
     def name
       SDL::Joystick.index_name(index)
-    end
-
-    def button(n)
-      @object.button(n)
-    end
-
-    def h_axis_index
-      0
-    end
-
-    def v_axis_index
-      1
-    end
-
-    def lever_on?(dir)
-      case dir
-      when :up
-        @object.axis(v_axis_index) == -32768
-      when :down
-        @object.axis(v_axis_index) == +32767
-      when :right
-        @object.axis(h_axis_index) == +32767
-      when :left
-        @object.axis(h_axis_index) == -32768
-      else
-        false
-      end
     end
 
     def button_str
@@ -77,11 +62,38 @@ module Stylet
     end
 
     def inspect
-      "#{@object.index}: #{name.slice(/^.{8}/)} #{unit_str}"
+      "#{index}: #{name.slice(/^.{8}/)} #{unit_str}"
+    end
+
+    def analog_lever_str
+      analog_lever.collect{|k, v|"#{k}(%+6d %+6d)" % v}.join(" ")
     end
 
     def unit_str
-      "AXIS:#{axis_str} BTN:#{button_str} %+04d %+04d" % [@object.axis(h_axis_index), @object.axis(v_axis_index)]
+      "AXIS:#{axis_str} BTN:#{button_str} #{analog_lever_str}"
+    end
+
+    ANALOG_LEVER_MAX = 32767
+    ANALOG_LEVER_MAGNITUDE_MAX = Math.sqrt(ANALOG_LEVER_MAX**2 + ANALOG_LEVER_MAX**2)
+
+    # 調整済みアナログレバー
+    def adjusted_analog_lever
+      analog_lever.inject({}) do |hash, (key, xy)|
+        v = Vector.new(*xy)
+        m = v.magnitude
+        if false
+          # 取得した値をそのまま使うと斜めのベクトルが強くなりすぎる
+          # たんなる方向を示したいときはこれで問題ない
+          r = m.to_f / ANALOG_LEVER_MAGNITUDE_MAX
+        else
+          # 斜めのベクトルが強くなりすぎないように制限を加えた例
+          if m >= ANALOG_LEVER_MAX
+            m = ANALOG_LEVER_MAX
+          end
+          r = m.to_f / ANALOG_LEVER_MAX
+        end
+        hash.merge(key => v.normalize * r)
+      end
     end
   end
 end
