@@ -6,20 +6,22 @@ module Stylet
   module Input
     Axis   = Struct.new(:up, :down, :left, :right)
     Button = Struct.new(:btA, :btB, :btC, :btD)
+    Button2 = Struct.new(:btR1)
 
     # このモジュールをプレイヤーや人工無能相当に直接includeしてaxisとbuttonの情報を持たせるようにする
     module Base
-      attr_reader :axis, :button
+      attr_reader :axis, :button, :button2
 
       def initialize
         super if defined? super
         @axis   = Axis.new(KeyOne.new("u"), KeyOne.new("d"), KeyOne.new("l"), KeyOne.new("r"))
         @button = Button.new(KeyOne.new("AL"), KeyOne.new("BR"), KeyOne.new("C"), KeyOne.new("D"))
+        @button2 = Button2.new(KeyOne.new("R1"))
       end
 
       # 上下左右とボタンの状態を配列で返す
       def key_objects
-        @axis.values + @button.values
+        @axis.values + @button.values + @button2.values
       end
 
       # レバーの更新前のビット状態を取得
@@ -35,6 +37,8 @@ module Stylet
           @axis.values.to_s
         when "button"
           @button.values.to_s
+        when "button2"
+          @button2.values.to_s
         else
           key_objects.to_s
         end

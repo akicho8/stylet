@@ -1,27 +1,21 @@
 # -*- coding: utf-8 -*-
 
 class Stylet::ArashiAdapter < Stylet::JoystickAdapter
-  def lever_on?(dir)
-    pos = {
+  cattr_accessor(:lever_button_assigns) do
+    {
       :up    => 4,
       :right => 5,
       :down  => 6,
       :left  => 7,
-    }[dir]
-    if pos
-      button(pos)
-    end
+    }
   end
 
-  def button_on?(key)
-    pos = {
+  cattr_accessor(:button_assigns) do
+    {
       :btA => 15,
       :btB => 12,
       :btC => 11,
       :btD => 10,
-    }[key]
-    if pos
-      button(pos)
-    end
+    }
   end
 end

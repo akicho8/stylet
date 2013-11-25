@@ -37,11 +37,15 @@ module Stylet
     # 抽象シリーズ
     begin
       def lever_on?(dir)
-        raise NotImplementedError, "#{__method__} is not implemented"
+        if pos = lever_button_assigns[dir]
+          button(pos)
+        end
       end
 
       def button_on?(key)
-        raise NotImplementedError, "#{__method__} is not implemented"
+        if pos = button_assigns[key]
+          button(pos)
+        end
       end
 
       def available_analog_levers
@@ -57,9 +61,9 @@ module Stylet
       end
 
       def adjusted_buttons
-        [:btA, :btB, :btC, :btD].collect do |key|
+        button_assigns.keys.collect do |key|
           if button_on?(key)
-            key.to_s.slice(/(.)\z/).upcase
+            key.to_s.sub("bt", "").upcase
           end
         end.compact
       end
@@ -99,7 +103,7 @@ module Stylet
     end
 
     # 調整済みアナログレバー
-    def adjusted_left_right_analog_lever
+    def adjusted_analog_levers
       available_analog_levers.inject({}) do |hash, (key, xy)|
         v = Vector.new(*xy)
         m = v.magnitude

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 class Stylet::UnknownAdapter < Stylet::JoystickAdapter
-  def lever_on?(dir)
-    false
+  cattr_accessor(:lever_button_assigns) do
+    {}
   end
 
-  def button_on?(key)
-    false
+  cattr_accessor(:button_assigns) do
+    {}
   end
 end

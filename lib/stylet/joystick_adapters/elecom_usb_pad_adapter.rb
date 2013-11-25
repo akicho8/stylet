@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
 class Stylet::ElecomUsbPadAdapter < Stylet::JoystickAdapter
+  cattr_accessor(:button_assigns) do
+    {
+      :btA => 0,
+      :btB => 1,
+      :btC => 3,
+      :btD => 2,
+    }
+  end
+
   def lever_on?(dir)
     case dir
     when :up
@@ -12,18 +21,6 @@ class Stylet::ElecomUsbPadAdapter < Stylet::JoystickAdapter
       axis(3) == -32768
     else
       false
-    end
-  end
-
-  def button_on?(key)
-    pos = {
-      :btA => 0,
-      :btB => 1,
-      :btC => 3,
-      :btD => 2,
-    }[key]
-    if pos
-      button(pos)
     end
   end
 end
