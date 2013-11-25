@@ -12,14 +12,15 @@ module Stylet
     cattr_accessor(:adapter_assigns) do
       {
         "USB Gamepad"                => :elecom_usb_pad, # ELECOMのファミコンっぽいやつ
-        "PLAYSTATION(R)3 Controller" => :arashi,         # PS3の本物のコントローラ
-        "PS(R) Gamepad"              => :arashi,         # PS3のコントローラのぱちもん
+        "PLAYSTATION(R)3 Controller" => :ps3_standard,   # PS3の本物のコントローラ
+        "PS(R) Gamepad"              => :ps3_standard,   # PS3のコントローラのぱちもん
       }
     end
 
     def self.create(object)
       name = SDL::Joystick.index_name(object.index).strip
-      adapter = "#{adapter_assigns.fetch(name, :unknown)}_adapter"
+      key = adapter_assigns[name] || :ps3_standard
+      adapter = "#{key}_adapter"
       require_relative "joystick_adapters/#{adapter}"
       Stylet.logger.info [object.index, name, adapter].inspect if Stylet.logger
       "stylet/#{adapter}".classify.constantize.new(object)
