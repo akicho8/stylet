@@ -6,18 +6,22 @@ require "active_support/core_ext/string/inflections"
 
 module Stylet
   class JoystickAdapter
-    cattr_accessor(:adapters) do
+    ANALOG_LEVER_MAX = 32767
+    ANALOG_LEVER_MAGNITUDE_MAX = Math.sqrt(ANALOG_LEVER_MAX**2 + ANALOG_LEVER_MAX**2)
+
+    cattr_accessor(:adapter_assigns) do
       {
-        "USB Gamepad"                => :elecom_usb_pad,
-        "PLAYSTATION(R)3 Controller" => :arashi,
+        "USB Gamepad"                => :elecom_usb_pad, # ELECOMのファミコンっぽいやつ
+        "PLAYSTATION(R)3 Controller" => :arashi,         # PS3の本物のコントローラ
+        "PS(R) Gamepad"              => :arashi,         # PS3のコントローラのぱちもん
       }
     end
 
     def self.create(object)
       name = SDL::Joystick.index_name(object.index).strip
-      Stylet.logger.info [object.index, name].inspect if Stylet.logger
-      adapter = "#{adapters[name]}_adapter"
+      adapter = "#{adapter_assigns.fetch(name, :unknown)}_adapter"
       require_relative "joystick_adapters/#{adapter}"
+      Stylet.logger.info [object.index, name, adapter].inspect if Stylet.logger
       "stylet/#{adapter}".classify.constantize.new(object)
     end
 
@@ -29,56 +33,73 @@ module Stylet
       @object = object
     end
 
-    def lever_on?(dir)
-      raise NotImplementedError, "#{__method__} is not implemented"
+    # 抽象シリーズ
+    begin
+      def lever_on?(dir)
+        raise NotImplementedError, "#{__method__} is not implemented"
+      end
+
+      def button_on?(key)
+        raise NotImplementedError, "#{__method__} is not implemented"
+      end
+
+      def available_analog_levers
+        {}
+      end
+
+      def adjusted_axes
+        [:up, :down, :right, :left].collect do |dir|
+          if lever_on?(dir)
+            dir.to_s.slice(/^(.)/).upcase
+          end
+        end.compact
+      end
+
+      def adjusted_buttons
+        [:btA, :btB, :btC, :btD].collect do |key|
+          if button_on?(key)
+            key.to_s.slice(/(.)\z/).upcase
+          end
+        end.compact
+      end
     end
 
-    def button_on?(key)
-      raise NotImplementedError, "#{__method__} is not implemented"
-    end
+    # ハードウェアの値をそのまま返すシリーズ
+    begin
+      def name
+        SDL::Joystick.index_name(index)
+      end
 
-    def analog_lever
-      raise NotImplementedError, "#{__method__} is not implemented"
-    end
+      def raw_active_button_numbers
+        @object.num_buttons.times.collect do |index|
+          if @object.button(index)
+            index
+          end
+        end.compact
+      end
 
-    def name
-      SDL::Joystick.index_name(index)
-    end
-
-    def button_str
-      @object.num_buttons.times.collect{|index|
-        if @object.button(index)
-          index
-        end
-      }.join
-    end
-
-    def axis_str
-      [:up, :down, :right, :left].collect{|dir|
-        if lever_on?(dir)
-          dir.to_s.slice(/^(.)/).upcase
-        end
-      }.join
+      def raw_analog_lever_status
+        @object.num_axes.times.collect{|index|@object.axis(index)}
+      end
     end
 
     def inspect
-      "#{index}: #{name.slice(/^.{8}/)} #{unit_str}"
-    end
-
-    def analog_lever_str
-      analog_lever.collect{|k, v|"#{k}(%+6d %+6d)" % v}.join(" ")
+      "#{index}: #{unit_str}"
     end
 
     def unit_str
-      "AXIS:#{axis_str} BTN:#{button_str} #{analog_lever_str}"
+      [
+        adjusted_axes.join,
+        adjusted_buttons.join,
+        raw_active_button_numbers,
+        # available_analog_levers.values,
+        raw_analog_lever_status,
+      ].collect(&:to_s).join
     end
 
-    ANALOG_LEVER_MAX = 32767
-    ANALOG_LEVER_MAGNITUDE_MAX = Math.sqrt(ANALOG_LEVER_MAX**2 + ANALOG_LEVER_MAX**2)
-
     # 調整済みアナログレバー
-    def adjusted_analog_lever
-      analog_lever.inject({}) do |hash, (key, xy)|
+    def adjusted_left_right_analog_lever
+      available_analog_levers.inject({}) do |hash, (key, xy)|
         v = Vector.new(*xy)
         m = v.magnitude
         if false

@@ -29,7 +29,7 @@ class Stylet::ArashiAdapter < Stylet::JoystickAdapter
     end
   end
 
-  def analog_lever
+  def available_analog_levers
     {:left => [axis(0), axis(1)], :right => [axis(2), axis(3)]}
   end
 end

@@ -26,8 +26,4 @@ class Stylet::ElecomUsbPadAdapter < Stylet::JoystickAdapter
       button(pos)
     end
   end
-
-  def analog_lever
-    {}
-  end
 end
