@@ -8,7 +8,7 @@ module Stylet
       super
       @pause = Info.new
       @pause.enable = false
-      @pause.keys ||= [SDL::Key::P, SDL::Key::SPACE, SDL::Key::RETURN]
+      @pause.keys ||= [SDL::Key::SPACE, SDL::Key::RETURN]
     end
 
     def polling
