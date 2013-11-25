@@ -96,7 +96,7 @@ class App < Stylet::Base
     # 砲台
     begin
       if joy = joys.first
-        @cannon_vector = joy.adjusted_analog_lever[:left]
+        @cannon_vector = joy.adjusted_analog_levers[:left]
         if @cannon_vector.magnitude > 0.5
           @cannon_dir = @cannon_vector.angle
         end

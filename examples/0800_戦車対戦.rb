@@ -29,6 +29,7 @@ class Tank
     @old_pos      = @pos.clone                 # 前回の位置
     @bullet_count = 0                          # 発射している弾丸数
     @life         = 3                          # ライフ
+    @anger        = 0                          # 怒り
     @radius       = 20                         # 車体の大きさ
     @bullet_max   = 3                          # 使える段数
 
@@ -60,12 +61,11 @@ class Tank
       @handle_dir += @handle_adir
       # ハンドルの角度の減速度(1.00なら車体が回りっぱなしになる)
       if @old_pos.truncate == @pos.truncate
-        # @handle_dir *= 0.9  # 止まっている場合はハンドルがなかなか効かない(普通の車なら0.0)
+        @handle_dir *= 0.6  # 止まっている場合はハンドルがなかなか効かない(普通の車なら0.0)
       else
-        # @handle_adir *= 1.1
-        # @handle_dir *= 1.0  # 動いている状態ではハンドルが効きやすい
+        #   @handle_dir *= 1.0  # 動いている状態ではハンドルが効きやすい
       end
-      @handle_dir *= 0.95  # ハンドルを元に戻す
+      @handle_dir *= 0.95   # ハンドルを元に戻す
       handle_gap = 0.1     # ハンドルが曲る最大の角度
       @handle_dir = Stylet::Etc.range_limited(@handle_dir, (-handle_gap..handle_gap))
       @body_dir += @handle_dir
@@ -82,9 +82,9 @@ class Tank
       if button.btD.press?
         @accel = -0.06            # ブレーキの効き具合い
       end
-      @accel *= 2 if @life <= 1
+      # @accel *= 2 if @life <= 1
       @speed += @accel if @life >= 1
-      @speed *= 0.98              # 空気抵抗
+      @speed *= 0.95              # 空気抵抗
       @speed = Stylet::Etc.range_limited(@speed, (-1.0..5)) # 下るときと進むときの速度のリミット
       vputs "速度: #{@speed.round(4)}" if $DEBUG
     end
@@ -100,7 +100,7 @@ class Tank
       # 砲台をアナログレバーの方向に向ける
       @al_diff = 0
       if joy = joys[@joystick_index]
-        vec = joy.adjusted_analog_lever[:left]
+        vec = joy.adjusted_analog_levers[:right]
         if vec.magnitude > 0.5
           @al_diff = vec.angle.modulo(1.0) - @cannon_dir.modulo(1.0)
           if @al_diff < -1.0 / 2
@@ -160,6 +160,7 @@ class Tank
   def damage
     if @life >= 1
       @life -= 1
+      @anger += 1
       @bullet_max += 1          # 不利になると弾数が増える
       (n = 16).times do |i|
         frame.objects << Dust.new(@pos, 1.0 / n * i, rand(6..8), rand(0.7..0.9), 0)
@@ -178,7 +179,7 @@ module BulletTrigger
 
   def update
     super
-    if button.btC.trigger?
+    if button2.btR1.trigger? || frame.key_down?(SDL::Key::B)
       if @bullet_count < @bullet_max
         @speed -= 0.2           # 玉を打つと反動で下がる
         frame.objects << Bullet.new(self, @pos.clone, @cannon_dir, 3)
@@ -186,7 +187,7 @@ module BulletTrigger
     end
 
     # 溜め
-    if button.btC.press?
+    if button2.btR1.press?
       @power += 1
       @free_count = 0
     else

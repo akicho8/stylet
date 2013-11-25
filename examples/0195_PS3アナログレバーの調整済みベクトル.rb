@@ -4,7 +4,7 @@ require "./setup"
 
 Stylet.run do
   joys.each do |joy|
-    joy.adjusted_analog_lever.each do |key, vector|
+    joy.adjusted_analog_levers.each do |key, vector|
       vputs [key, vector]
       draw_vector(vector * (rect.height / 2), :origin => rect.center, :label => vector.round(2))
     end
