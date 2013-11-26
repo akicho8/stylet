@@ -23,9 +23,9 @@ module Stylet
       if Stylet.config.full_screen
         options |= SDL::FULLSCREEN
       end
-      w, h = Stylet.config.screen_size
-      @screen ||= SDL::Screen.open(w, h, Stylet.config.color_depth, options)
+      @screen ||= SDL::Screen.open(*Stylet.config.screen_size, Stylet.config.color_depth, options)
       @rect = Rect.new(0, 0, @screen.w, @screen.h)
+
       if @title
         self.title = title
       end

@@ -4,24 +4,22 @@ require_relative "../axis_support"
 
 module Stylet
   module Input
-    Axis   = Struct.new(:up, :down, :left, :right)
-    Button = Struct.new(:btA, :btB, :btC, :btD)
-    Button2 = Struct.new(:btR1)
-
     # このモジュールをプレイヤーや人工無能相当に直接includeしてaxisとbuttonの情報を持たせるようにする
     module Base
-      attr_reader :axis, :button, :button2
+      Axis   = Struct.new(:up, :down, :left, :right)
+      Button = Struct.new(:btA, :btB, :btC, :btD)
+
+      attr_reader :axis, :button
 
       def initialize
         super if defined? super
         @axis   = Axis.new(KeyOne.new("u"), KeyOne.new("d"), KeyOne.new("l"), KeyOne.new("r"))
         @button = Button.new(KeyOne.new("AL"), KeyOne.new("BR"), KeyOne.new("C"), KeyOne.new("D"))
-        @button2 = Button2.new(KeyOne.new("R1"))
       end
 
       # 上下左右とボタンの状態を配列で返す
       def key_objects
-        @axis.values + @button.values + @button2.values
+        @axis.values + @button.values
       end
 
       # レバーの更新前のビット状態を取得
@@ -30,18 +28,22 @@ module Stylet
         @axis.values.collect{|e|e.state_to_s}.to_s
       end
 
-      # 適当に文字列化
-      def to_s(stype=nil)
-        case stype.to_s
-        when "axis"
-          @axis.values.to_s
-        when "button"
-          @button.values.to_s
-        when "button2"
-          @button2.values.to_s
-        else
-          key_objects.to_s
-        end
+      # # 適当に文字列化
+      # def to_s(stype=nil)
+      #   case stype.to_s
+      #   when "axis"
+      #     @axis.values.to_s
+      #   when "button"
+      #     @button.values.to_s
+      #   when "ext_button"
+      #     @ext_button.values.to_s
+      #   else
+      #     key_objects.to_s
+      #   end
+      # end
+
+      def to_s
+        key_objects.to_s
       end
 
       # 左右の溜めが完了しているか?(次の状態から使えるか?)
@@ -70,19 +72,26 @@ module Stylet
         AxisSupport.axis_angle(@axis)
       end
     end
+
+    # ジョイスティックの上とかにあるボタン類
+    module ExtensionButton
+      Button = Struct.new(:btR1, :btR2)
+
+      attr_reader :ext_button
+
+      def initialize
+        super if defined? super
+        @ext_button = Button.new(KeyOne.new("R1"), KeyOne.new("R2"), KeyOne.new("L1"), KeyOne.new("L2"))
+      end
+
+      def key_objects
+        super + @ext_button.values
+      end
+    end
   end
+end
 
-  if $0 == __FILE__
-    require_relative "key_one"
-    require_relative "../vector"
-    require_relative "../fee"
-
-    # b = Input::KeyOne.new
-    # b.update(true)
-    # 
-    # p Vector.angle_at(0.0)
-
-    # Stylet::Vector.angle_at(speed.angle + Stylet::Fee.r45) * speed.magnitude
-    # p Stylet::Fee.angle_at(0.0)
-  end
+if $0 == __FILE__
+  require_relative "../../stylet"
+  Stylet.run
 end

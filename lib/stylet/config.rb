@@ -6,7 +6,7 @@ module Stylet
 
   config.screen_size      = [640, 480]
   config.full_screen      = false
-  config.color_depth      = 32
+  config.color_depth      = 16
   config.production       = false
 
   config.sound_freq       = 44100  # SDLのデフォルトは 22050

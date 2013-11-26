@@ -18,6 +18,9 @@ class Stylet::Ps3StandardAdapter < Stylet::JoystickAdapter
       :btD => 14,
 
       :btR1 => 11,
+      :btR2 => 9,
+      :btL1 => 10,
+      :btL2 => 8,
     }
   end
 

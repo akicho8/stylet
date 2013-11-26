@@ -17,9 +17,9 @@ module Stylet
         oparser.on("-f", "--full-screen", TrueClass){|v|Stylet.config.full_screen = true}
         oparser.on("-p", "--production", TrueClass){|v|Stylet.config.production = true}
         oparser.on("-s", "--screen-size=SIZE", String){|v|Stylet.config.screen_size = [*v.scan(/\d+/).collect(&:to_i)]}
+        oparser.on("-c", "--color-depth=DEPTH", Integer){|v|Stylet.config.color_depth = v}
       end
       oparser.parse(ARGV)
-      p Stylet.config.screen_size
     end
 
     def update
@@ -33,9 +33,12 @@ end
 
 if $0 == __FILE__
   require_relative "../stylet"
-  ARGV << "--shutdown=60"
+  ARGV << "--shutdown=3600"
   ARGV << "--screen-size=800x600"
   ARGV << "--full-screen"
   ARGV << "--production"
-  Stylet.run
+  Stylet.run do
+    vputs cl_options
+    vputs Stylet.config
+  end
 end

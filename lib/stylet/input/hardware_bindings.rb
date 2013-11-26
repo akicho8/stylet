@@ -51,7 +51,12 @@ module Stylet
         @button.btB << joy.button_on?(:btB)
         @button.btC << joy.button_on?(:btC)
         @button.btD << joy.button_on?(:btD)
-        @button2.btR1 << joy.button_on?(:btR1)
+        if @ext_button
+          @ext_button.btR1 << joy.button_on?(:btR1)
+          @ext_button.btR2 << joy.button_on?(:btR2)
+          @ext_button.btL1 << joy.button_on?(:btL1)
+          @ext_button.btL2 << joy.button_on?(:btL2)
+        end
       end
     end
   end
