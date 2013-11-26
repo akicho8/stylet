@@ -10,6 +10,7 @@ class Tank
   def_delegators "Stylet::Base.active_frame", :draw_triangle, :rect, :count, :vputs, :joys, :draw_rectangle
 
   include Stylet::Input::Base
+  include Stylet::Input::ExtensionButton
 
   attr_accessor :pos
   attr_accessor :target
@@ -28,13 +29,13 @@ class Tank
     @speed        = 0                          # 速度
     @old_pos      = @pos.clone                 # 前回の位置
     @bullet_count = 0                          # 発射している弾丸数
-    @life         = 3                          # ライフ
+    @life         = 10                         # ライフ
     @anger        = 0                          # 怒り
     @radius       = 20                         # 車体の大きさ
     @bullet_max   = 3                          # 使える段数
 
     @cannon_dir   = @body_dir                  # 砲台の向き(実際)
-    @cannon_dir2  = 0                          # 砲台の向き(目標)
+    @cannon_dir2  = @body_dir                  # 砲台の向き(目標)
   end
 
   def update
@@ -61,7 +62,7 @@ class Tank
       @handle_dir += @handle_adir
       # ハンドルの角度の減速度(1.00なら車体が回りっぱなしになる)
       if @old_pos.truncate == @pos.truncate
-        @handle_dir *= 0.6  # 止まっている場合はハンドルがなかなか効かない(普通の車なら0.0)
+        # @handle_dir *= 0.8  # 止まっている場合はハンドルがなかなか効かない(普通の車なら0.0)
       else
         #   @handle_dir *= 1.0  # 動いている状態ではハンドルが効きやすい
       end
@@ -76,15 +77,15 @@ class Tank
     # アクセル
     begin
       @accel = 0
-      if button.btA.press?
+      if axis.up.press?
         @accel = 0.06             # 前の進むときの加速度
       end
-      if button.btD.press?
+      if axis.down.press?
         @accel = -0.06            # ブレーキの効き具合い
       end
       # @accel *= 2 if @life <= 1
       @speed += @accel if @life >= 1
-      @speed *= 0.98              # 空気抵抗
+      @speed *= 0.97              # 空気抵抗
       @speed = Stylet::Etc.range_limited(@speed, (-1.0..5)) # 下るときと進むときの速度のリミット
       vputs "速度: #{@speed.round(4)}" if $DEBUG
     end
@@ -98,30 +99,48 @@ class Tank
     # 砲台
     begin
       # 砲台をアナログレバーの方向に向ける
-      @al_diff = 0
+      @cannon_dir2 = 0
+
+      # 指定の方向に合わせる
       if joy = joys[@joystick_index]
         vec = joy.adjusted_analog_levers[:right]
         if vec.magnitude > 0.5
-          @al_diff = vec.angle.modulo(1.0) - @cannon_dir.modulo(1.0)
-          if @al_diff < -1.0 / 2
-            @al_diff = 1.0 + @al_diff
-          elsif @al_diff > 1.0 / 2
-            @al_diff = -1.0 + @al_diff
+          # FIXME: ライブラリ化
+          d = vec.angle.modulo(1.0) - @cannon_dir.modulo(1.0)
+          if d < -1.0 / 2
+            d = 1.0 + d
+          elsif d > 1.0 / 2
+            d = -1.0 + d
           end
-          @cannon_dir += @al_diff * 0.01 # 後ろの方にはなかなか向けられない
+          @cannon_dir2 = d
         end
       end
 
-      if @al_diff.zero?
-        # 砲台はだんだんと車体の向きに戻っていく
+      # 車体の向きに合わせる
+      if ext_button.btL1.press?
         d = @body_dir.modulo(1.0) - @cannon_dir.modulo(1.0)
         if d < -1.0 / 2
           d = 1.0 + d
         elsif d > 1.0 / 2
           d = -1.0 + d
         end
-        @cannon_dir += d * 0.1
+        @cannon_dir2 = d
       end
+
+      # 相手の方向に合わせる
+      if ext_button.btR1.press?
+        d = @pos.angle_to(@target.pos) - @cannon_dir.modulo(1.0)
+        if d < -1.0 / 2
+          d = 1.0 + d
+        elsif d > 1.0 / 2
+          d = -1.0 + d
+        end
+        @cannon_dir2 = d
+        # # ただしスピードが落ちる
+        # @speed *= 0.9
+      end
+
+      @cannon_dir += @cannon_dir2 * 0.08 # 後ろの方にはなかなか向けられない
 
       vputs "cannon_dir2: #{@cannon_dir2}" if $DEBUG
       vputs "cannon_dir: #{@cannon_dir}" if $DEBUG
@@ -179,15 +198,16 @@ module BulletTrigger
 
   def update
     super
-    if ext_button.btR1.trigger? || frame.key_down?(SDL::Key::B)
+    # ext_button.btR2.count.modulo(10) == 1
+    if button.btC.trigger? || frame.key_down?(SDL::Key::B)
       if @bullet_count < @bullet_max
-        @speed -= 0.2           # 玉を打つと反動で下がる
-        frame.objects << Bullet.new(self, @pos.clone, @cannon_dir, 3)
+        @speed -= 0.2           # 玉を打つと反動で下がる。(FIXME: 砲台は前に向いていると限らないので間違い)
+        frame.objects << Bullet.new(self, @pos.clone, @cannon_dir, 4)
       end
     end
 
     # 溜め
-    if ext_button.btR1.press?
+    if button.btC.press?
       @power += 1
       @free_count = 0
     else
@@ -274,7 +294,7 @@ class Missile
     @tank = tank
     @pos = tank.pos
     @dir = dir + rand(-0.1..0.1)
-    @speed = rand(3..5.0)
+    @speed = rand(1.0..3.0)
 
     @size = 20
     @radius = 26
@@ -296,8 +316,8 @@ class Missile
       d = -1.0 + d
     end
     @dir += d * 0.04            # 誘導率
-    @speed += 0.01
-    @speed = Stylet::Etc.range_limited(@speed, (0..5))
+    # @speed += 0.01
+    @speed = Stylet::Etc.range_limited(@speed, (1..3))
     @radius += @speed
     _pos = @pos + Stylet::Vector.angle_at(@dir) * @radius
     frame.draw_triangle(_pos, :radius => @size, :angle => @dir)
