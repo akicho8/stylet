@@ -84,7 +84,7 @@ class Tank
       end
       # @accel *= 2 if @life <= 1
       @speed += @accel if @life >= 1
-      @speed *= 0.95              # 空気抵抗
+      @speed *= 0.98              # 空気抵抗
       @speed = Stylet::Etc.range_limited(@speed, (-1.0..5)) # 下るときと進むときの速度のリミット
       vputs "速度: #{@speed.round(4)}" if $DEBUG
     end
@@ -179,7 +179,7 @@ module BulletTrigger
 
   def update
     super
-    if button2.btR1.trigger? || frame.key_down?(SDL::Key::B)
+    if ext_button.btR1.trigger? || frame.key_down?(SDL::Key::B)
       if @bullet_count < @bullet_max
         @speed -= 0.2           # 玉を打つと反動で下がる
         frame.objects << Bullet.new(self, @pos.clone, @cannon_dir, 3)
@@ -187,7 +187,7 @@ module BulletTrigger
     end
 
     # 溜め
-    if button2.btR1.press?
+    if ext_button.btR1.press?
       @power += 1
       @free_count = 0
     else
