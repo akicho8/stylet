@@ -75,7 +75,7 @@ module Stylet
 
     # ジョイスティックの上とかにあるボタン類
     module ExtensionButton
-      Button = Struct.new(:btR1, :btR2)
+      Button = Struct.new(:btR1, :btR2, :btL1, :btL2)
 
       attr_reader :ext_button
 
