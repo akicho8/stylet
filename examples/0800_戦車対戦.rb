@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 # 戦車
 require_relative "helper"
-require 'forwardable'
 
 $DEBUG = false
 
 class Tank
-  extend Forwardable
-  def_delegators "Stylet::Base.active_frame", :draw_triangle, :rect, :count, :vputs, :joys, :draw_rectangle
-
+  include Stylet::Delegators
   include Stylet::Input::Base
   include Stylet::Input::ExtensionButton
 

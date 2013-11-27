@@ -43,6 +43,9 @@ require_relative 'mouse'
 # オーディオ系
 require_relative 'audio'
 
+# その他
+require_relative 'delegators'
+
 module Stylet
   class Base
     include Core
