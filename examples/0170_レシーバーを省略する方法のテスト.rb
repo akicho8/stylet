@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# .frame を書かない方法
+# .frame を書かない方法の実験
+# Stylet::Delegators の中身がこんな感じ
 #
 require_relative "helper"
 require 'forwardable'
