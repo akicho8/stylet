@@ -1,4 +1,4 @@
-/README.html
+/*.html
 /Gemfile.lock
 /*.gem
 /doc
@@ -7,4 +7,3 @@
 /stylet_math
 /examples/_*
 /_*
-

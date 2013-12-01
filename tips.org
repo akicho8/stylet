@@ -1,10 +1,14 @@
 #+OPTIONS: toc:nil num:nil author:nil creator:nil \n:nil |:t
 #+OPTIONS: @:t ::t ^:t -:t f:t *:t <:t
 
-** PS3コントローラーのアナログレバーの方向取得
+** PS3コントローラーのアナログレバーの方向を取得するには？
 
 : if (joy = frame.joys.first) && (al = joy.adjusted_analog_levers[:left]) && al.magnitude >= 0.5
 :   if al.magnitude >= 0.5
-:     rot = al.angle
+:     rotate = al.angle
 :   end
 : end
+
+** A, B ボタンで変数の値を増減するには？
+
+: rotate += (1.0 / 24) * (button.btB.repeat_0or1 - button.btC.repeat_0or1)

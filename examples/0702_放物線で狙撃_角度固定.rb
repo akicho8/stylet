@@ -40,6 +40,7 @@ class Bullet
     unless @pos.to_a.any?(&:nan?)
       draw_triangle(@pos, :radius => 16, :angle => @speed.angle)
       draw_vector(@speed * 8, :origin => @pos) # スピードベクトルの可視化
+      vputs "speed: #{@speed.round(2)}"
     end
   end
 
@@ -53,7 +54,7 @@ class App < Stylet::Base
   include Helper::MovablePoint
 
   setup do
-    self.title = "放物線 狙撃 角度固定"
+    self.title = "放物線 狙撃【角度固定】"
 
     @points = []
     @points << rect.center + Stylet::Vector.new(+rect.w / 4, 0)  # 右の点
@@ -71,10 +72,11 @@ class App < Stylet::Base
         @rot = al.angle
       end
     end
+    @rot += (1.0 / 24) * (button.btB.repeat_0or1 - button.btC.repeat_0or1)
     draw_vector(Stylet::Vector.angle_at(@rot).scale(32), :origin => @points[0])
 
     # 球発射
-    if count.modulo(15) == 1
+    if count.modulo(30) == 1
       @objects << Bullet.new(@points[0], cursor.point, @rot)
     end
   end
