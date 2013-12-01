@@ -22,15 +22,17 @@ class Bullet
     @g  = 2.0   # 上昇加速度(大きくすると高く上がる)
     @dt = 0.05  # 微分 (結局 y の差分は g * dt で出している)
 
-    @diff = @target - @pos                # 対象までの差分
-    @diff.y -= @frame**2 * (@g * @dt) / 2 # 上方向の加速度の初期値が求まる
-    @diff /= @frame                       # フレーム数で分割
+    @speed = @target - @pos                # 対象までの差分
+    @speed.y -= @frame**2 * (@g * @dt) / 2 # 上方向の加速度の初期値が求まる
+    @speed /= @frame                       # フレーム数で分割
+
   end
 
   def update
-    @diff.y += @g * @dt         # Yの加速度が変化していく
-    @pos += @diff
-    draw_triangle(@pos, :radius => 16, :angle => @pos.angle_to(@target))
+    @speed.y += @g * @dt         # Yの加速度が変化していく
+    @pos += @speed
+    draw_triangle(@pos, :radius => 16, :angle => @dif.angle)
+    draw_vector(@speed * 8, :origin => @pos) # スピードベクトルの可視化
   end
 
   def screen_out?

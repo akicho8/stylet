@@ -24,21 +24,22 @@ class Bullet
     @g = 2.0   # 重力加速度
     @dt = 0.05 # 微分 (結局 y の差分は g * dt で出している)
 
-    @diff = @target - @pos                # 対象までの差分
+    @speed = @target - @pos                # 対象までの差分
 
-    t = -(2 * @diff.x * rsin(@rot)) / (rcos(@rot) * @g * @dt) + (2 * @diff.y / (@g * @dt))
+    t = -(2 * @speed.x * rsin(@rot)) / (rcos(@rot) * @g * @dt) + (2 * @speed.y / (@g * @dt))
     t = Math.sqrt(t.abs)
 
-    @diff.x /= t
-    @diff.y = @diff.x / rcos(@rot) * rsin(@rot)
+    @speed.x /= t
+    @speed.y = @speed.x / rcos(@rot) * rsin(@rot)
   end
 
   def update
-    @diff.y += @g * @dt         # Yの加速度が変化していく
-    @pos += @diff
+    @speed.y += @g * @dt         # Yの加速度が変化していく
+    @pos += @speed
 
     unless @pos.to_a.any?(&:nan?)
-      draw_triangle(@pos, :radius => 16, :angle => @pos.angle_to(@target))
+      draw_triangle(@pos, :radius => 16, :angle => @speed.angle)
+      draw_vector(@speed * 8, :origin => @pos) # スピードベクトルの可視化
     end
   end
 
