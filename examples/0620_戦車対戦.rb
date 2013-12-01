@@ -65,7 +65,7 @@ class Tank
       end
       @handle_dir *= 0.95   # ハンドルを元に戻す
       handle_gap = 0.1     # ハンドルが曲る最大の角度
-      @handle_dir = Stylet::Etc.range_limited(@handle_dir, (-handle_gap..handle_gap))
+      @handle_dir = Stylet::Etc.clamp(@handle_dir, (-handle_gap..handle_gap))
       @body_dir += @handle_dir
       vputs "ハンドル: #{@handle_dir.round(4)}" if $DEBUG
       vputs "車体向き: #{@body_dir.round(4)}" if $DEBUG
@@ -83,7 +83,7 @@ class Tank
       # @accel *= 2 if @life <= 1
       @speed += @accel if @life >= 1
       @speed *= 0.97              # 空気抵抗
-      @speed = Stylet::Etc.range_limited(@speed, (-1.0..5)) # 下るときと進むときの速度のリミット
+      @speed = Stylet::Etc.clamp(@speed, (-1.0..5)) # 下るときと進むときの速度のリミット
       vputs "速度: #{@speed.round(4)}" if $DEBUG
     end
 
@@ -314,7 +314,7 @@ class Missile
     end
     @dir += d * 0.04            # 誘導率
     # @speed += 0.01
-    @speed = Stylet::Etc.range_limited(@speed, (1..3))
+    @speed = Stylet::Etc.clamp(@speed, (1..3))
     @radius += @speed
     _pos = @pos + Stylet::Vector.angle_at(@dir) * @radius
     frame.draw_triangle(_pos, :radius => @size, :angle => @dir)

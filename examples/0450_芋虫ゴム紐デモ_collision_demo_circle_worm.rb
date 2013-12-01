@@ -74,11 +74,11 @@ class App < Stylet::Base
     begin
       # 間接と間接の距離の調整
       @magnitude += (@button.btA.repeat - @button.btB.repeat)
-      @magnitude = Stylet::Etc.range_limited(@magnitude, (1..80))
+      @magnitude = Stylet::Etc.clamp(@magnitude, (1..80))
 
       # 固さ調整
       @hard_level += (@button.btC.repeat - @button.btD.repeat) * 0.1
-      @hard_level = Stylet::Etc.range_limited(@hard_level)
+      @hard_level = Stylet::Etc.clamp(@hard_level, 0.0..1.0)
 
       # 円の表示トグル
       if key_down?(SDL::Key::A)

@@ -37,7 +37,7 @@ class App < Stylet::Base
       if button.btA.press? || button.btB.press?
         # 重力調整
         @gravity += @gravity.normalize.scale(button.btA.repeat) + @gravity.normalize.scale(-button.btB.repeat)
-        @gravity.y = Stylet::Etc.range_limited(@gravity.y, (1..@radius))
+        @gravity.y = Stylet::Etc.clamp(@gravity.y, (1..@radius))
         @speed = 0
       end
 
