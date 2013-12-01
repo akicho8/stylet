@@ -20,6 +20,13 @@ module Stylet
         :draw_vector,
         :draw_arrow,
         :draw_polygon,
+
+        :check_fps,
+      ]
+
+      def_delegators "Stylet::Fee", *[
+        :rsin,
+        :rcos,
       ]
     end
   end
