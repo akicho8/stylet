@@ -25,11 +25,11 @@ module Helper
         key_counter_update_all
 
         if mouse.moved?
-          @cursor.point = @mouse.point.clone
+          @cursor.point.replace(@mouse.point.clone)
         end
 
         if angle = axis_angle
-          @cursor.point += Stylet::Vector.angle_at(angle) * @cursor.speed
+          @cursor.point.replace(@cursor.point + Stylet::Vector.angle_at(angle) * @cursor.speed)
         end
 
         if @cursor.display
@@ -42,6 +42,7 @@ module Helper
       attr_accessor :point, :speed, :vertex, :radius, :display
 
       def initialize
+        @point   = Stylet::Vector.zero
         @speed   = 5
         @vertex  = 3
         @radius  = 8

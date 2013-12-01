@@ -16,7 +16,7 @@ class App < Stylet::Base
   end
 
   update do
-    movable_point_update(@points, :origin => rect.center)
+    update_movable_points(@points, :origin => rect.center)
     @points.each.with_index{|e, i| draw_vector(e, :origin => rect.center, :label => "P#{i} #{e.round(2)}") }
 
     a, b = @points

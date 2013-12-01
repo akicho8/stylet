@@ -19,16 +19,18 @@ module Helper
       # end
     end
 
-    def movable_point_update(points, options = {})
+    def update_movable_points(points, options = {})
       options = {
         :origin => Stylet::Vector.zero,
+        :radius => 2,           # ドットの大きさ
+        :collision_radius => 8, # 当り判定の広さ
       }.merge(options)
 
       mpoint = mouse.point - options[:origin]
 
       unless @dragging_current
         if button.btA.trigger?
-          if v = points.find{|e|Stylet::CollisionSupport.squire_collision?(e, mpoint, :radius => 8)}
+          if v = points.find{|e|Stylet::CollisionSupport.squire_collision?(e, mpoint, :radius => options[:collision_radius])}
             @dragging_current = v
           end
         end
@@ -45,10 +47,10 @@ module Helper
       end
 
       if @dragging_current
-        draw_circle(options[:origin] + @dragging_current, :radius => 8, :vertex => 32)
+        draw_circle(options[:origin] + @dragging_current, :radius => options[:collision_radius], :vertex => 32)
       end
 
-      points.each {|e| draw_circle(options[:origin] + e, :radius => 2) }
+      points.each {|e| draw_circle(options[:origin] + e, :radius => options[:radius]) }
     end
   end
 end
@@ -66,7 +68,7 @@ if $0 == __FILE__
     end
 
     update do
-      movable_point_update(@points)
+      update_movable_points(@points)
       @points.each_with_index{|e, i| vputs("#{i}", :vector => e) }
     end
 

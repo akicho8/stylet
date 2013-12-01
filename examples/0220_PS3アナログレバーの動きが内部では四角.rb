@@ -7,7 +7,7 @@ ANALOG_LEVER_MAGNITUDE_MAX = Math.sqrt(ANALOG_LEVER_MAX**2 + ANALOG_LEVER_MAX**2
 
 Stylet.run do
   joys.each do |joy|
-    joy.analog_lever.each do |key, state|
+    joy.available_analog_levers.each do |key, state|
       v = Stylet::Vector.new(*state)
       vputs [joy.name, key, v.magnitude]
 

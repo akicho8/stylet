@@ -118,7 +118,7 @@ module BulletUzumaki
       if mod.zero?
         n = 4
         n.times{|i|
-          d = 1.0 / n * i + (Fee.sin(1.0 / 32 * div) * 0.1)
+          d = 1.0 / n * i + (Fee.rsin(1.0 / 32 * div) * 0.1)
           @win.bullets << Bullet.new(@win, @x, @y, d, 2)
         }
       end

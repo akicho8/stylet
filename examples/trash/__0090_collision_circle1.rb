@@ -21,8 +21,8 @@ class Ball
       if @win.button.btA.press?
         # カーソルの方向から円の位置の方向に一方的に移動させる
         dir = @win.cursor.point.angle_to(@pos)
-        @pos.x = @win.cursor.point.x + Stylet::Fee.cos(dir) * radius2
-        @pos.y = @win.cursor.point.y + Stylet::Fee.sin(dir) * radius2
+        @pos.x = @win.cursor.point.x + Stylet::Fee.rcos(dir) * radius2
+        @pos.y = @win.cursor.point.y + Stylet::Fee.rsin(dir) * radius2
       end
     end
     @win.draw_polygon(@pos, :radius => @radius, :vertex => 32)

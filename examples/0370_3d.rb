@@ -47,8 +47,8 @@ class App < Stylet::Base
 
     # @pointsA.collect{|p|
     #   s = Stylet::Vector.new
-    #   s.x = p.x * Stylet::Fee.cos(@ydir) - p.z * Stylet::Fee.sin(@ydir)
-    #   s.x = p.x * Stylet::Fee.cos(@ydir) - p.z * Stylet::Fee.sin(@ydir)
+    #   s.x = p.x * Stylet::Fee.rcos(@ydir) - p.z * Stylet::Fee.rsin(@ydir)
+    #   s.x = p.x * Stylet::Fee.rcos(@ydir) - p.z * Stylet::Fee.rsin(@ydir)
     #   ((long)box2z[i].vx * rsin8(r)) / 128 + ((long)box2z[i].vz * rcos8(r)) / 128;
     #   box2y[i].vy = box2z[i].vy;
     # }

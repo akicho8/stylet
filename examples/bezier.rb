@@ -32,21 +32,21 @@ class App < Stylet::Base
     end
 
     # ベジェのポイントを動かして表示
-    movable_point_update(@points)
+    update_movable_points(@points)
     @points.each_with_index{|e, i|vputs("b#{i} #{e}", :vector => e)}
 
     unless @points.empty?
       # 物体をいったりきたりさせる
       if false
         # ○の表示
-        pos = 0.5 + (Stylet::Fee.sin(count / 256.0) * 0.5)
+        pos = 0.5 + (Stylet::Fee.rsin(count / 256.0) * 0.5)
         pt = point_of_t(pos)
         draw_circle(pt, :radius => 64, :vertex => 32)
         vputs(pos)
       else
         # △の表示で進んでいる方向を頂点にする
-        t0 = 0.5 + (Stylet::Fee.sin(1.0 / 256 * count) * 0.5)       # 現在の位置(0.0〜1.0)
-        t1 = 0.5 + (Stylet::Fee.sin(1.0 / 256 * count.next) * 0.5)  # 未来の位置(0.0〜1.0)
+        t0 = 0.5 + (Stylet::Fee.rsin(1.0 / 256 * count) * 0.5)       # 現在の位置(0.0〜1.0)
+        t1 = 0.5 + (Stylet::Fee.rsin(1.0 / 256 * count.next) * 0.5)  # 未来の位置(0.0〜1.0)
         p0 = point_of_t(t0)                                              # 現在の座標
         p1 = point_of_t(t1)                                              # 未来の座標
         draw_triangle(p0, :angle => p0.angle_to(p1), :radius => 64) # 三角の頂点を未来への向きに設定して三角描画
@@ -91,7 +91,7 @@ class App
         end
 
         # 直線のポイント位置のドラッグ
-        movable_point_update(@line_ab)
+        update_movable_points(@line_ab)
 
         # ライン両端の番号とライン表示
         @line_ab.each_with_index{|e, i|vputs("p#{i} #{e}", :vector => e)}

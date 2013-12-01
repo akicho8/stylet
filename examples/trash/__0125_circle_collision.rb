@@ -33,8 +33,8 @@ class Ball
       @vr = 0
     end
     @r += @vr
-    @pos.x = @cpos.x + Stylet::Fee.cos(@dir) * @r
-    @pos.y = @cpos.y + Stylet::Fee.sin(@dir) * @r
+    @pos.x = @cpos.x + Stylet::Fee.rcos(@dir) * @r
+    @pos.y = @cpos.y + Stylet::Fee.rsin(@dir) * @r
     @win.draw_polygon(@pos, :radius => @radius, :vertex => 32)
   end
 
@@ -70,8 +70,8 @@ module Helper
       end
 
       if dir = axis_angle
-        @cursor.point.x += Stylet::Fee.cos(dir) * @cursor.speed
-        @cursor.point.y += Stylet::Fee.sin(dir) * @cursor.speed
+        @cursor.point.x += Stylet::Fee.rcos(dir) * @cursor.speed
+        @cursor.point.y += Stylet::Fee.rsin(dir) * @cursor.speed
       end
 
       vputs @mouse.point.to_a

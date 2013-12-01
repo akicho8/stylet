@@ -19,15 +19,15 @@ class SprineApp < Stylet::Base
   update do
     a = spline_stream(@points, 256) # 点と点の間をN分割する
     a.each_cons(2){|a, b| draw_line(a, b) }
-    movable_point_update(@points)
+    update_movable_points(@points)
     @points.each_with_index{|e, i| vputs("#{i}", :vector => e) }
     ship(a)
   end
 
   def ship(a)
     # 区間をN分割なので角に来るとブレーキがかかる感じになる
-    t0 = 0.5 + (Stylet::Fee.sin(1.0 / 256 / 4 * (count +  0)) * 0.5) # 現在の位置(0.0〜1.0)
-    t1 = 0.5 + (Stylet::Fee.sin(1.0 / 256 / 4 * (count + 16)) * 0.5) # 現在の位置(0.0〜1.0)
+    t0 = 0.5 + (Stylet::Fee.rsin(1.0 / 256 / 4 * (count +  0)) * 0.5) # 現在の位置(0.0〜1.0)
+    t1 = 0.5 + (Stylet::Fee.rsin(1.0 / 256 / 4 * (count + 16)) * 0.5) # 現在の位置(0.0〜1.0)
     p0 = a[((a.size - 1).to_f * t0).to_i]                            # 現在の座標
     p1 = a[((a.size - 1).to_f * t1).to_i]                            # 現在の座標
     draw_triangle(p0, :angle => p0.angle_to(p1), :vertex => 3)

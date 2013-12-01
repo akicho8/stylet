@@ -21,8 +21,8 @@ class Ball
   #
   def pos_new(count)
     pos = Stylet::Vector.new
-    pos.x = Stylet::Fee.cos(1.0 / 512 * (count * frame.xc + @index * 24)) * frame.rect.w * 0.4
-    pos.y = Stylet::Fee.sin(1.0 / 512 * (count * frame.yc + @index * 24)) * frame.rect.h * 0.4
+    pos.x = Stylet::Fee.rcos(1.0 / 512 * (count * frame.xc + @index * 24)) * frame.rect.w * 0.4
+    pos.y = Stylet::Fee.rsin(1.0 / 512 * (count * frame.yc + @index * 24)) * frame.rect.h * 0.4
     frame.rect.center + pos
   end
 end
