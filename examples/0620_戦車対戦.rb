@@ -49,17 +49,24 @@ class Tank
     # ハンドル
     begin
       @handle_adir = 0
-      if axis.left.press? || axis.right.press?
+
+      if button_obj = Stylet::Input::Support.preference_key(ext_button.btL2, ext_button.btR2)
         # ハンドルの強さ。大きいと小回りが効く。
+        @handle_adir = 0.0005
+        if button_obj == ext_button.btL2
+          @handle_adir *= -1
+        end
+      elsif axis.left.press? || axis.right.press?
         @handle_adir = 0.0005
         if axis.left.press?
           @handle_adir *= -1
         end
       end
+
       @handle_dir += @handle_adir
       # ハンドルの角度の減速度(1.00なら車体が回りっぱなしになる)
       if @old_pos.truncate == @pos.truncate
-        # @handle_dir *= 0.8  # 止まっている場合はハンドルがなかなか効かない(普通の車なら0.0)
+        @handle_dir *= 0.5  # 止まっている場合はハンドルがなかなか効かない(普通の車なら0.0)
       else
         #   @handle_dir *= 1.0  # 動いている状態ではハンドルが効きやすい
       end
@@ -74,15 +81,15 @@ class Tank
     # アクセル
     begin
       @accel = 0
-      if axis.up.press?
+      if button.btA.press?
         @accel = 0.06             # 前の進むときの加速度
       end
-      if axis.down.press?
+      if button.btD.press?
         @accel = -0.06            # ブレーキの効き具合い
       end
       # @accel *= 2 if @life <= 1
       @speed += @accel if @life >= 1
-      @speed *= 0.97              # 空気抵抗
+      @speed *= 0.999              # 空気抵抗
       @speed = Stylet::Etc.clamp(@speed, (-1.0..5)) # 下るときと進むときの速度のリミット
       vputs "速度: #{@speed.round(4)}" if $DEBUG
     end
@@ -95,51 +102,26 @@ class Tank
 
     # 砲台
     begin
-      # 砲台をアナログレバーの方向に向ける
-      @cannon_dir2 = 0
-
       # 指定の方向に合わせる
       if joy = joys[@joystick_index]
         vec = joy.adjusted_analog_levers[:right]
         if vec.magnitude > 0.5
-          # FIXME: ライブラリ化
-          d = vec.angle.modulo(1.0) - @cannon_dir.modulo(1.0)
-          if d < -1.0 / 2
-            d = 1.0 + d
-          elsif d > 1.0 / 2
-            d = -1.0 + d
-          end
-          @cannon_dir2 = d
+          @cannon_dir += Stylet::Etc.shortest_angular_difference(vec.angle, @cannon_dir) * 0.1
         end
       end
 
-      # 車体の向きに合わせる
-      if ext_button.btL1.press?
-        d = @body_dir.modulo(1.0) - @cannon_dir.modulo(1.0)
-        if d < -1.0 / 2
-          d = 1.0 + d
-        elsif d > 1.0 / 2
-          d = -1.0 + d
+      if false
+        # 相手の方向に合わせる
+        if ext_button.btR1.press?
+          @cannon_dir2 = Stylet::Etc.shortest_angular_difference(@pos.angle_to(@target.pos), @cannon_dir)
+          # # ただしスピードが落ちる
+          # @speed *= 0.9
         end
-        @cannon_dir2 = d
       end
 
-      # 相手の方向に合わせる
-      if ext_button.btR1.press?
-        d = @pos.angle_to(@target.pos) - @cannon_dir.modulo(1.0)
-        if d < -1.0 / 2
-          d = 1.0 + d
-        elsif d > 1.0 / 2
-          d = -1.0 + d
-        end
-        @cannon_dir2 = d
-        # # ただしスピードが落ちる
-        # @speed *= 0.9
-      end
+      # ゆっくりと砲台を車体の方向に向けていく
+      @cannon_dir += Stylet::Etc.shortest_angular_difference(@body_dir, @cannon_dir) * 0.08
 
-      @cannon_dir += @cannon_dir2 * 0.08 # 後ろの方にはなかなか向けられない
-
-      vputs "cannon_dir2: #{@cannon_dir2}" if $DEBUG
       vputs "cannon_dir: #{@cannon_dir}" if $DEBUG
     end
 
@@ -154,10 +136,14 @@ class Tank
     end
 
     # 粉塵
-    if false
+    if true
       if @accel.nonzero? && @speed >= 1.0
         if count.modulo(3).zero?
-          frame.objects << Dust.new(@pos, @body_dir + 0.5 + rand(-0.10..0.10), @speed * rand(6..8), rand(0.7..0.9), rand(15..20))
+          (@speed * 4).round.times do
+            if rand(3).zero?
+              frame.objects << Dust.new(@pos, @body_dir + 0.5 + rand(-0.10..0.10), @speed * rand(6..8), rand(0.7..0.8), rand(15..20))
+            end
+          end
         end
       end
     end
@@ -195,16 +181,17 @@ module BulletTrigger
 
   def update
     super
-    # ext_button.btR2.count.modulo(10) == 1
-    if button.btC.trigger? || frame.key_down?(SDL::Key::B)
+    bt = ext_button.btR1
+
+    if bt.trigger? || frame.key_down?(SDL::Key::B)
       if @bullet_count < @bullet_max
-        @speed -= 0.2           # 玉を打つと反動で下がる。(FIXME: 砲台は前に向いていると限らないので間違い)
-        frame.objects << Bullet.new(self, @pos.clone, @cannon_dir, 4)
+        @speed -= 0.8           # 玉を打つと反動で下がる。(BUG: 横に向けて砲台を打っているときに後車するのはおかしい)
+        frame.objects << Bullet.new(self, @pos.clone, @cannon_dir, 8)
       end
     end
 
     # 溜め
-    if button.btC.press?
+    if bt.press?
       @power += 1
       @free_count = 0
     else
