@@ -34,6 +34,7 @@ require_relative 'font'
 require_relative 'draw_support/circle'
 require_relative 'draw_support/polygon'
 require_relative 'draw_support/arrow'
+require_relative 'draw_support/bar'
 
 # 入力系
 require_relative 'joystick'

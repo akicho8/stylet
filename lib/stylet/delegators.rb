@@ -12,6 +12,7 @@ module Stylet
         :rect,
         :count,
         :joys,
+        :draw_dot,
         :draw_line,
         :draw_circle,
         :draw_triangle,

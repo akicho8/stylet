@@ -11,4 +11,6 @@
 
 ** A, B ボタンで変数の値を増減するには？
 
-: rotate += (1.0 / 24) * (button.btB.repeat_0or1 - button.btC.repeat_0or1)
+: index += button.btA.repeat_0or1 - button.btB.repeat_0or1
+
+: rotate += (1.0 / 24) * (button.btA.repeat_0or1 - button.btB.repeat_0or1)

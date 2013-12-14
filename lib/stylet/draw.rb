@@ -127,11 +127,6 @@ module Stylet
       @screen.send(method, x, y, w, h, Palette[options[:color]])
     end
 
-    # def fill_rect(x, y, w, h, color = "white")
-    #   return if w.abs.zero? || h.abs.zero?
-    #   @screen.fill_rect(x, y, w.abs - 1, h.abs - 1, Palette[color])
-    # end
-
     def draw_line(p0, p1, options = {})
       options = {
         :color => "foreground",
@@ -142,13 +137,13 @@ module Stylet
       # raise error
     end
 
+    def draw_dot(p0, options = {})
+      draw_line(p0, p0, options)
+    end
+
     def draw_rect(rect, options = {})
       __draw_rect(rect.x, rect.y, rect.w, rect.h, options)
     end
-
-    # def __fill_rect2(rect)
-    #   fill_rect(rect.x, rect.y, rect.w, rect.h, color)
-    # end
 
     def save_bmp(fname)
       @screen.save_bmp(fname)
