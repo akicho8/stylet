@@ -46,9 +46,9 @@ end
 module Helper
   module HandCursor
     include Stylet::Input::Base
-    include Stylet::Input::StandardKeybord
-    include Stylet::Input::JoystickBinding
-    include Stylet::Input::MouseButtonAsCounter
+    include Stylet::Input::StandardKeybordBind
+    include Stylet::Input::JoystickBindMethod
+    include Stylet::Input::MouseButtonBind
 
     setup do
       super if defined? super

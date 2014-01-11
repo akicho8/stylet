@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 require "./setup"
-frame.run(:title => "(title)") do
-  frame.vputs frame.count
+__frame__.run(:title => "(title)") do
+  __frame__.vputs __frame__.count
 end

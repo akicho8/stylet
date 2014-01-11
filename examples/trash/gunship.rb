@@ -36,6 +36,6 @@ class GunShip
       end
     end
 
-    @win.draw_rect(Stylet::Rect.new(@pos.x - @size, @pos.y - @size, @size * 2, @size * 2))
+    @win.draw_rect(Stylet::Rect4.new(@pos.x - @size, @pos.y - @size, @size * 2, @size * 2))
   end
 end

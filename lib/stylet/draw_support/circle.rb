@@ -38,7 +38,7 @@ module Stylet
     end
 
     # 長方形
-    def draw_rectangle(p0, options = {})
+    def draw_angle_rect(p0, options = {})
       options = {
         :radius => 64,       # 半径
         :angle  => Fee.r270, # 長方形の細長い部分の方向
@@ -58,7 +58,7 @@ module Stylet
       draw_circle(rect.center)
       draw_triangle(rect.center)
       draw_square(rect.center)
-      draw_rectangle(rect.center)
+      draw_angle_rect(rect.center)
     end
   end
 end

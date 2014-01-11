@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 module Stylet
   module Font
-    def before_run
+    def sdl_initialize
       super if defined? super
       SDL::TTF.init
       if Stylet.config.font_name
@@ -14,6 +14,7 @@ module Stylet
           end
         end
       end
+      p ["#{__FILE__}:#{__LINE__}", __method__]
     end
 
     def before_draw
@@ -28,32 +29,36 @@ module Stylet
       end
     end
 
-    # def vprint(x, y, str)
-    #   str = str.to_s
-    #   return if str.empty?
-    #   if @font
-    #     @font.drawBlendedUTF8(@screen, str, x, y, *Palette["font"])
-    #   end
-    # end
+    def update                  # FIXME: update をつかわないようにする
+      super
+      if Stylet.config.production_keys.any?{|key|key_down?(key)}
+        Stylet.production = !Stylet.production
+      end
+    end
+
+    def dputs(*args)
+      return if Stylet.production
+      vputs(*args)
+    end
 
     #
     # フォント表示
     #
-    #   vputs "Hello"                             # 垂れ流し
+    #   vputs "Hello"                               # 垂れ流し
     #   vputs "Hello", :vector => Vector.new(1, 2)  # 座標指定
     #
-    def vputs(str, options = {})
+    def vputs(str, vector: nil, color: "font")
       return unless @font
       str = str.to_s
       return if str.empty?
 
-      if options[:vector]
+      if vector
         begin
-          @font.drawBlendedUTF8(@screen, str, options[:vector].x, options[:vector].y, *Palette["font"])
+          @font.drawBlendedUTF8(@screen, str, vector.x, vector.y, *Palette[color])
         rescue RangeError
         end
       else
-        vputs(str, :vector => Vector.new(0, @__vputs_lines * (@font.line_skip + Stylet.config.font_margin)))
+        vputs(str, :vector => Vector.new(0, @__vputs_lines * (@font.line_skip + Stylet.config.font_margin)), :color => color)
         @__vputs_lines += 1
       end
     end

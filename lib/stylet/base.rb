@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-require "stylet_math/all"
+require 'stylet_math/all'
 
 # gem
 require 'sdl'
@@ -16,7 +16,7 @@ require 'stylet/config'
 
 # 汎用ライブラリ
 require_relative 'palette'
-require_relative 'vsync_wait'
+require_relative 'fps_adjust'
 require_relative 'check_fps'
 require_relative 'logger'
 require_relative 'rect'
@@ -25,10 +25,11 @@ require_relative 'collision_support'
 # 描画系
 require_relative 'core'
 require_relative 'callbacks'
-require_relative 'pause'
+require_relative 'system_pause'
 require_relative 'cl_options'
 require_relative 'draw'
 require_relative 'font'
+require_relative 'shortcut'
 
 # 描画サポート
 require_relative 'draw_support/circle'
@@ -59,12 +60,11 @@ module Stylet
     include Mouse
     include Pause
     include ClOptions
+    include Shortcut
+    include Delegators
   end
 end
 
 if $0 == __FILE__
-  count = 0
-  Stylet::Base.run do |win|
-    win.vputs(count += 1)
-  end
+  Stylet::Base.run
 end

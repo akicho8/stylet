@@ -13,7 +13,7 @@ module Stylet
       # キーリピート2としたときの挙動
       # 3フレーム目に押された場合
       #
-      #        2 3 4 5 6 7 (frame)
+      #        2 3 4 5 6 7 (__frame__)
       #  count 0 1 2 3 4 5
       # repeat 0 1 0 0 2 3
       #            ^ ^  の数(1と2の間がの数)がkey_repeat
@@ -31,9 +31,10 @@ module Stylet
       end
 
       attr_reader :mark, :count, :free_count
+      attr_accessor :state
 
       def initialize(mark = "?")
-        @mark = mark.to_s.scan(/./) # "AL" だったら A と L に対応
+        @mark = mark.to_s.chars # "AL" だったら A と L に対応
         @count = 0
         @free_count = 0
         @state = false              # 直近のフラグ
@@ -48,14 +49,14 @@ module Stylet
       #     obj << 1
       #     obj << true
       #
-      def <<(arg)
-        case arg
+      def <<(value)
+        case value
         when String
-          arg = !!@mark.any?{|m|arg.include?(m)}
+          value = !!@mark.any?{|m|value.include?(m)}
         when Fixnum
-          arg = arg.nonzero?
+          value = value.nonzero?
         end
-        @state |= arg
+        @state |= value
       end
 
       # 更新する前のon/off状態を取得(廃止予定)
@@ -82,12 +83,12 @@ module Stylet
       # キーリピート2としたときの挙動
       # 3フレーム目に押された場合
       #
-      #        2 3 4 5 6 7 (frame)
+      #        2 3 4 5 6 7 (__frame__)
       #  count 0 1 2 3 4 5
       # repeat 0 1 0 0 2 3
       #            ^ ^  の数(1と2の間がの数)がkey_repeat
       #
-      def repeat(key_repeat = 12)
+      def repeat(key_repeat = 12) # FIXME
         self.class.repeat(@count, key_repeat)
       end
 

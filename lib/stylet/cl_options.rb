@@ -15,11 +15,13 @@ module Stylet
       oparser = OptionParser.new do |oparser|
         oparser.on("--shutdown=INTEGER", Integer){|v|@cl_options[:shutdown] = v}
         oparser.on("-f", "--full-screen", TrueClass){|v|Stylet.config.full_screen = true}
-        oparser.on("-p", "--production", TrueClass){|v|Stylet.config.production = true}
+        oparser.on("-p", "--production", TrueClass){|v|Stylet.production = true}
         oparser.on("-s", "--screen-size=SIZE", String){|v|Stylet.config.screen_size = [*v.scan(/\d+/).collect(&:to_i)]}
         oparser.on("-c", "--color-depth=DEPTH", Integer){|v|Stylet.config.color_depth = v}
       end
-      oparser.parse(ARGV)
+      if Stylet.config.optparse_enable
+        oparser.parse(ARGV)
+      end
     end
 
     def update

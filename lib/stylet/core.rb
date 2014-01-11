@@ -30,11 +30,12 @@ module Stylet
       Stylet.logger
     end
 
-    def before_run
-      return if @initialized
+    def sdl_initialize
+      # return if @initialized # 他の sdl_initialize は何度も呼ばれてるのであえて外してみる
       SDL.init(@init_code)
       logger.debug "SDL.init #{'%08x' % @init_code}" if logger
       @initialized = true
+      p ["#{__FILE__}:#{__LINE__}", __method__]
     end
 
     def setup
@@ -61,35 +62,38 @@ module Stylet
       if options[:title]
         @title = options[:title]
       end
-      before_run                # SDL.init(@init_code)
-      setup
+      sdl_initialize                # SDL.init(@init_code)
+      setup                         # for user
       main_loop(&block)
       after_run                 # @screen.destroy
     end
 
-    private
-
     def main_loop(&block)
       catch(:exit) do
         loop do
-          polling
-          if pause?
-            next
-          end
-          before_draw           # @__vputs_lines = 0
-          background_clear
-          before_update         # for vputs(system_line)
-          update                # ユーザー用
-          if block_given?
-            if block.arity == 1
-              block.call(self)
-            else
-              instance_eval(&block)
-            end
-          end
-          after_draw            # for @screen.flip
+          next_frame(&block)
         end
       end
+    end
+
+    def next_frame(&block)
+      raise "SDL is not initialized" unless @initialized
+      polling
+      if pause?
+        return
+      end
+      before_draw           # @__vputs_lines = 0
+      background_clear
+      before_update         # vputs(system_line)
+      update                # for user
+      if block_given?
+        if block.arity == 1
+          block.call(self)
+        else
+          instance_eval(&block)
+        end
+      end
+      after_draw            # @screen.flip
     end
   end
 end

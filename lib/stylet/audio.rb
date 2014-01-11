@@ -1,35 +1,36 @@
 # -*- coding: utf-8 -*-
-
-require_relative "config"
-require_relative "logger"
-
+require "pathname"
 require "singleton"
+require "forwardable"
 
 module Stylet
-  #
-  # 曲関連
-  #
-  #   filename = File.expand_path(File.join(File.dirname(__FILE__), "assets/bgm.wav"))
-  #   Stylet::Audio.instance.play(filename) # 曲再生
-  #   p Stylet::Audio.instance.play?        #=> true (ループすることに注意)
-  #   sleep(3)
-  #   p Stylet::Audio.instance.fade_out      # フェイドアウト
-  #   nil while Stylet::Audio.instance.play? # フェイドアウトするまで待つ
-  #
   class Audio
     include Singleton
 
-    # 曲も効果音も必ず初期化することになる
     def initialize
       SDL.initSubSystem(SDL::INIT_AUDIO)
       SDL::Mixer.open(Stylet.config.sound_freq)
       Stylet.logger.debug "driver_name: #{SDL::Mixer.driver_name}" if Stylet.logger
     end
+  end
+
+  module Music
+    extend self
 
     # mp3,wav,mod等を再生する(再生できるチャンネルは1つだけ)
-    def play(fname)
-      Stylet.logger.debug "play: #{fname}" if Stylet.logger
-      SDL::Mixer.play_music(SDL::Mixer::Music.load(fname), -1)
+    def play(filename, volume: nil)
+      Audio.instance
+      filename = Pathname(filename).expand_path
+      if filename.exist?
+        Stylet.logger.debug "play: #{filename}" if Stylet.logger
+        SDL::Mixer.play_music(SDL::Mixer::Music.load(filename.to_s), -1)
+        self.volume = volume if volume
+      end
+    end
+
+    def volume=(v)
+      v = (v / 1.0 * 128).to_i if v.kind_of? Float
+      SDL::Mixer.set_volume_music(v)
     end
 
     # 曲の再生中？
@@ -43,102 +44,99 @@ module Stylet
     end
 
     # フェイドインで入れる
-    def fade_in(fname, ms=1000)
-      SDL::Mixer.fade_in_music(SDL::Mixer::Music.load(fname), -1, ms)
+    def fade_in(filename, ms=1000)
+      filename = Pathname(filename).expand_path.to_s
+      SDL::Mixer.fade_in_music(SDL::Mixer::Music.load(filename), -1, ms)
     end
 
     # フェイドアウト
     def fade_out(ms=1000)
       SDL::Mixer.fade_out_music(ms)
     end
+  end
 
-    # 効果音関連はここからアクセスする
-    #   Stylet::Audio.instance.se_stock.load_files(filenames...)
-    #   Stylet::Audio.instance.se_stock["se"].play
-    def se_stock
-      @se_stock ||= SeStock.new
+  # 複数の効果音
+  module SE
+    extend self
+
+    @data = {}
+
+    def [](key)
+      @data[key.to_sym] || NullEffect.new
     end
 
-    # 複数の効果音
-    class SeStock
-      def initialize
-        @files = {}
+    def load_file(filename, volume: nil, key: nil)
+      filename = Pathname(filename).expand_path
+      return unless filename.exist?
+      key ||= filename.basename(".*").to_s
+      key = key.to_sym
+      return if @data[key]
+
+      Audio.instance
+      Stylet.logger.debug "load_file: #{filename}" if Stylet.logger
+      index = @data.size
+      @channel_count = SDL::Mixer.allocate_channels(index.next)
+      se = SoundEffect.new(index, SDL::Mixer::Wave.load(filename.to_s))
+      se.volume = volume if volume
+      @data[key] = se
+    end
+
+    def wait
+      nil while @data.values.any?{|e|e.play?}
+    end
+
+    def inspect
+      out = ""
+      out << "spec=#{SDL::Mixer.spec.inspect}\n"
+      out << "@channel_count=#{@channel_count.inspect}\n"
+      out << "@data.keys=#{@data.keys.inspect}"
+    end
+
+    class Base
+      def play
       end
 
-      # @files には直接アクセスさせない
-      #   Stylet::Audio.instance.se_stock["se"].play
-      def [](key)
-        @files[key] || NullEffect.new
+      def play_if_halt
+        unless play?
+          play
+        end
       end
 
-      # 複数ファイルの一括読み込み
-      def load_files(filenames)
-        filenames.each {|filename| load_file(filename) }
+      def play?
+        false
       end
 
-      # 単体ファイルの読み込み
-      def load_file(filename)
-        filename = Pathname(filename).expand_path
-        key = filename.basename(".*").to_s
-        Stylet.logger.debug "load_file: #{filename}" if Stylet.logger
-        index = @files.size
-        @channel_count = SDL::Mixer.allocate_channels(index.next)
-        @files[key] = SoundEffect.new(index, SDL::Mixer::Wave.load(filename.to_s))
+      def halt
       end
 
-      # いずれかの効果音が再生中なら終わるまで待つ(デバッグ用)
-      def wait
-        nil while @files.values.any?{|e|e.play?}
+      def volume=(v)
+      end
+    end
+
+    class NullEffect < Base
+    end
+
+    class SoundEffect < Base
+      def initialize(ch, wave)
+        @ch = ch
+        @wave = wave
       end
 
-      def inspect
-        out = ""
-        out << "spec=#{SDL::Mixer.spec.inspect}\n"
-        out << "@channel_count=#{@channel_count.inspect}\n"
-        out << "@files.keys=#{@files.keys.inspect}"
+      def play
+        SDL::Mixer.play_channel(@ch, @wave, 0)
       end
 
-      class SoundEffectBase
-        def play
-        end
-
-        def play_if_stop
-          unless play?
-            play
-          end
-        end
-
-        def play?
-          false
-        end
-
-        def halt
-        end
-
-        alias stop halt
+      def play?
+        SDL::Mixer.play?(@ch)
       end
 
-      class NullEffect < SoundEffectBase
+      def halt
+        SDL::Mixer.halt(@ch)
       end
 
-      # 効果音一つ
-      class SoundEffect < SoundEffectBase
-        def initialize(ch, wave)
-          @ch = ch
-          @wave = wave
-        end
-
-        def play
-          SDL::Mixer.play_channel(@ch, @wave, 0)
-        end
-
-        def play?
-          SDL::Mixer.play?(@ch)
-        end
-
-        def halt
-          SDL::Mixer.halt(@ch)
-        end
+      def volume=(v)
+        v = (v / 1.0 * 128).to_i if v.kind_of? Float
+        @wave.set_volume(v)
       end
     end
   end
@@ -147,13 +145,13 @@ end
 if $0 == __FILE__
   require_relative "../stylet"
 
-  Stylet::Audio.instance.play("#{__dir__}/assets/bgm.wav")
-  p Stylet::Audio.instance.play?
+  Stylet::Music.play("#{__dir__}/assets/bgm.wav")
+  p Stylet::Music.play?
   sleep(3)
-  p Stylet::Audio.instance.fade_out
-  nil while Stylet::Audio.instance.play?
+  p Stylet::Music.fade_out
+  nil while Stylet::Music.play?
 
-  Stylet::Audio.instance.se_stock.load_file("#{__dir__}/assets/se.wav")
-  Stylet::Audio.instance.se_stock["se"].play
-  Stylet::Audio.instance.se_stock.wait
+  Stylet::SE.load_file("#{__dir__}/assets/se.wav")
+  Stylet::SE["se"].play
+  Stylet::SE.wait
 end

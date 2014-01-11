@@ -25,7 +25,7 @@
 
    以下が true なら次へ
 
-   : ruby -r sdl -e 'p [:sge, SDL.respond_to?(:autoLock)]'
+   : ruby -r sdl -e 'p [:sge, SDL.respond_to?(:auto_lock)]'
    : ruby -r sdl -e 'p [:mixer, SDL.constants.include?(:Mixer)]'
    : ruby -r sdl -e 'p [:ttf, SDL.constants.include?(:TTF)]'
 

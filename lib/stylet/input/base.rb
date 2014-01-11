@@ -24,8 +24,8 @@ module Stylet
 
       # レバーの更新前のビット状態を取得
       #   更新前であることに注意
-      def state_to_s
-        @axis.values.collect{|e|e.state_to_s}.to_s
+      def axis_state_str
+        @axis.values.collect{|e|e.state_to_s}.join
       end
 
       # # 適当に文字列化
@@ -43,7 +43,7 @@ module Stylet
       # end
 
       def to_s
-        key_objects.to_s
+        key_objects.join
       end
 
       # 左右の溜めが完了しているか?(次の状態から使えるか?)
@@ -75,13 +75,21 @@ module Stylet
 
     # ジョイスティックの上とかにあるボタン類
     module ExtensionButton
-      Button = Struct.new(:btR1, :btR2, :btL1, :btL2)
+      Button = Struct.new(:btR1, :btR2, :btL1, :btL2, :btSelect, :btStart, :btPS)
 
       attr_reader :ext_button
 
       def initialize
         super if defined? super
-        @ext_button = Button.new(KeyOne.new("R1"), KeyOne.new("R2"), KeyOne.new("L1"), KeyOne.new("L2"))
+        @ext_button = Button.new(*[
+            KeyOne.new("R1"),
+            KeyOne.new("R2"),
+            KeyOne.new("L1"),
+            KeyOne.new("L2"),
+            KeyOne.new("SELECT"),
+            KeyOne.new("START"),
+            KeyOne.new("PS"),
+          ])
       end
 
       def key_objects

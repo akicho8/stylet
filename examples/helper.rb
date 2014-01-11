@@ -6,9 +6,9 @@ module Helper
 
     include Stylet::Input::Base
     include Stylet::Input::ExtensionButton
-    include Stylet::Input::StandardKeybord
-    include Stylet::Input::JoystickBinding
-    include Stylet::Input::MouseButtonAsCounter
+    include Stylet::Input::StandardKeybordBind
+    include Stylet::Input::JoystickBindMethod
+    include Stylet::Input::MouseButtonBind
 
     included do
       attr_reader :cursor

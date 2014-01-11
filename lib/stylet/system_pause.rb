@@ -2,32 +2,20 @@
 
 module Stylet
   module Pause
-    attr_accessor :pause
-
     def initialize
       super
-      @pause = Info.new
-      @pause.enable = false
-      @pause.keys ||= [SDL::Key::P, SDL::Key::SPACE, SDL::Key::RETURN]
+      @pause = false
     end
 
     def polling
       super
-      if @pause.keys.any?{|key|key_down?(key)}
-        @pause.toggle
+      if Stylet.config.pause_keys.any?{|key|key_down?(key)}
+        @pause = !@pause
       end
     end
 
     def pause?
-      @pause.enable
-    end
-
-    class Info
-      attr_accessor :enable, :keys
-
-      def toggle
-        self.enable = !enable
-      end
+      @pause
     end
   end
 end

@@ -1,0 +1,28 @@
+# -*- coding: utf-8 -*-
+require_relative "helper"
+
+Stylet.configure do |config|
+  config.screen_size = [320/4, 240/4]
+end
+
+class App < Stylet::Base
+  setup do
+    SDL::Mouse.hide
+  end
+
+  update do
+    screen.h.times.each{|y|
+      screen.w.times.each{|x|
+        r = 127 * Stylet::Fee.rsin(1.0 / 256 / 2 * count * x)
+        g = 0
+        b = 127 * Stylet::Fee.rsin(1.0 / 256 / 2 * count * y)
+        screen[x, y] = screen.format.map_rgb(r, g, b)
+      }
+    }
+  end
+
+  def background_clear
+  end
+
+  run
+end

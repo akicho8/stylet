@@ -9,10 +9,11 @@ module Stylet
       @init_code |= SDL::INIT_JOYSTICK
     end
 
-    def before_run
+    def sdl_initialize
       super
       logger.debug "SDL::Joystick.num: #{SDL::Joystick.num}" if logger
       @joys = SDL::Joystick.num.times.collect{|i|JoystickAdapter.create(SDL::Joystick.open(i))}
+      p ["#{__FILE__}:#{__LINE__}", __method__]
     end
 
     def polling
@@ -22,9 +23,8 @@ module Stylet
 
     def before_update
       super
-      unless Stylet.config.production
-        @joys.each{|joy|vputs(joy.inspect)}
-      end
+      return if Stylet.production
+      @joys.each{|joy|vputs(joy.inspect)}
     end
   end
 end

@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-require 'forwardable'
+require "forwardable"
 require "active_support/concern"
 
 module Stylet
@@ -7,28 +6,34 @@ module Stylet
     extend ActiveSupport::Concern
     included do
       extend Forwardable
-      def_delegators "Stylet::Base.active_frame", *[
-        :vputs,
-        :rect,
-        :count,
-        :joys,
-        :draw_dot,
-        :draw_line,
-        :draw_circle,
-        :draw_triangle,
-        :draw_square,
-        :draw_rectangle,
-        :draw_vector,
-        :draw_arrow,
-        :draw_polygon,
 
-        :check_fps,
-      ]
+      unless self <= Stylet::Base
+        instance_delegate [
+          :vputs,
+          :dputs,
+          :rect,
+          :count,
+          :joys,
+          :draw_dot,
+          :draw_line,
+          :draw_circle,
+          :draw_triangle,
+          :draw_square,
+          :draw_angle_rect,
+          :draw_rect,
+          :draw_vector,
+          :draw_arrow,
+          :draw_polygon,
+          :screen,
 
-      def_delegators "Stylet::Fee", *[
-        :rsin,
-        :rcos,
-      ]
+          :check_fps,
+
+          :vec2,
+          :rect2,
+        ] => "Stylet::Base.active_frame"
+      end
+
+      instance_delegate [:rsin, :rcos] => "Stylet::Fee"
     end
   end
 end

@@ -9,7 +9,7 @@ module Stylet
   # スペックを配列で返す
   def suppprt
     @suppprt ||= [].tap do |a|
-      a << :sge   if SDL.respond_to?(:autoLock)
+      a << :sge   if SDL.respond_to?(:auto_lock)
       a << :mpeg  if SDL.constants.include?(:MPEG)
       a << :mixer if SDL.constants.include?(:Mixer)
       a << :gl    if SDL.constants.include?(:GL)
@@ -22,7 +22,7 @@ module Stylet
     Base.run(*args, &block)
   end
 
-  def frame(&block)
+  def __frame__(&block)
     if block
       if block.arity == 1
         block.call(Base.active_frame)
@@ -40,16 +40,16 @@ module Stylet
 end
 
 module Kernel
-  def frame(&block)
-    Stylet.frame(&block)
+  def __frame__(&block)
+    Stylet.__frame__(&block)
   end
 end
 
 if $0 == __FILE__
   Stylet.run do
     vputs "a"
-    frame.vputs "b"
-    frame { vputs "c" }
-    frame {|f| f.vputs "d" }
+    __frame__.vputs "b"
+    __frame__ { vputs "c" }
+    __frame__ {|f| f.vputs "d" }
   end
 end

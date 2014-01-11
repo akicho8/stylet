@@ -4,8 +4,8 @@
 #
 module Stylet
   module Input
-    module StandardKeybord
-      def update
+    module StandardKeybordBind
+      def update(*args)
         super if defined? super
         @axis.up    << SDL::Key.press?(SDL::Key::UP)
         @axis.down  << SDL::Key.press?(SDL::Key::DOWN)
@@ -18,8 +18,8 @@ module Stylet
       end
     end
 
-    module MouseButtonAsCounter
-      def update
+    module MouseButtonBind
+      def update(*args)
         super if defined? super
         @button.btA << @mouse.button.a
         @button.btB << @mouse.button.b
@@ -27,8 +27,8 @@ module Stylet
       end
     end
 
-    module ViLikeKeyboard
-      def update
+    module HjklKeyboardBind
+      def update(*args)
         super if defined? super
         @axis.up    << SDL::Key.press?(SDL::Key::K)
         @axis.down  << SDL::Key.press?(SDL::Key::J)
@@ -41,8 +41,9 @@ module Stylet
       end
     end
 
-    module JoystickBinding
+    module JoystickBindMethod
       def update_by_joy(joy)
+        return unless joy
         @axis.up    << joy.lever_on?(:up)
         @axis.down  << joy.lever_on?(:down)
         @axis.left  << joy.lever_on?(:left)
@@ -56,6 +57,9 @@ module Stylet
           @ext_button.btR2 << joy.button_on?(:btR2)
           @ext_button.btL1 << joy.button_on?(:btL1)
           @ext_button.btL2 << joy.button_on?(:btL2)
+          @ext_button.btSelect << joy.button_on?(:btSelect)
+          @ext_button.btStart  << joy.button_on?(:btStart)
+          @ext_button.btPS     << joy.button_on?(:btPS)
         end
       end
     end
