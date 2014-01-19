@@ -9,11 +9,12 @@ module Stylet
     ANALOG_LEVER_MAX = 32767
     ANALOG_LEVER_MAGNITUDE_MAX = Math.sqrt(ANALOG_LEVER_MAX**2 + ANALOG_LEVER_MAX**2)
 
-    cattr_accessor(:adapter_assigns) do
+    cattr_accessor :adapter_assigns do
       {
-        "USB Gamepad"                => :elecom_usb_pad, # ELECOMのファミコンっぽいやつ
-        "PLAYSTATION(R)3 Controller" => :ps3_standard,   # PS3の本物のコントローラ
-        "PS(R) Gamepad"              => :ps3_standard,   # PS3のコントローラのぱちもん
+        "PLAYSTATION(R)3 Controller" => :ps3_standard,        # 純正
+        "PS(R) Gamepad"              => :ps3_standard,        # 純正風ぱちもん
+        "USB Gamepad"                => :elecom_usb_pad,      # ELECOM ゲームパッド JC-U2410TBK http://www.amazon.co.jp/dp/B000FO600A
+        "REAL ARCADE Pro.V3"         => :real_arcade_pro_v3, # リアルアーケードPro.V3 SA(PS3用) http://www.amazon.co.jp/dp/B002YT9PSI
       }
     end
 
@@ -23,7 +24,7 @@ module Stylet
       adapter = "#{key}_adapter"
       require_relative "joystick_adapters/#{adapter}"
       Stylet.logger.info [object.index, name, adapter].inspect if Stylet.logger
-      "stylet/#{adapter}".classify.constantize.new(object)
+      "stylet/joystick_adapters/#{adapter}".classify.constantize.new(object)
     end
 
     attr_reader :object

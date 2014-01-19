@@ -1,10 +1,12 @@
+/stylet_math
+/vortex
+
 /*.html
 /Gemfile.lock
 /*.gem
 /doc
 /.yardoc
 /TODO
-/stylet_math
 /examples/_*
 /examples/assets/*
 /_*
