@@ -6,16 +6,6 @@ require_relative 'stylet/input'
 module Stylet
   extend self
 
-  # スペックを配列で返す
-  def suppprt
-    @suppprt ||= [].tap do |a|
-      a << :sge   if SDL.respond_to?(:auto_lock)
-      a << :mpeg  if SDL.constants.include?(:MPEG)
-      a << :mixer if SDL.constants.include?(:Mixer)
-      a << :gl    if SDL.constants.include?(:GL)
-    end
-  end
-
   # ショートカット
   #   Stylet.run { vputs "Hello" }
   def run(*args, &block)

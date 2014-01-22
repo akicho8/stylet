@@ -73,11 +73,11 @@ module Stylet
       return if @data[key]
 
       Audio.instance
-      Stylet.logger.debug "load_file: #{filename}" if Stylet.logger
       index = @data.size
       @channel_count = SDL::Mixer.allocate_channels(index.next)
       se = SoundEffect.new(index, SDL::Mixer::Wave.load(filename.to_s))
       se.volume = volume if volume
+      Stylet.logger.debug "load_file: #{filename} volume:#{volume} channel_count:#{@channel_count}" if Stylet.logger
       @data[key] = se
     end
 

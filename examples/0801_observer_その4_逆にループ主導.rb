@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Stylet::Base 側のループで描画されるのではなくPlayer側のタイミングで描画する
+# Stylet::Base 側のループで描画されるのではなくPlayer側のタイミングで描画するとみせかけて、やっぱり Stylet::Base 側のループで描画する
 require_relative "helper"
 
 class Player
@@ -17,8 +17,8 @@ class Window < SimpleDelegator
     player.add_observer(self)
   end
 
-  def update(player)            # observer として呼ばれる update
-    next_frame do               # Stylet::Base#update を呼ぶ。干渉しない。
+  def update(player)
+    next_frame do
       vputs player
     end
   end
@@ -26,6 +26,11 @@ end
 
 player = Player.new
 Window.new(player)
-loop do
+(60*3).times do
   player.render
+end
+
+Stylet::Base.run do
+  vputs player
+  vputs count
 end

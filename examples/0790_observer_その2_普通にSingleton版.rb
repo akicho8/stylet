@@ -16,7 +16,7 @@ class Window
     player.add_observer(self)
   end
 
-  def update(player)
+  def update(player)            # Stylet::Base を継承してないのでデフォルトの update で受けられる
     Stylet::Base.instance.next_frame do
       vputs player
     end
