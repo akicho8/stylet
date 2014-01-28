@@ -1,5 +1,15 @@
 # -*- coding: utf-8 -*-
 module Stylet
+  #
+  # Example:
+  #
+  #   obj = CheckFPS.new
+  #   loop do
+  #     obj.update
+  #     obj.fps # => 60
+  #     screen.flip
+  #   end
+  #
   class CheckFPS
     MSECOND = 1000.0
 
@@ -7,21 +17,21 @@ module Stylet
 
     # blockにはミリ秒単位で現在の時間を返すブロックを指定する
     def initialize(&block)
-      @block = block || proc{(Time.now.to_f * MSECOND).to_i}
+      @block = block || -> { Time.now.to_f * MSECOND }
       @old_time = @block.call
       @fps = 0
-      @count = 0
+      @counter = 0
     end
 
     # 毎フレーム呼ぶことでフレーム数を調べられる
     def update
-      @count += 1
+      @counter += 1
       v = @block.call
       t = v - @old_time
       if t > MSECOND
         @old_time = v
-        @fps = @count
-        @count = 0
+        @fps = @counter
+        @counter = 0
       end
     end
   end
