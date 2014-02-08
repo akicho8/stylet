@@ -82,9 +82,14 @@ module Stylet
       if pause?
         return
       end
+      after_draw            # @screen.flip
       before_draw           # @__vputs_lines = 0
       background_clear
       before_update         # vputs(system_line)
+
+      # ここからユーザーの処理
+      # ということは next_frame の中のブロックから呼ぶ必要はない？
+
       update                # for user
       if block_given?
         if block.arity == 1
@@ -93,7 +98,6 @@ module Stylet
           instance_eval(&block)
         end
       end
-      after_draw            # @screen.flip
     end
   end
 end
