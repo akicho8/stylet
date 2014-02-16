@@ -31,10 +31,12 @@ module Stylet
       end
 
       attr_reader :mark, :count, :free_count
+      attr_accessor :match_chars
       attr_accessor :state
 
-      def initialize(mark = "?")
-        @mark = mark.to_s.chars # "AL" だったら A と L に対応
+      def initialize(mark = "?", match_chars = nil)
+        @mark = mark.to_s.chars
+        @match_chars = (match_chars || mark).to_s.chars # # "AL" だったら A と L に対応
         @count = 0
         @free_count = 0
         @state = false              # 直近のフラグ
@@ -52,7 +54,7 @@ module Stylet
       def <<(value)
         case value
         when String
-          value = !!@mark.any?{|m|value.include?(m)}
+          value = !!@match_chars.any?{|m|value.include?(m)}
         when Fixnum
           value = value.nonzero?
         end

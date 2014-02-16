@@ -82,13 +82,13 @@ module Stylet
       def initialize
         super if defined? super
         @ext_button = Button.new(*[
-            KeyOne.new("R1"),
-            KeyOne.new("R2"),
-            KeyOne.new("L1"),
-            KeyOne.new("L2"),
-            KeyOne.new("SELECT"),
-            KeyOne.new("START"),
-            KeyOne.new("PS"),
+            KeyOne.new("R1", ""), # 第二引数は TextInputUnit が反応する文字
+            KeyOne.new("R2", ""),
+            KeyOne.new("L1", ""), # ホールド用 FIXME
+            KeyOne.new("L2", ""),
+            KeyOne.new("SELECT", ""),
+            KeyOne.new("START", ""),
+            KeyOne.new("PS", ""),
           ])
       end
 
