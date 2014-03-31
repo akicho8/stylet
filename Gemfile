@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.1.0'
+ruby '2.1.1'
 gemspec
 
 if File.exist? (path = File.expand_path(File.join(File.dirname(__FILE__), "stylet_math")))
