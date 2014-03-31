@@ -5,7 +5,7 @@ module Stylet
     #   開始地点のデフォルトは画面中央になる
     #   開始地点がわかっている場合は origin を指定すること
     #
-    #   draw_vector(Vector.new(100, 0), :origin => Vector.new(50, 50), :label => "ok")
+    #   draw_vector(vec2[100, 0], :origin => vec2[50, 50], :label => "ok")
     #
     #     p0 -----> p1 ok
     #
@@ -49,9 +49,9 @@ module Stylet
   if $0 == __FILE__
     require_relative "../../stylet"
     Base.run do
-      draw_arrow(rect.center, rect.center + Vector.new(50, 50))
-      draw_vector(Vector.new(100, -100), :origin => rect.center, :label => "ok")
-      draw_vector(Vector.new(100, 0), :origin => Vector.new(50, 50), :label => "ok")
+      draw_arrow(rect.center, rect.center + [50, 50])
+      draw_vector(vec2[100, -100], :origin => rect.center, :label => "ok")
+      draw_vector(vec2[100, 0], :origin => vec2[50, 50], :label => "ok")
     end
   end
 end

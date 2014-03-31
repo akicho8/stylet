@@ -163,7 +163,7 @@ module Stylet
 
     def before_update
       super
-      return if Stylet.production
+      # return if Stylet.production
       @check_fps.update
       vputs(system_line)
     end

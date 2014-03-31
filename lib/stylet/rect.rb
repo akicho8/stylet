@@ -34,7 +34,7 @@ module Stylet
 
     def initialize(x, y, w, h)
       super(x, y)
-      @wh = Vector.new(w, h)
+      @wh = Vector[w, h]
     end
 
     def w; @wh.x; end

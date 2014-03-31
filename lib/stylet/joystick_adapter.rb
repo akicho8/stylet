@@ -106,7 +106,7 @@ module Stylet
     # 調整済みアナログレバー
     def adjusted_analog_levers
       available_analog_levers.inject({}) do |hash, (key, xy)|
-        v = Vector.new(*xy)
+        v = vec2[*xy]
         m = v.magnitude
         if false
           # 取得した値をそのまま使うと斜めのベクトルが強くなりすぎる

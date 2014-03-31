@@ -17,7 +17,6 @@ module Stylet
   config.font_name        = "ipag-mona.ttf"
 
   config.font_size        = 18
-  config.font_margin      = 3 # 行
   config.font_bold        = false
 
   config.background_image = nil # "background.bmp"
