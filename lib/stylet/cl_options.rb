@@ -7,28 +7,40 @@ require "optparse"
 
 module Stylet
   module ClOptions
-    attr_reader :cl_options
+    module Base
+      extend ActiveSupport::Concern
 
-    def initialize
-      super if defined? super
-      @cl_options = {}
-      oparser = OptionParser.new do |oparser|
-        oparser.on("--shutdown=INTEGER", Integer){|v|@cl_options[:shutdown] = v}
-        oparser.on("-f", "--full-screen", TrueClass){|v|Stylet.config.full_screen = true}
-        oparser.on("-p", "--production", TrueClass){|v|Stylet.production = true}
-        oparser.on("-s", "--screen-size=SIZE", String){|v|Stylet.config.screen_size = [*v.scan(/\d+/).collect(&:to_i)]}
-        oparser.on("-c", "--color-depth=DEPTH", Integer){|v|Stylet.config.color_depth = v}
-      end
-      if Stylet.config.optparse_enable
-        oparser.parse(ARGV)
+      attr_reader :cl_options
+
+      def initialize
+        super if defined? super
+        @cl_options = {}
+        oparser = OptionParser.new do |oparser|
+          oparser.on("--shutdown=INTEGER", Integer){|v|@cl_options[:shutdown] = v}
+          oparser.on("-f", "--full-screen", TrueClass){|v|Stylet.config.full_screen = true}
+          oparser.on("-p", "--production", TrueClass){|v|Stylet.production = true}
+          oparser.on("-s", "--screen-size=SIZE", String){|v|Stylet.config.screen_size = [*v.scan(/\d+/).collect(&:to_i)]}
+          oparser.on("-c", "--color-depth=DEPTH", Integer){|v|Stylet.config.color_depth = v}
+        end
+        if Stylet.config.optparse_enable
+          oparser.parse(ARGV)
+        end
       end
     end
 
-    def update
-      super if defined? super
-      if @cl_options[:shutdown] && @count >= @cl_options[:shutdown]
-        throw :exit, :break
+    module Shutdown
+      def update
+        super if defined? super
+        if @cl_options[:shutdown] && @count >= @cl_options[:shutdown]
+          throw :exit, :break
+        end
       end
+    end
+
+    module All
+      extend ActiveSupport::Concern
+      include Base
+      include Shutdown
     end
   end
 end

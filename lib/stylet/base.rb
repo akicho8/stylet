@@ -59,7 +59,7 @@ module Stylet
     include Keyboard
     include Mouse
     include Pause
-    include ClOptions
+    include ClOptions::All
     include Shortcut
     include Delegators
   end
