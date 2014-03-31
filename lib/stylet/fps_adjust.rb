@@ -7,7 +7,7 @@ module Stylet
     MSECOND = 1000.0
 
     def self.slow_loop(fps)
-      if fps && fps.to_i > 0
+      if fps
         object = new(fps)
         loop do
           yield
@@ -21,8 +21,8 @@ module Stylet
     #
     # blockにはミリ秒単位で現在の時間を返すブロックを指定する
     #
-    def initialize(fps=60, &block)
-      @fps = fps.to_i
+    def initialize(fps = Stylet.config.fps, &block)
+      @fps = fps
       @block = block || proc{(Time.now.to_f * MSECOND).to_i}
       @old_time = @block.call
     end
@@ -31,7 +31,7 @@ module Stylet
     # Vsync待ち相当のウェイト
     #
     def wait
-      return if @fps == 0
+      return unless @fps
       loop do
         v = @block.call
         usetime = v - @old_time

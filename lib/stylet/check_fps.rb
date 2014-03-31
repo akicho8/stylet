@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 module Stylet
   #
+  # FPSの計測
+  #
   # Example:
   #
   #   obj = CheckFPS.new

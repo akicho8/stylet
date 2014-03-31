@@ -16,6 +16,7 @@ module Stylet
         super if defined? super
         @cl_options = {}
         oparser = OptionParser.new do |oparser|
+          oparser.on("--fps=INTEGER", Integer){|v|Stylet.config.fps = v}
           oparser.on("--shutdown=INTEGER", Integer){|v|@cl_options[:shutdown] = v}
           oparser.on("-f", "--full-screen", TrueClass){|v|Stylet.config.full_screen = true}
           oparser.on("-p", "--production", TrueClass){|v|Stylet.production = true}

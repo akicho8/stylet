@@ -6,6 +6,7 @@ module Stylet
 
   config_accessor :production
 
+  config.fps              = nil,
   config.screen_size      = [640, 480]
   config.full_screen      = false
   config.color_depth      = 16
