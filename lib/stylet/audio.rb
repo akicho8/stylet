@@ -19,11 +19,12 @@ module Stylet
 
     # mp3,wav,mod等を再生する(再生できるチャンネルは1つだけ)
     def play(filename, volume: nil)
+      return if Stylet.config.silent_music
       Audio.instance
       filename = Pathname(filename).expand_path
       if filename.exist?
         Stylet.logger.debug "play: #{filename}" if Stylet.logger
-        SDL::Mixer.play_music(SDL::Mixer::Music.load(filename.to_s), -1)
+        SDL::Mixer.play_music(load(filename), -1)
         self.volume = volume if volume
       end
     end
@@ -45,13 +46,17 @@ module Stylet
 
     # フェイドインで入れる
     def fade_in(filename, ms=1000)
-      filename = Pathname(filename).expand_path.to_s
-      SDL::Mixer.fade_in_music(SDL::Mixer::Music.load(filename), -1, ms)
+      return if Stylet.config.silent_music
+      SDL::Mixer.fade_in_music(load(filename), -1, ms)
     end
 
     # フェイドアウト
     def fade_out(ms=1000)
       SDL::Mixer.fade_out_music(ms)
+    end
+
+    def load(filename)
+      SDL::Mixer::Music.load(Pathname(filename).expand_path.to_s)
     end
   end
 

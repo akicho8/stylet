@@ -16,12 +16,13 @@ module Stylet
         super if defined? super
         @cl_options = {}
         oparser = OptionParser.new do |oparser|
-          oparser.on("--fps=INTEGER", Integer){|v|Stylet.config.fps = v}
-          oparser.on("--shutdown=INTEGER", Integer){|v|@cl_options[:shutdown] = v}
-          oparser.on("-f", "--full-screen", TrueClass){|v|Stylet.config.full_screen = true}
-          oparser.on("-p", "--production", TrueClass){|v|Stylet.production = true}
-          oparser.on("-s", "--screen-size=SIZE", String){|v|Stylet.config.screen_size = [*v.scan(/\d+/).collect(&:to_i)]}
-          oparser.on("-c", "--color-depth=DEPTH", Integer){|v|Stylet.config.color_depth = v}
+          oparser.on("--fps=INTEGER", Integer)             {|v| Stylet.config.fps = v                                        }
+          oparser.on("--shutdown=INTEGER", Integer)        {|v| @cl_options[:shutdown] = v                                   }
+          oparser.on("-f", "--full-screen", TrueClass)     {|v| Stylet.config.full_screen = true                             }
+          oparser.on("-p", "--production", TrueClass)      {|v| Stylet.production = true                                     }
+          oparser.on("-s", "--screen-size=SIZE", String)   {|v| Stylet.config.screen_size = [*v.scan(/\d+/).collect(&:to_i)] }
+          oparser.on("-c", "--color-depth=DEPTH", Integer) {|v| Stylet.config.color_depth = v                                }
+          oparser.on("-m", "--silent-music", TrueClass)    {|v| Stylet.config.silent_music = true                            }
         end
         if Stylet.config.optparse_enable
           oparser.parse(ARGV)

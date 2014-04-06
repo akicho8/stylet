@@ -28,4 +28,6 @@ module Stylet
 
   config.production       = false
   config.production_keys  = [SDL::Key::RETURN]
+
+  config.silent_music       = false
 end
