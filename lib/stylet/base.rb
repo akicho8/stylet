@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+# 数学系汎用
 require 'stylet_math/all'
 
 # gem

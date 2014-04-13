@@ -11,7 +11,7 @@ module Stylet
 
       attr_reader :axis, :button
 
-      def initialize
+      def initialize(*)
         super if defined? super
         @axis   = Axis.new(KeyOne.new("u"), KeyOne.new("d"), KeyOne.new("l"), KeyOne.new("r"))
         @button = Button.new(KeyOne.new("AL"), KeyOne.new("BR"), KeyOne.new("C"), KeyOne.new("D"))
@@ -79,7 +79,7 @@ module Stylet
 
       attr_reader :ext_button
 
-      def initialize
+      def initialize(*)
         super if defined? super
         @ext_button = Button.new(*[
             KeyOne.new("R1", ""), # 第二引数は TextInputUnit が反応する文字

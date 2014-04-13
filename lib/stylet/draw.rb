@@ -13,54 +13,55 @@ module Stylet
       @init_code |= SDL::INIT_VIDEO
     end
 
-    def sdl_initialize
+    def run_initializers
       super
+      init_on(:draw) do
+        @count = 0
+        @check_fps = CheckFPS.new
 
-      @count = 0
-      @check_fps = CheckFPS.new
+        options = Stylet.config.screen_options
+        if Stylet.config.full_screen
+          options |= SDL::FULLSCREEN
+        end
+        options |= SDL::HWACCEL
+        @screen ||= SDL::Screen.open(*Stylet.config.screen_size, Stylet.config.color_depth, options)
+        @rect = Rect2.new(@screen.w, @screen.h)
 
-      options = Stylet.config.screen_options
-      if Stylet.config.full_screen
-        options |= SDL::FULLSCREEN
-      end
-      options |= SDL::HWACCEL
-      @screen ||= SDL::Screen.open(*Stylet.config.screen_size, Stylet.config.color_depth, options)
-      @rect = Rect2.new(@screen.w, @screen.h)
+        @vi = SDL::Screen.info
+        @vi.class.instance_methods(false).each{|var|
+          p "#{var}: #{@vi.send(var)}"
+        }
 
-      @vi = SDL::Screen.info
-      @vi.class.instance_methods(false).each{|var|
-        p "#{var}: #{@vi.send(var)}"
-      }
+        if @title
+          self.title = title
+        end
 
-      if @title
-        self.title = title
-      end
-
-      unless @backgroud_image
-        if Stylet.config.background_image
-          file = Pathname(Stylet.config.background_image)
-          unless file.exist?
-            file = Pathname("#{__dir__}/assets/#{file}")
-          end
-          if file.exist?
-            bin = SDL::Surface.load(file.to_s) # SDL.image があれば BMP 以外をロードできる
-            if false
-              # これを設定すると黒色は透明色になって描画されない
-              bin.set_color_key(SDL::SRCCOLORKEY, 0)
+        unless @backgroud_image
+          if Stylet.config.background_image
+            file = Pathname(Stylet.config.background_image)
+            unless file.exist?
+              file = Pathname("#{__dir__}/assets/#{file}")
             end
-            @backgroud_image = bin.display_format
+            if file.exist?
+              bin = SDL::Surface.load(file.to_s) # SDL.image があれば BMP 以外をロードできる
+              if false
+                # これを設定すると黒色は透明色になって描画されない
+                bin.set_color_key(SDL::SRCCOLORKEY, 0)
+              end
+              @backgroud_image = bin.display_format
+            end
           end
         end
+
+        # background_clear
+
+        # SGE関係でウィンドウを自動ロックさせる(これは必要なのか？)
+        if SDL.respond_to?(:auto_lock)
+          SDL.auto_lock = true
+        end
+
+        p ["#{__FILE__}:#{__LINE__}", __method__]
       end
-
-      # background_clear
-
-      # SGE関係でウィンドウを自動ロックさせる(これは必要なのか？)
-      if SDL.respond_to?(:auto_lock)
-        SDL.auto_lock = true
-      end
-
-      p ["#{__FILE__}:#{__LINE__}", __method__]
     end
 
     # ハードウェアがダブルバッファ対応の場合、flipで自動的にVSYNCを待って切り替えるため

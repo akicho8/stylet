@@ -12,15 +12,13 @@ end
 
 class Window < SimpleDelegator
   def initialize(player)
-    super(Stylet::Base.instance)
-    sdl_initialize
+    super(Stylet::Base.active_frame)
     player.add_observer(self)
   end
 
-  def update(player)            # observer として呼ばれる update
-    next_frame do               # Stylet::Base#update を呼ぶ。干渉しない。
-      vputs player
-    end
+  def update(player)          # observer として呼ばれる update
+    next_frame                # Stylet::Base#update を呼ぶ。干渉しない。
+    vputs player
   end
 end
 

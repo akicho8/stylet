@@ -12,15 +12,13 @@ end
 
 class Window < SimpleDelegator
   def initialize(player)
-    super(Stylet::Base.instance)
-    sdl_initialize
+    super(Stylet::Base.active_frame)
     player.add_observer(self)
   end
 
   def update(player)
-    next_frame do
-      vputs player
-    end
+    next_frame
+    vputs player
   end
 end
 
@@ -28,9 +26,4 @@ player = Player.new
 Window.new(player)
 (60*3).times do
   player.render
-end
-
-Stylet::Base.run do
-  vputs player
-  vputs count
 end

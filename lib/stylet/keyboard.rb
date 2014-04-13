@@ -1,9 +1,12 @@
+# -*- coding: utf-8 -*-
 module Stylet
   module Keyboard
-    def sdl_initialize
+    def run_initializers
       super
-      SDL::Key.scan
-      p ["#{__FILE__}:#{__LINE__}", __method__]
+      init_on(:keyboard) do
+        # SDL::Key.press? のタイミングが難しくなるためとにかく最初に scan しておく
+        SDL::Key.scan
+      end
     end
 
     def polling

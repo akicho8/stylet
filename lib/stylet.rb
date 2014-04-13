@@ -2,6 +2,8 @@
 require_relative 'stylet/version'
 require_relative 'stylet/base'
 require_relative 'stylet/input'
+require_relative 'stylet/state'
+require_relative 'stylet/contrib/menu'
 
 module Stylet
   extend self

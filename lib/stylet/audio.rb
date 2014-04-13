@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# 表示系のライブラリとは独立
+
 require "pathname"
 require "singleton"
 require "forwardable"
@@ -6,6 +8,10 @@ require "forwardable"
 module Stylet
   class Audio
     include Singleton
+
+    class << self
+      alias setup_once instance
+    end
 
     def initialize
       SDL.initSubSystem(SDL::INIT_AUDIO)
@@ -20,7 +26,7 @@ module Stylet
     # mp3,wav,mod等を再生する(再生できるチャンネルは1つだけ)
     def play(filename, volume: nil)
       return if Stylet.config.silent_music
-      Audio.instance
+      Audio.setup_once
       filename = Pathname(filename).expand_path
       if filename.exist?
         Stylet.logger.debug "play: #{filename}" if Stylet.logger
@@ -61,6 +67,13 @@ module Stylet
   end
 
   # 複数の効果音
+  #
+  # Stylet::SE.load_file("path/to/foo.ogg")
+  # Stylet::SE[:foo].play
+  #
+  # Stylet::SE.load_file("path/to/foo.ogg", :key => :attack)
+  # Stylet::SE[:attack].play
+  #
   module SE
     extend self
 
@@ -72,12 +85,17 @@ module Stylet
 
     def load_file(filename, volume: nil, key: nil)
       filename = Pathname(filename).expand_path
-      return unless filename.exist?
+      unless filename.exist?
+        Stylet.logger.debug "#{filename} not found" if Stylet.logger
+        return
+      end
       key ||= filename.basename(".*").to_s
       key = key.to_sym
-      return if @data[key]
+      if @data[key]
+        return
+      end
 
-      Audio.instance
+      Audio.setup_once
       index = @data.size
       @channel_count = SDL::Mixer.allocate_channels(index.next)
       se = SoundEffect.new(index, SDL::Mixer::Wave.load(filename.to_s))
@@ -87,7 +105,7 @@ module Stylet
     end
 
     def wait
-      nil while @data.values.any?{|e|e.play?}
+      nil while @data.values.any? {|e| e.play? }
     end
 
     def inspect
@@ -122,6 +140,8 @@ module Stylet
     end
 
     class SoundEffect < Base
+      cattr_accessor(:volume_max) { 128 }
+
       def initialize(ch, wave)
         @ch = ch
         @wave = wave
@@ -140,8 +160,17 @@ module Stylet
       end
 
       def volume=(v)
-        v = (v / 1.0 * 128).to_i if v.kind_of? Float
-        @wave.set_volume(v)
+        @wave.set_volume(volume_cast(v))
+      end
+
+      private
+
+      def volume_cast(v)
+        if v.kind_of? Float
+          (v / 1.0 * volume_max).to_i
+        else
+          v
+        end
       end
     end
   end

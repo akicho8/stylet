@@ -5,7 +5,8 @@ module Stylet
 
     included do
       include Singleton
-      cattr_accessor :_active_frame
+
+      cattr_accessor :_active_instance
     end
 
     module ClassMethods
@@ -15,27 +16,36 @@ module Stylet
         active_frame.run(*args, &block)
       end
 
+      # すでにどこかで実行済みの場合は instance ではなく
+      # 先に実行された _active_instance の方を返す
+      # これで何度も初期化したり _active_instance が上書きされることがなくなる
+      def active_instance
+        @active_instance ||= _active_instance || instance
+      end
+
+      # run_initializers 実行済みの active_frame
       def active_frame
-        _active_frame || instance
+        @active_frame ||= active_instance.tap {|e| e.run_initializers }
       end
     end
 
     def initialize
+      raise "Singletonなのに再び初期化されている。Stylet::Base を継承したクラスを複数作っている？" if _active_instance
+      self._active_instance = self
+
       @init_code = 0
-      @initialized = false
-      @@_active_frame = self
+      @initialized = []
     end
 
     def logger
       Stylet.logger
     end
 
-    def sdl_initialize
-      # return if @initialized # 他の sdl_initialize は何度も呼ばれてるのであえて外してみる
-      SDL.init(@init_code)
-      logger.debug "SDL.init #{'%08x' % @init_code}" if logger
-      @initialized = true
-      p ["#{__FILE__}:#{__LINE__}", __method__]
+    def run_initializers
+      init_on(:core) do
+        SDL.init(@init_code)
+        logger.debug "SDL.init #{'%08x' % @init_code}"
+      end
     end
 
     def setup
@@ -62,10 +72,10 @@ module Stylet
       if options[:title]
         @title = options[:title]
       end
-      sdl_initialize                # SDL.init(@init_code)
+      run_initializers                # SDL.init(@init_code)
       setup                         # for user
       main_loop(&block)
-      after_run                 # @screen.destroy
+      # after_run                 # @screen.destroy
     end
 
     def main_loop(&block)
@@ -77,7 +87,7 @@ module Stylet
     end
 
     def next_frame(&block)
-      raise "SDL is not initialized" unless @initialized
+      raise "SDL is not initialized" if @initialized.empty?
       polling
       if pause?
         return
@@ -91,12 +101,23 @@ module Stylet
       # ということは next_frame の中のブロックから呼ぶ必要はない？
 
       update                # for user
+
       if block_given?
         if block.arity == 1
           block.call(self)
         else
           instance_eval(&block)
         end
+      end
+    end
+
+    private
+
+    def init_on(key)
+      unless @initialized.include?(key)
+        yield
+        @initialized << key
+        logger.debug "init: #{key}"
       end
     end
   end

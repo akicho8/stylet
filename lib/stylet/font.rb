@@ -3,16 +3,18 @@ module Stylet
   module Font
     attr_reader :font
 
-    def sdl_initialize
-      super if defined? super
-      SDL::TTF.init
-      if Stylet.config.font_name
-        font_file = Pathname("#{__dir__}/assets/#{Stylet.config.font_name}")
-        if font_file.exist?
-          @font = SDL::TTF.open(font_file.to_s, Stylet.config.font_size)
-          logger.debug "load: #{font_file} (#{@font.family_name.inspect} #{@font.style_name.inspect} #{@font.height} #{@font.line_skip} #{@font.fixed_width?})" if logger
-          if Stylet.config.font_bold
-            @font.style = SDL::TTF::STYLE_BOLD
+    def run_initializers
+      super
+      init_on(:font) do
+        SDL::TTF.init
+        if Stylet.config.font_name
+          font_file = Pathname("#{__dir__}/assets/#{Stylet.config.font_name}")
+          if font_file.exist?
+            @font = SDL::TTF.open(font_file.to_s, Stylet.config.font_size)
+            logger.debug "load: #{font_file} (#{@font.family_name.inspect} #{@font.style_name.inspect} #{@font.height} #{@font.line_skip} #{@font.fixed_width?})" if logger
+            if Stylet.config.font_bold
+              @font.style = SDL::TTF::STYLE_BOLD
+            end
           end
         end
       end
@@ -74,8 +76,10 @@ module Stylet
         rescue RangeError
         end
       else
-        vputs(str, :vector => vec2[0, @_console_lines * @font.line_skip], color: color, align: align)
-        @_console_lines += 1
+        if @_console_lines
+          vputs(str, :vector => vec2[0, @_console_lines * @font.line_skip], color: color, align: align)
+          @_console_lines += 1
+        end
       end
     end
   end

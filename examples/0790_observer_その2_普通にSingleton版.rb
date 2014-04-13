@@ -12,12 +12,13 @@ end
 
 class Window
   def initialize(player)
-    Stylet::Base.instance.sdl_initialize
+    Stylet::Base.active_frame.run_initializers
     player.add_observer(self)
   end
 
   def update(player)            # Stylet::Base を継承してないのでデフォルトの update で受けられる
-    Stylet::Base.instance.next_frame do
+    Stylet::Base.active_frame.instance_eval do
+      next_frame
       vputs player
     end
   end

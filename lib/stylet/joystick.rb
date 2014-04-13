@@ -9,11 +9,12 @@ module Stylet
       @init_code |= SDL::INIT_JOYSTICK
     end
 
-    def sdl_initialize
+    def run_initializers
       super
-      logger.debug "SDL::Joystick.num: #{SDL::Joystick.num}" if logger
-      @joys = SDL::Joystick.num.times.collect{|i|JoystickAdapter.create(SDL::Joystick.open(i))}
-      p ["#{__FILE__}:#{__LINE__}", __method__]
+      init_on(:joystick) do
+        logger.debug "SDL::Joystick.num: #{SDL::Joystick.num}" if logger
+        @joys = SDL::Joystick.num.times.collect{|i|JoystickAdapter.create(SDL::Joystick.open(i))}
+      end
     end
 
     def polling

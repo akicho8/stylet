@@ -13,13 +13,12 @@ end
 class Window < Stylet::Base
   def initialize
     super
-    sdl_initialize
+    run_initializers
   end
 
   def scene_update(player)      # Stylet::Base#update はすでにあるため別メソッドにする必要がある
-    next_frame do
-      vputs player
-    end
+    next_frame
+    vputs player
   end
 end
 

@@ -98,7 +98,7 @@ class Ball
 
     diff = pB - pA
     rdiff = (oA.radius + oB.radius) - diff.magnitude
-    # Stylet::Base.instance.vputs rdiff
+    # Stylet::Base.active_frame.vputs rdiff
 
     # ここは完全に重なっている。物理的にはこうならないので左右に移動させる
     if diff.magnitude.zero?
