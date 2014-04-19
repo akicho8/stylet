@@ -15,24 +15,24 @@ module Stylet
       cnt_ary.should == [1, 2, 3, 4, 5, 6]
     end
 
-    it "EQ" do
-      a = Input::KeyOne.new
-      b = Input::KeyOne.new
-      (a == b).should == true
-      b.update(true)
-      (a != b).should == true
-    end
-
-    it "EQ_for_sort" do
-      a = Input::KeyOne.new
-      b = Input::KeyOne.new
-      (a <=> b).should == 0    # 0, 0
-      b.update(true)
-      (a <=> b).should == +1   # 0, 1
-      a.update(true)
-      b.update(true)
-      (a <=> b).should == -1   # 1, 2
-    end
+    # it "EQ" do
+    #   a = Input::KeyOne.new
+    #   b = Input::KeyOne.new
+    #   (a == b).should == true
+    #   b.update(true)
+    #   (a != b).should == true
+    # end
+    #
+    # it "EQ_for_sort" do
+    #   a = Input::KeyOne.new
+    #   b = Input::KeyOne.new
+    #   (a <=> b).should == 0    # 0, 0
+    #   b.update(true)
+    #   (a <=> b).should == +1   # 0, 1
+    #   a.update(true)
+    #   b.update(true)
+    #   (a <=> b).should == -1   # 1, 2
+    # end
 
     it "ARROR_LL" do
       a = Input::KeyOne.new

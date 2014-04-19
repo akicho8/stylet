@@ -27,7 +27,7 @@ module Stylet
   config.optparse_enable  = true
 
   config.production       = false
-  config.production_keys  = [SDL::Key::RETURN]
+  config.production_keys  = [SDL::Key::K0] # [SDL::Key::RETURN]
 
   config.silent_music       = false
 end

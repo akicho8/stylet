@@ -2,9 +2,10 @@
 # 状態遷移管理
 
 class State
-  attr_reader :count, :state, :looping
+  attr_reader :count, :state
 
   def initialize(state = nil)
+    @scope = []
     soft_jump_to(state)
   end
 
@@ -29,7 +30,7 @@ class State
   # 一気に次の状態に移行する
   def jump_to(state)
     soft_jump_to(state)
-    if @looping
+    if @scope.last
       throw transit_key
     end
   end
@@ -54,14 +55,14 @@ class State
   #   end
   #
   def loop_in(&block)
-    @looping = true
+    @scope << true
     begin
       ret = catch(transit_key) do
         yield
         true
       end
     end until ret == true
-    @looping = false
+    @scope.pop
     pass
   end
 

@@ -3,8 +3,8 @@
 require_relative "helper"
 require "pathname"
 
-Stylet::Palette["background"] = [107, 140, 255]
-Stylet::Palette["font"]       = [255, 255, 255]
+Stylet::Palette[:background] = [107, 140, 255]
+Stylet::Palette[:font]       = [255, 255, 255]
 
 module Utils
   include Stylet::Delegators
@@ -1026,7 +1026,7 @@ class App < Stylet::Base
     # end
     #
     if @bg_mode == :background
-      draw_rect(rect, :color => "background", :fill => true)
+      draw_rect(rect, :color => :background, :fill => true)
     end
     if @bg_mode == :image
       # カメラと背景画像の関係

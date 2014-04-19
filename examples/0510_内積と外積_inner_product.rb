@@ -29,8 +29,8 @@ class App < Stylet::Base
 
     vC = a.normalize * dot_product
     vD = a.normalize.rotate(Stylet::Fee.r90) * cross_product
-    draw_vector(vC, :origin => rect.center, :color => "orange")
-    draw_vector(vD, :origin => vC + rect.center, :color => "orange")
+    draw_vector(vC, :origin => rect.center, :color => :orange)
+    draw_vector(vD, :origin => vC + rect.center, :color => :orange)
   end
 
   run

@@ -109,7 +109,7 @@ module Stylet
     end
 
     def current_run
-      if root.button.send(root.select_button).trigger? || root.axis.right.trigger?
+      if root.button.send(root.select_button).trigger? || root.axis.right.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
         if current[:menu]
           add(current[:menu])
         end
@@ -157,7 +157,7 @@ module Stylet
     end
 
     def close_check
-      if root.button.send(root.cancel_button).trigger? || root.axis.left.trigger?
+      if root.button.send(root.cancel_button).trigger? || root.axis.left.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
         close
       end
     end

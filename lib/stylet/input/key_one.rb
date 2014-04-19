@@ -123,23 +123,23 @@ module Stylet
         @free_count == 1
       end
 
-      #
-      # 優先度チェック用
-      #
-      #   FIXME: もっと簡潔に書けるはず
-      #
-      def <=>(other)                # sortで優先度の高い順に並べる為の比較処理
-        if @count == 0 || other.count == 0
-          other.count <=> @count    # 0はもっとも優先度が低い為逆にする
-        else
-          @count <=> other.count
-        end
-      end
-
-      # 指定のボタンと同時押し状態？
-      def ==(other)
-        @count == other.count
-      end
+      # #
+      # # 優先度チェック用
+      # #
+      # #   FIXME: もっと簡潔に書けるはず
+      # #
+      # def <=>(other)                # sortで優先度の高い順に並べる為の比較処理
+      #   if @count == 0 || other.count == 0
+      #     other.count <=> @count    # 0はもっとも優先度が低い為逆にする
+      #   else
+      #     @count <=> other.count
+      #   end
+      # end
+      # 
+      # # 指定のボタンと同時押し状態？
+      # def ==(other)
+      #   @count == other.count
+      # end
 
       def inspect
         "#{to_s}#{@count}"

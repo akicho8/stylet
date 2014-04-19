@@ -52,7 +52,7 @@ module Stylet
     #   vputs "Hello", :vector => Vector[x, y], :align => :right  # 座標指定(右寄せ)
     #   vputs "Hello", :vector => Vector[x, y], :align => :center # 座標指定(中央)
     #
-    def vputs(str, vector: nil, color: "font", align: :left)
+    def vputs(str, vector: nil, color: :font, align: :left)
       return unless @font
       str = str.to_s
       return if str.empty?

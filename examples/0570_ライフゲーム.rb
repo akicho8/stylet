@@ -71,7 +71,7 @@ class LifeGame < Stylet::Base
         if cell
           v = Stylet::Vector.new(*xy)
           v = (v * @size) + rect.to_vector + cursor.point
-          draw_rect(Stylet::Rect4.new(*v, @size, @size), :fill => true, :color => "font")
+          draw_rect(Stylet::Rect4.new(*v, @size, @size), :fill => true, :color => :font)
         end
       end
     end

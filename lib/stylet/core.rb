@@ -43,8 +43,7 @@ module Stylet
 
     def run_initializers
       init_on(:core) do
-        SDL.init(@init_code)
-        logger.debug "SDL.init #{'%08x' % @init_code}"
+        SDL.init(SDL::INIT_VIDEO)
       end
     end
 

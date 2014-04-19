@@ -2,8 +2,8 @@
 # 左右が繋がっている例
 require_relative "helper"
 
-Stylet::Palette["background"] = [107, 140, 255]
-Stylet::Palette["font"]       = [0, 0, 0]
+Stylet::Palette[:background] = [107, 140, 255]
+Stylet::Palette[:font]       = [0, 0, 0]
 
 class App < Stylet::Base
   include Helper::CursorWithObjectCollection

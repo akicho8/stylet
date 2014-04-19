@@ -14,9 +14,11 @@ module Stylet
     end
 
     def initialize
-      SDL.initSubSystem(SDL::INIT_AUDIO)
-      SDL::Mixer.open(Stylet.config.sound_freq)
-      Stylet.logger.debug "driver_name: #{SDL::Mixer.driver_name}" if Stylet.logger
+      if SDL.inited_system(SDL::INIT_AUDIO).zero?
+        SDL.initSubSystem(SDL::INIT_AUDIO)
+        SDL::Mixer.open(Stylet.config.sound_freq)
+        Stylet.logger.debug "driver_name: #{SDL::Mixer.driver_name}" if Stylet.logger
+      end
     end
   end
 

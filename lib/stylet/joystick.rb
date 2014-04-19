@@ -4,22 +4,22 @@ module Stylet
   module Joystick
     attr_reader :joys
 
-    def initialize
-      super
-      @init_code |= SDL::INIT_JOYSTICK
-    end
-
     def run_initializers
       super
       init_on(:joystick) do
-        logger.debug "SDL::Joystick.num: #{SDL::Joystick.num}" if logger
-        @joys = SDL::Joystick.num.times.collect{|i|JoystickAdapter.create(SDL::Joystick.open(i))}
+        if SDL.inited_system(SDL::INIT_JOYSTICK).zero?
+          SDL.initSubSystem(SDL::INIT_JOYSTICK)
+          logger.debug "SDL::Joystick.num: #{SDL::Joystick.num}" if logger
+          @joys = SDL::Joystick.num.times.collect do |i|
+            JoystickAdapter.create(SDL::Joystick.open(i))
+          end
+        end
       end
     end
 
     def polling
       super
-      SDL::Joystick.updateAll
+      SDL::Joystick.update_all
     end
 
     def before_update

@@ -8,11 +8,6 @@ module Stylet
     attr_reader :count, :check_fps, :sdl_event, :rect, :screen
     attr_accessor :title
 
-    def initialize
-      super
-      @init_code |= SDL::INIT_VIDEO
-    end
-
     def run_initializers
       super
       init_on(:draw) do
@@ -101,6 +96,11 @@ module Stylet
           if @sdl_event.sym == SDL::Key::ESCAPE || @sdl_event.sym == SDL::Key::Q
             throw :exit, :break
           end
+        when SDL::Event::Active
+          p [SDL::Event.app_state, @sdl_event.state, @sdl_event.gain]
+          # SDL::Event::APPMOUSEFOCUS ← 定義されてない？？
+          # SDL::Event::APPINPUTFOCUS
+          # SDL::Event::APPACTIVE
         end
       end
     end
@@ -120,7 +120,7 @@ module Stylet
     #
     def __draw_rect(x, y, w, h, options = {})
       options = {
-        :color => "foreground",
+        :color => :foreground,
       }.merge(options)
       raise "w, h は正を指定するように" if w < 0 || h < 0
       return if w.zero? || h.zero?
@@ -138,7 +138,7 @@ module Stylet
 
     def draw_line(p0, p1, options = {})
       options = {
-        :color => "foreground",
+        :color => :foreground,
       }.merge(options)
       @screen.draw_line(p0.x, p0.y, p1.x, p1.y, Palette[options[:color]])
     rescue RangeError => error
@@ -175,7 +175,7 @@ module Stylet
       if @backgroud_image
         SDL::Surface.blit(@backgroud_image, @rect.x, @rect.y, @rect.w, @rect.h, @screen, 0, 0)
       else
-        draw_rect(@rect, :color => "background", :fill => true)
+        draw_rect(@rect, :color => :background, :fill => true)
       end
     end
   end
