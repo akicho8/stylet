@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.name          = "stylet"
   s.version       = Stylet::VERSION
   s.summary       = "Simple SDL library"
-  s.description   = "Simple SDL library"
+  s.description   = "Simple SDL library description"
   s.author        = "akicho8"
   s.homepage      = "http://github.com/akicho8/stylet"
   s.email         = "akicho8@gmail.com"
@@ -25,5 +25,4 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "rspec"
   s.add_development_dependency "yard"
-  s.add_development_dependency "tapp"
 end

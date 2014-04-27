@@ -72,7 +72,7 @@ module Stylet
               raise ArgumentError, align.inspect
             end
           end
-          @font.drawBlendedUTF8(@screen, str, x, vector.y, *Palette[color])
+          @font.drawBlendedUTF8(@screen, str, x, vector.y, *Palette.fetch(color))
         rescue RangeError
         end
       else

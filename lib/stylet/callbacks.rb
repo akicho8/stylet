@@ -8,7 +8,7 @@ module Stylet
 
     included do
       extend ActiveModel::Callbacks
-      define_model_callbacks :setup, :update, :main_loop, :terminator => "false"
+      define_model_callbacks :setup, :update, :main_loop
     end
 
     module ClassMethods

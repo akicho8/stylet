@@ -1,11 +1,27 @@
 # -*- coding: utf-8 -*-
+#
 # 状態遷移管理
-
+#
+#   object = State.new(:idle)
+#   object.loop_in do
+#     case object.state
+#     when :idle
+#       if object.count_at?(1)
+#         object.jump_to(:active)
+#       end
+#     when :active
+#       if object.start?
+#       end
+#       if object.count_at?(1)
+#       end
+#     end
+#   end
+#
 class State
   attr_reader :count, :state
 
   def initialize(state = nil)
-    @scope = []
+    @depth = 0
     soft_jump_to(state)
   end
 
@@ -30,39 +46,20 @@ class State
   # 一気に次の状態に移行する
   def jump_to(state)
     soft_jump_to(state)
-    if @scope.last
+    if @depth.nonzero?
       throw transit_key
     end
   end
 
-  # jump_to を使って瞬時に別の状態に移行するためのブロックを作る
-  #
-  # Example:
-  #
-  #   object = State.new(:idle)
-  #   object.loop_in do
-  #     case object.state
-  #     when :idle
-  #       if object.count_at?(1)
-  #         object.jump_to(:active)
-  #       end
-  #     when :active
-  #       if object.start?
-  #       end
-  #       if object.count_at?(1)
-  #       end
-  #     end
-  #   end
-  #
   def loop_in(&block)
-    @scope << true
+    @depth += 1
     begin
       ret = catch(transit_key) do
         yield
         true
       end
     end until ret == true
-    @scope.pop
+    @depth -= 1
     pass
   end
 
