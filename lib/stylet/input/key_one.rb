@@ -30,13 +30,13 @@ module Stylet
         repeat
       end
 
-      attr_reader :mark, :count, :free_count
+      attr_reader :name, :count, :free_count
       attr_accessor :match_chars
       attr_accessor :state
 
-      def initialize(mark = "?", match_chars = nil)
-        @mark = mark.to_s.chars
-        @match_chars = (match_chars || mark).to_s.chars # # "AL" だったら A と L に対応
+      def initialize(name = "?", match_chars = nil)
+        @name = name.to_s
+        @match_chars = (match_chars || @name).to_s.chars # # "AL" だったら A と L に対応
         @count = 0
         @free_count = 0
         @state = false              # 直近のフラグ
@@ -63,7 +63,7 @@ module Stylet
 
       # 更新する前のon/off状態を取得(廃止予定)
       def state_to_s
-        @state ? mark.first : ""
+        @state ? name[0] : ""
       end
 
       # @state の状態を @count に反映する
@@ -135,11 +135,6 @@ module Stylet
       #     @count <=> other.count
       #   end
       # end
-      # 
-      # # 指定のボタンと同時押し状態？
-      # def ==(other)
-      #   @count == other.count
-      # end
 
       def inspect
         "#{to_s}#{@count}"
@@ -147,7 +142,7 @@ module Stylet
 
       # 押されているときだけ自分のマークを返す
       def to_s
-        press? ? @mark.first : ""
+        press? ? @name[0] : ""
       end
     end
   end

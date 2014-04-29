@@ -12,7 +12,7 @@ module Stylet
   config.color_depth      = 16
   config.screen_options   = SDL::HWSURFACE | SDL::DOUBLEBUF # SDL::NOFRAME
 
-  config.sound_freq       = 44100  # SDLのデフォルトは 22050
+  config.sound_freq       = 22050 # 44100  # SDLのデフォルトは 22050
 
   # config.font_name      = "luxirr.ttf"
   config.font_name        = "ipag-mona.ttf"
@@ -29,5 +29,7 @@ module Stylet
   config.production       = false
   config.production_keys  = [SDL::Key::K0] # [SDL::Key::RETURN]
 
-  config.silent_music       = false
+  config.silent_music     = false
+  config.silent_all       = false
+  config.hide_mouse       = false
 end

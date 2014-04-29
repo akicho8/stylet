@@ -21,6 +21,7 @@ module Stylet
           :draw_square,
           :draw_angle_rect,
           :draw_rect,
+          :_draw_rect,
           :draw_vector,
           :draw_arrow,
           :draw_polygon,

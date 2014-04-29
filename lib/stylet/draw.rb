@@ -22,6 +22,10 @@ module Stylet
         @screen ||= SDL::Screen.open(*Stylet.config.screen_size, Stylet.config.color_depth, options)
         @rect = Rect2.new(@screen.w, @screen.h)
 
+        if Stylet.config.hide_mouse
+          SDL::Mouse.hide
+        end
+
         @vi = SDL::Screen.info
         @vi.class.instance_methods(false).each{|var|
           p "#{var}: #{@vi.send(var)}"
@@ -118,7 +122,7 @@ module Stylet
     #
     # draw_rect の場合、デフォルトだと幅+1ドット描画されるため -1 してある
     #
-    def __draw_rect(x, y, w, h, options = {})
+    def _draw_rect(x, y, w, h, options = {})
       options = {
         :color => :foreground,
       }.merge(options)
@@ -151,7 +155,7 @@ module Stylet
     end
 
     def draw_rect(rect, options = {})
-      __draw_rect(rect.x, rect.y, rect.w, rect.h, options)
+      _draw_rect(rect.x, rect.y, rect.w, rect.h, options)
     end
 
     def save_bmp(fname)
@@ -159,7 +163,7 @@ module Stylet
     end
 
     def system_line
-      "#{@count} #{@check_fps.fps} FPS"
+      "#{@count} #{@check_fps.fps} FPS SE:#{SDL::Mixer.playing_channels}"
     end
 
     def before_update

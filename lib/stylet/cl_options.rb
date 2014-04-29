@@ -23,6 +23,8 @@ module Stylet
           oparser.on("-s", "--screen-size=SIZE", String)   {|v| Stylet.config.screen_size = [*v.scan(/\d+/).collect(&:to_i)] }
           oparser.on("-c", "--color-depth=DEPTH", Integer) {|v| Stylet.config.color_depth = v                                }
           oparser.on("-m", "--silent-music", TrueClass)    {|v| Stylet.config.silent_music = true                            }
+          oparser.on("-M", "--silent-all", TrueClass)      {|v| Stylet.config.silent_all = true                              }
+          oparser.on("-i", "--hide-mouse", TrueClass)      {|v| Stylet.config.hide_mouse = true                              }
         end
         if Stylet.config.optparse_enable
           oparser.parse(ARGV)

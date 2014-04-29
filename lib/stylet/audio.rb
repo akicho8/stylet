@@ -11,6 +11,8 @@ module Stylet
 
     class << self
       alias setup_once instance
+
+      delegate :halt, :to => "Stylet::Audio.instance"
     end
 
     def initialize
@@ -20,20 +22,28 @@ module Stylet
         Stylet.logger.debug "driver_name: #{SDL::Mixer.driver_name}" if Stylet.logger
       end
     end
+
+    def halt
+      SDL::Mixer.halt(-1)
+      SDL::Mixer.halt_music
+    end
   end
 
   module Music
     extend self
 
+    mattr_accessor :current_music
+
     # mp3,wav,mod等を再生する(再生できるチャンネルは1つだけ)
-    def play(filename, volume: nil)
-      return if Stylet.config.silent_music
+    def play(filename, volume: nil, loop: -1)
+      return if Stylet.config.silent_music || Stylet.config.silent_all
       Audio.setup_once
       filename = Pathname(filename).expand_path
       if filename.exist?
         Stylet.logger.debug "play: #{filename}" if Stylet.logger
-        SDL::Mixer.play_music(load(filename), -1)
+        SDL::Mixer.play_music(load(filename), loop)
         self.volume = volume if volume
+        self.current_music = filename.basename.to_s
       end
     end
 
@@ -54,7 +64,7 @@ module Stylet
 
     # フェイドインで入れる
     def fade_in(filename, ms=1000)
-      return if Stylet.config.silent_music
+      return if Stylet.config.silent_music || Stylet.config.silent_all
       SDL::Mixer.fade_in_music(load(filename), -1, ms)
     end
 
@@ -86,6 +96,8 @@ module Stylet
     end
 
     def load_file(filename, volume: nil, key: nil)
+      return if Stylet.config.silent_all
+
       filename = Pathname(filename).expand_path
       unless filename.exist?
         Stylet.logger.debug "#{filename} not found" if Stylet.logger
@@ -106,8 +118,9 @@ module Stylet
       @data[key] = se
     end
 
+    # nil while @data.values.any? {|e| e.play? }
     def wait
-      nil while @data.values.any? {|e| e.play? }
+      nil until SDL::Mixer.playing_channels.zero?
     end
 
     def inspect
@@ -117,14 +130,13 @@ module Stylet
       out << "@data.keys=#{@data.keys.inspect}"
     end
 
-    class Base
-      def play
-      end
+    # すべてのチャンネルを停止する
+    def channel_all_stop
+      SDL::Mixer.halt(-1)
+    end
 
-      def play_if_halt
-        unless play?
-          play
-        end
+    class Base
+      def play(*)
       end
 
       def play?
@@ -132,6 +144,9 @@ module Stylet
       end
 
       def halt
+      end
+
+      def fade_out
       end
 
       def volume=(v)
@@ -149,8 +164,8 @@ module Stylet
         @wave = wave
       end
 
-      def play
-        SDL::Mixer.play_channel(@ch, @wave, 0)
+      def play(loop: false)
+        SDL::Mixer.play_channel(@ch, @wave, loop ? -1 : 0)
       end
 
       def play?
@@ -159,6 +174,10 @@ module Stylet
 
       def halt
         SDL::Mixer.halt(@ch)
+      end
+
+      def fade_out(ms=1000)
+        SDL::Mixer.fade_out(@ch, ms)
       end
 
       def volume=(v)
