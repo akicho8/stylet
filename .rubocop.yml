@@ -1,0 +1,7 @@
+inherit_from:
+  - ./rubocop-todo.yml
+
+AllCops:
+  Exclude:
+    - 'vortex/lib/vortex/simulator/t_spin.rb'
+    - 'vortex/web/**/*'

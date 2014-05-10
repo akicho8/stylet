@@ -9,3 +9,4 @@ else
 end
 
 gem "ruby-opengl", :require => false
+gem "rubocop", :require => false
