@@ -2,6 +2,7 @@
 module Stylet
   module Font
     attr_reader :font
+    attr_reader :font_width
 
     def run_initializers
       super
@@ -15,6 +16,7 @@ module Stylet
             if Stylet.config.font_bold
               @font.style = SDL::TTF::STYLE_BOLD
             end
+            @font_width = @font.text_size("A").first
           end
         end
       end
