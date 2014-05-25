@@ -95,6 +95,10 @@ module Stylet
       @data[key.to_sym] || NullEffect.new
     end
 
+    def exist?(key)
+      @data[key.to_sym]
+    end
+
     def load_file(filename, volume: nil, key: nil)
       return if Stylet.config.silent_all
 
