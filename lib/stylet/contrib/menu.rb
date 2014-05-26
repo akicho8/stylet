@@ -18,7 +18,7 @@ module Stylet
       attr_reader :parent
       attr_reader :select_button, :cancel_button
 
-      def initialize(parent: nil, name: nil, list: [], select_button: :btA, cancel_button: :btD)
+      def initialize(parent: nil, name: nil, list: [], select_button: [:btA, :btD], cancel_button: [:btB, :btC])
         super() if defined? super
 
         @list          = list
@@ -109,7 +109,8 @@ module Stylet
       end
 
       def current_run
-        if root.button.send(root.select_button).trigger? || root.axis.right.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
+        # if root.button.send(root.select_button).trigger? || root.axis.right.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
+        if root.select_button.any?{|e|root.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
           if current[:menu]
             chain(current[:menu])
           end
@@ -161,7 +162,8 @@ module Stylet
       end
 
       def close_check
-        if root.button.send(root.cancel_button).trigger? || root.axis.left.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
+        # if root.button.send(root.cancel_button).trigger? || root.axis.left.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
+        if root.cancel_button.any?{|e|root.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
           close
         end
       end
