@@ -4,8 +4,6 @@ module Stylet
   # フレーム数を指定してウェイトを取る
   #
   class FpsAdjust
-    MSECOND = 1000.0
-
     def self.slow_loop(fps)
       if fps
         object = new(fps)
@@ -23,7 +21,7 @@ module Stylet
     #
     def initialize(fps = Stylet.config.fps, &block)
       @fps = fps
-      @block = block || proc{(Time.now.to_f * MSECOND).to_i}
+      @block = block || -> { (Time.now.to_f * 1000).to_i }
       @old_time = @block.call
     end
 
@@ -34,8 +32,8 @@ module Stylet
       return unless @fps
       loop do
         v = @block.call
-        usetime = v - @old_time
-        if usetime > MSECOND / @fps
+        t = v - @old_time
+        if t > 1000 / @fps
           @old_time = v
           break
         end

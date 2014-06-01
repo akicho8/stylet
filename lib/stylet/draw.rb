@@ -26,10 +26,11 @@ module Stylet
           SDL::Mouse.hide
         end
 
-        @vi = SDL::Screen.info
-        @vi.class.instance_methods(false).each{|var|
-          p "#{var}: #{@vi.send(var)}"
-        }
+        # フルスクリーンで利用可能なサイズ
+        Stylet.logger.debug "SDL::Screen.list_modes # => #{SDL::Screen.list_modes(SDL::FULLSCREEN|SDL::HWSURFACE).inspect}"
+
+        # 画面情報
+        Stylet.logger.debug "SDL::Screen.info # => #{SDL::Screen.info.inspect}"
 
         if @title
           self.title = title
@@ -58,8 +59,6 @@ module Stylet
         if SDL.respond_to?(:auto_lock)
           SDL.auto_lock = true
         end
-
-        p ["#{__FILE__}:#{__LINE__}", __method__]
       end
     end
 
@@ -105,6 +104,10 @@ module Stylet
           # SDL::Event::APPMOUSEFOCUS ← 定義されてない？？
           # SDL::Event::APPINPUTFOCUS
           # SDL::Event::APPACTIVE
+        when SDL::Event::VideoResize
+          p @sdl_event
+          p @screen
+          p [@screen.w, @screen.h]
         end
       end
     end

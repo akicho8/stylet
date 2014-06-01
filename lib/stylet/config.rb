@@ -10,7 +10,7 @@ module Stylet
   config.screen_size      = [640, 480]
   config.full_screen      = false
   config.color_depth      = 16
-  config.screen_options   = SDL::HWSURFACE | SDL::DOUBLEBUF # SDL::NOFRAME
+  config.screen_options   = SDL::HWSURFACE | SDL::DOUBLEBUF | SDL::RESIZABLE # SDL::NOFRAME
 
   config.sound_freq       = 22050 # 44100  # SDLのデフォルトは 22050
 

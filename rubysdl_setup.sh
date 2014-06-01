@@ -20,6 +20,7 @@ gem install specific_install
 # gem install rubysdl
 # gem install rubysdl -- --enable-bundled-sge
 gem specific_install ohai/rubysdl -- --enable-bundled-sge
+# bundle config build.rubysdl --enable-bundled-sge
 
 ruby -r sdl -e 'p [:ttf, SDL.constants.include?(:TTF)]'
 ruby -r sdl -e 'p [:mixer, SDL.constants.include?(:Mixer)]'

@@ -46,12 +46,10 @@ module Stylet
 
       def update
         super if defined? super
-
         unless @parent
-          update_by_joy(joys.first)
+          joys.each{|e|update_by_joy(e)}
           key_counter_update_all
         end
-
         @state.loop_in do
           case @state.state
           when :menu_boot
@@ -111,8 +109,12 @@ module Stylet
       def current_run
         # if root.button.send(root.select_button).trigger? || root.axis.right.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
         if root.select_button.any?{|e|root.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
-          if current[:menu]
-            chain(current[:menu])
+          current.assert_valid_keys(:name, :menu, :soft_command, :safe_command)
+          if menu = current[:menu]
+            if menu.respond_to?(:call)
+              menu = menu.call
+            end
+            chain(menu)
           end
           if soft_command = current[:soft_command]
             case soft_command
@@ -182,19 +184,26 @@ module Stylet
       end
 
       def current
-        @list[@cursor]
+        @list.fetch(@cursor)
       end
 
       def scroll_line
         @scroll_line || (@display_height / 3)
       end
 
-      def close
-        if parent
-          parent.children.delete(self)
-          parent.state.jump_to(:menu_restart)
-        else
-          # throw :exit, :break
+      # close methods
+      begin
+        def close_and_parent_restart
+          if parent
+            parent.children.delete(self)
+            parent.state.jump_to(:menu_restart)
+          end
+        end
+
+        alias close close_and_parent_restart
+
+        def force_close
+          throw :exit, :break
         end
       end
 
@@ -239,13 +248,13 @@ module Stylet
   end
 
   if $0 == __FILE__
-    class Window < SimpleDelegator
+    class SampleWindow < SimpleDelegator
       def initialize
         super(Stylet::Base.active_frame)
         @c = 0
       end
 
-      def update_loop
+      def counter_loop
         main_loop do |x|
           if @c >= 60
             break
@@ -257,7 +266,7 @@ module Stylet
     end
 
     #--------------------------------------------------------------------------------
-    # 方法1
+    # 例1
     #--------------------------------------------------------------------------------
 
     if true
@@ -266,10 +275,10 @@ module Stylet
           super(Stylet::Base.active_frame)
 
           @menu = Stylet::Menu::Soundy.new(list: [
-              {name: "実行", safe_command: proc { Window.new.update_loop }},
+              {name: "実行", safe_command: proc { SampleWindow.new.counter_loop }},
               {name: "サブメニュー", soft_command: proc {|s|
                   s.chain(name: "sub menu", list: [
-                      {name: "実行", safe_command: proc { Window.new.update_loop }},
+                      {name: "実行", safe_command: proc { SampleWindow.new.counter_loop }},
                       {name: "A", safe_command: proc { p 1 }},
                       {name: "B", safe_command: proc { p 2 }},
                       {name: "閉じる", soft_command: :close },
@@ -282,24 +291,24 @@ module Stylet
 
         end
 
-        def update_loop
+        def counter_loop
           main_loop{|s| @menu.update }
         end
       end
 
-      App1.new.update_loop
+      App1.new.counter_loop
     end
 
     #--------------------------------------------------------------------------------
-    # 方法2
+    # 例2
     #--------------------------------------------------------------------------------
 
     if false
-      # この方法でもいいけど update コールバックが Singleton のインスタンスに結び付いてしまうのため
-      # Window クラスでも update が実行されてしまう
+      # この例でもいいけど update コールバックが Singleton のインスタンスに結び付いてしまうのため
+      # SampleWindow クラスでも update が実行されてしまう
       class App2 < Stylet::Base
         setup do
-          @menu = Stylet::Menu::Soundy.new(list: [{name: "RUN", safe_command: -> { Window.new.update_loop }}])
+          @menu = Stylet::Menu::Soundy.new(list: [{name: "RUN", safe_command: proc { SampleWindow.new.counter_loop }}])
         end
         update do
           @menu.update

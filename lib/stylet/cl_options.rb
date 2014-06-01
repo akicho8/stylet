@@ -27,7 +27,10 @@ module Stylet
           oparser.on("-i", "--hide-mouse", TrueClass)      {|v| Stylet.config.hide_mouse = true                              }
         end
         if Stylet.config.optparse_enable
-          oparser.parse(ARGV)
+          if ENV["STYLET_SKIP_OPTPARSE"]
+          else
+            oparser.parse(ARGV)
+          end
         end
       end
     end
