@@ -2,7 +2,7 @@
 require_relative "helper"
 require "opengl"
 
-Stylet.config.screen_options |= SDL::OPENGL
+Stylet.config.screen_flags |= SDL::OPENGL
 
 class App < Stylet::Base
   include Helper::CursorWithObjectCollection

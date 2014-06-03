@@ -16,23 +16,22 @@ module Stylet
         active_frame.run(*args, &block)
       end
 
+      # run_initializers 実行済みの active_frame
+      def active_frame
+        @active_frame ||= active_instance.tap {|e| e.run_initializers }
+      end
+
       # すでにどこかで実行済みの場合は instance ではなく
       # 先に実行された _active_instance の方を返す
       # これで何度も初期化したり _active_instance が上書きされることがなくなる
       def active_instance
         @active_instance ||= _active_instance || instance
       end
-
-      # run_initializers 実行済みの active_frame
-      def active_frame
-        @active_frame ||= active_instance.tap {|e| e.run_initializers }
-      end
     end
 
     def initialize
       raise "Singletonなのに再び初期化されている。Stylet::Base を継承したクラスを複数作っている？" if _active_instance
       self._active_instance = self
-
       @init_code = 0
       @initialized = []
     end
@@ -88,7 +87,7 @@ module Stylet
     def next_frame(&block)
       raise "SDL is not initialized" if @initialized.empty?
       polling
-      if pause?
+      if pause? || !screen_active
         return
       end
       after_draw            # @screen.flip

@@ -5,7 +5,7 @@
 
 module Stylet
   module Draw
-    attr_reader :count, :check_fps, :sdl_event, :rect, :screen
+    attr_reader :count, :check_fps, :sdl_event, :rect, :screen, :screen_active
     attr_accessor :title
 
     def run_initializers
@@ -13,45 +13,20 @@ module Stylet
       init_on(:draw) do
         @count = 0
         @check_fps = CheckFPS.new
+        @screen_active = true
 
-        options = Stylet.config.screen_options
-        if Stylet.config.full_screen
-          options |= SDL::FULLSCREEN
-        end
-        options |= SDL::HWACCEL
-        @screen ||= SDL::Screen.open(*Stylet.config.screen_size, Stylet.config.color_depth, options)
-        @rect = Rect2.new(@screen.w, @screen.h)
+        screen_open
+        screen_info_check
 
         if Stylet.config.hide_mouse
           SDL::Mouse.hide
         end
 
-        # フルスクリーンで利用可能なサイズ
-        Stylet.logger.debug "SDL::Screen.list_modes # => #{SDL::Screen.list_modes(SDL::FULLSCREEN|SDL::HWSURFACE).inspect}"
-
-        # 画面情報
-        Stylet.logger.debug "SDL::Screen.info # => #{SDL::Screen.info.inspect}"
-
         if @title
-          self.title = title
+          self.title = @title
         end
 
-        unless @backgroud_image
-          if Stylet.config.background_image
-            file = Pathname(Stylet.config.background_image)
-            unless file.exist?
-              file = Pathname("#{__dir__}/assets/#{file}")
-            end
-            if file.exist?
-              bin = SDL::Surface.load(file.to_s) # SDL.image があれば BMP 以外をロードできる
-              if false
-                # これを設定すると黒色は透明色になって描画されない
-                bin.set_color_key(SDL::SRCCOLORKEY, 0)
-              end
-              @backgroud_image = bin.display_format
-            end
-          end
-        end
+        backgroud_image_load
 
         # background_clear
 
@@ -72,10 +47,7 @@ module Stylet
 
     def after_run
       super
-      if @screen
-        @screen.destroy
-        @screen = nil
-      end
+      screen_destroy
       if @backgroud_image
         @backgroud_image.destroy
         @backgroud_image = nil
@@ -93,33 +65,35 @@ module Stylet
       super
       if @sdl_event = SDL::Event.poll
         case @sdl_event
-        when SDL::Event::Quit # Window の [x] が押されたとき
-          throw :exit, :break
         when SDL::Event::KeyDown
           if @sdl_event.sym == SDL::Key::ESCAPE || @sdl_event.sym == SDL::Key::Q
             throw :exit, :break
           end
+          if @sdl_event.sym == SDL::Key::F1
+            Stylet.config.full_screen = !Stylet.config.full_screen
+            screen_open
+          end
         when SDL::Event::Active
-          p [SDL::Event.app_state, @sdl_event.state, @sdl_event.gain]
-          # SDL::Event::APPMOUSEFOCUS ← 定義されてない？？
-          # SDL::Event::APPINPUTFOCUS
-          # SDL::Event::APPACTIVE
+          if (@sdl_event.state & SDL::Event::APPINPUTFOCUS).nonzero?
+            @screen_active = @sdl_event.gain
+          end
         when SDL::Event::VideoResize
-          p @sdl_event
-          p @screen
-          p [@screen.w, @screen.h]
+          Stylet.config.screen_size = [@sdl_event.w, @sdl_event.h]
+          screen_open
+        when SDL::Event::Quit
+          throw :exit, :break
         end
       end
     end
 
-    def key_down?(key_sym)
+    def key_down?(sym)
       if @sdl_event.kind_of? SDL::Event::KeyDown
-        @sdl_event.sym == key_sym
+        @sdl_event.sym == sym
       end
     end
 
     def __draw_line(x0, y0, x1, y1, color)
-      @screen.draw_line(x0, y0, x1, y1, Palette[color])
+      @screen.draw_line(x0, y0, x1, y1, Palette.fetch(color))
     end
 
     #
@@ -140,14 +114,14 @@ module Stylet
         w = w.abs - 1
         h = h.abs - 1
       end
-      @screen.send(method, x, y, w, h, Palette[options[:color]])
+      @screen.send(method, x, y, w, h, Palette.fetch(options[:color]))
     end
 
     def draw_line(p0, p1, options = {})
       options = {
         :color => :foreground,
       }.merge(options)
-      @screen.draw_line(p0.x, p0.y, p1.x, p1.y, Palette[options[:color]])
+      @screen.draw_line(p0.x, p0.y, p1.x, p1.y, Palette.fetch(options[:color]))
     rescue RangeError => error
       # warn [p0, p1].inspect
       # raise error
@@ -166,7 +140,11 @@ module Stylet
     end
 
     def system_line
-      "#{@count} #{@check_fps.fps} FPS SE:#{SDL::Mixer.playing_channels}"
+      if Stylet.production
+        "#{@count} #{@check_fps.fps}"
+      else
+        "#{@count} #{@check_fps.fps} FPS SE:#{SDL::Mixer.playing_channels} #{@rect.w}x#{@rect.h} #{app_state}"
+      end
     end
 
     def before_update
@@ -178,6 +156,61 @@ module Stylet
 
     private
 
+    def screen_open
+      screen_destroy            # 既存サーフェスを破棄しないとGCの際に落ちる
+      @screen = SDL::Screen.open(*Stylet.config.screen_size, Stylet.config.color_depth, screen_flags)
+      @rect = Rect2.new(@screen.w, @screen.h)
+    end
+
+    def screen_destroy
+      if @screen
+        unless @screen.destroyed?
+          @screen.destroy
+        end
+        @screen = nil
+      end
+    end
+
+    def screen_flags
+      options = Stylet.config.screen_flags
+      options |= SDL::FULLSCREEN if Stylet.config.full_screen
+      options
+    end
+
+    def screen_info_check
+      # フルスクリーンで利用可能なサイズ
+      Stylet.logger.debug "SDL::Screen.list_modes # => #{SDL::Screen.list_modes(SDL::FULLSCREEN|SDL::HWSURFACE).inspect}"
+
+      # 画面情報
+      Stylet.logger.debug "SDL::Screen.info # => #{SDL::Screen.info.inspect}"
+    end
+
+    def app_state
+      app_state_list = {SDL::Event::APPMOUSEFOCUS => "M", SDL::Event::APPINPUTFOCUS => "K", SDL::Event::APPACTIVE => "A"}
+      app_state_list.collect{|k, v|
+        if (SDL::Event.app_state & k).nonzero?
+          v
+        end
+      }.join
+    end
+
+    def backgroud_image_load
+      unless @backgroud_image
+        if Stylet.config.background_image
+          file = Pathname(Stylet.config.background_image)
+          unless file.exist?
+            file = Pathname("#{__dir__}/assets/#{file}")
+          end
+          if file.exist?
+            bin = SDL::Surface.load(file.to_s)              # SDL.image があればBMP以外をロード可
+            bin.set_color_key(SDL::SRCCOLORKEY, 0) if false # 黒を抜き色にするなら
+            @backgroud_image = bin.display_format
+          end
+        end
+      end
+    end
+
+    # オーバーライド推奨
     def background_clear
       if @backgroud_image
         SDL::Surface.blit(@backgroud_image, @rect.x, @rect.y, @rect.w, @rect.h, @screen, 0, 0)
