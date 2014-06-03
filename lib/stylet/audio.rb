@@ -18,8 +18,11 @@ module Stylet
     def initialize
       if SDL.inited_system(SDL::INIT_AUDIO).zero?
         SDL.initSubSystem(SDL::INIT_AUDIO)
-        SDL::Mixer.open(Stylet.config.sound_freq)
-        Stylet.logger.debug "driver_name: #{SDL::Mixer.driver_name}" if Stylet.logger
+        SDL::Mixer.open(Stylet.config.sound_freq, SDL::Mixer::DEFAULT_FORMAT, 2, 512) # デフォルトの4096では効果音が遅延する
+        if Stylet.logger
+          Stylet.logger.debug "SDL::Mixer.driver_name: #{SDL::Mixer.driver_name.inspect}"
+          Stylet.logger.debug "SDL::Mixer.spec: #{Hash[[:frequency, :format, :channels].zip(SDL::Mixer.spec)]}"
+        end
       end
     end
 
