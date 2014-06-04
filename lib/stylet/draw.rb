@@ -143,7 +143,7 @@ module Stylet
       if Stylet.production
         "#{@count} #{@check_fps.fps}"
       else
-        "#{@count} #{@check_fps.fps} FPS SE:#{SDL::Mixer.playing_channels} #{@rect.w}x#{@rect.h} #{app_state}"
+        "#{@count} #{@check_fps.fps} FPS SE:#{SDL::Mixer.playing_channels}/#{SE.allocated_channels} #{@rect.w}x#{@rect.h} #{app_state}"
       end
     end
 
