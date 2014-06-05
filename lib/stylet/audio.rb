@@ -51,7 +51,7 @@ module Stylet
 
     mattr_accessor :current_music_file # 最後に再生したファイル
 
-    def play(filename, volume: nil, loop: false, fade_in_ms: nil)
+    def play(filename, volume: nil, loop: true, fade_in_ms: nil)
       return if Stylet.config.silent_music || Stylet.config.silent_all
 
       Audio.setup_once
@@ -79,16 +79,16 @@ module Stylet
     end
 
     # すべてのサウンド停止
-    def halt(fade_out_ms: nil)
-      if fade_out_ms
-        SDL::Mixer.fade_out_music(fade_out_ms)
+    def halt(fade_out_sec: nil)
+      if fade_out_sec
+        SDL::Mixer.fade_out_music(fade_out_sec * 1000.0)
       else
         SDL::Mixer.halt_music
       end
     end
 
-    def fade_out(fade_out_ms: 1000)
-      halt(fade_out_ms: fade_out_ms)
+    def fade_out(fade_out_sec: 2)
+      halt(fade_out_sec: fade_out_sec)
     end
 
     def load(filename)
@@ -203,6 +203,9 @@ module Stylet
 
       def volume=(v)
       end
+
+      def spec
+      end
     end
 
     class NullEffect < Base
@@ -216,8 +219,7 @@ module Stylet
         @filename = Pathname(filename).expand_path
         @key = key
         @channel_group = channel_group
-
-        self.volume = volume
+        @volume = volume
 
         if preload
           preload()
@@ -234,16 +236,19 @@ module Stylet
         SDL::Mixer.play?(channel)
       end
 
-      def halt(fade_out_ms: nil)
-        if fade_out_ms
-          SDL::Mixer.fade_out(channel, fade_out_ms)
+      def halt(fade_out_sec: nil)
+        if fade_out_sec
+          SDL::Mixer.fade_out(channel, fade_out_sec * 1000)
         else
           SDL::Mixer.halt(channel)
         end
       end
 
       def volume=(v)
-        wave.set_volume(Audio.volume_cast(@volume = v))
+        @volume = v
+        if @wave
+          @wave.set_volume(Audio.volume_cast(v))
+        end
       end
 
       def channel
@@ -263,7 +268,9 @@ module Stylet
       end
 
       def wave
-        @wave ||= SDL::Mixer::Wave.load(@filename.to_s)
+        @wave ||= SDL::Mixer::Wave.load(@filename.to_s).tap do |obj|
+          obj.set_volume(Audio.volume_cast(@volume))
+        end
       end
 
       def spec
@@ -275,28 +282,36 @@ end
 
 if $0 == __FILE__
   require_relative "../stylet"
+  require "rspec/autorun"
 
-  Stylet::Music.play("#{__dir__}/assets/bgm.wav")
-  p Stylet::Music.play?
-  sleep(3)
-  p Stylet::Music.fade_out
-  nil while Stylet::Music.play?
+  describe do
+    it do
+      Stylet::Music.play("#{__dir__}/assets/bgm.wav")
+      expect(Stylet::Music.play?).to eq true
+      sleep(1)
+      Stylet::Music.halt(fade_out_sec: 3)
+      nil while Stylet::Music.play?
+    end
 
-  Stylet::SE.load_file("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO00.WAV", :key => :a, :channel_group => :x, :volume => 0.1)
-  Stylet::SE.load_file("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO01.WAV", :key => :b, :channel_group => :x, :volume => 0.1)
-  Stylet::SE.load_file("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO02.WAV", :key => :c,                       :volume => 0.1)
-  p Stylet::SE.se_hash[:a].channel
-  p Stylet::SE.se_hash[:b].channel
-  p Stylet::SE.se_hash[:c].channel
-  Stylet::SE[:a].play
-  Stylet::SE.wait_if_playing?
-  Stylet::SE[:b].play
-  Stylet::SE.wait_if_playing?
-  Stylet::SE.destroy_all(:a)
-  p Stylet::SE.se_hash.keys
-  p Stylet::SE.se_hash[:b].channel # a が消されたので 1 から 0 に変わっている
-  Stylet::SE[:a].play              # NullEffect
-  Stylet::SE[:b].play
-  p Stylet::SE[:b].spec
-  Stylet::SE.wait_if_playing?
+    it do
+      Stylet::SE.load_file("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO00.WAV", :key => :a, :channel_group => :x, :volume => 0.1)
+      Stylet::SE.load_file("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO01.WAV", :key => :b,                       :volume => 0.1)
+      Stylet::SE.load_file("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO02.WAV", :key => :c, :channel_group => :x, :volume => 0.1)
+
+      expect(Stylet::SE[:a].spec).to match(/new/)
+      Stylet::SE[:a].preload
+      expect(Stylet::SE[:a].spec).to match(/loaded/)
+
+      expect(Stylet::SE.se_hash.values.collect(&:channel)).to eq [0, 1, 0]
+
+      Stylet::SE[:a].play
+      Stylet::SE.wait_if_playing?
+      Stylet::SE[:b].play
+      Stylet::SE.wait_if_playing?
+      Stylet::SE.destroy_all(:a)
+      expect(Stylet::SE.se_hash.values.collect(&:channel)).to eq [1, 0]
+      Stylet::SE.destroy_all(:c)
+      expect(Stylet::SE.se_hash.values.collect(&:channel)).to eq [0]
+    end
+  end
 end
