@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-# 表示系のライブラリとは独立
+# 曲と効果音の管理
 #
+# ・表示系のライブラリとは独立
 # ・チャンネルとWAVの音量は独立している
-# ・チャンネルとWAVを1:1で割り当てている
-# ・WAVを削除したときに再割り当て
+# ・SEの解放時、対応チャンネルを誰も使わなくなっていたら消して再割り当てする
 
-require "pathname"
-require "singleton"
-require "forwardable"
+require 'pathname'
+require 'singleton'
+require 'forwardable'
 require 'active_support/core_ext/module/delegation' # Defines Module#delegate.
 require 'active_support/core_ext/module/attribute_accessors' # Defines Module#mattr_accessor
 
@@ -21,11 +21,8 @@ module Stylet
       delegate :halt, :to => "Stylet::Audio.instance"
 
       def volume_cast(v)
-        if v.kind_of? Float
-          (v / 1.0 * 128).to_i
-        else
-          v
-        end
+        raise if v.kind_of? Integer
+        (v / 1.0 * 128).to_i
       end
     end
 
@@ -33,16 +30,19 @@ module Stylet
       if SDL.inited_system(SDL::INIT_AUDIO).zero?
         SDL.initSubSystem(SDL::INIT_AUDIO)
         SDL::Mixer.open(Stylet.config.sound_freq, SDL::Mixer::DEFAULT_FORMAT, 2, 512) # デフォルトの4096では効果音が遅延する
-        if Stylet.logger
-          Stylet.logger.debug "SDL::Mixer.driver_name: #{SDL::Mixer.driver_name.inspect}"
-          Stylet.logger.debug "SDL::Mixer.spec: #{Hash[[:frequency, :format, :channels].zip(SDL::Mixer.spec)]}"
-        end
+        spec_check
       end
     end
 
     def halt
       SDL::Mixer.halt(-1)
       SDL::Mixer.halt_music
+    end
+
+    def spec_check
+      return unless Stylet.logger
+      Stylet.logger.debug "SDL::Mixer.driver_name: #{SDL::Mixer.driver_name.inspect}"
+      Stylet.logger.debug "SDL::Mixer.spec: #{Hash[[:frequency, :format, :channels].zip(SDL::Mixer.spec)]}"
     end
   end
 
@@ -51,9 +51,9 @@ module Stylet
 
     mattr_accessor :current_music_file # 最後に再生したファイル
 
-    # mp3,wav,mod等を再生する(再生できるチャンネルは1つだけ)
     def play(filename, volume: nil, loop: false, fade_in_ms: nil)
       return if Stylet.config.silent_music || Stylet.config.silent_all
+
       Audio.setup_once
       filename = Pathname(filename).expand_path
       if filename.exist?
@@ -79,13 +79,16 @@ module Stylet
     end
 
     # すべてのサウンド停止
-    def halt
-      SDL::Mixer.halt_music
+    def halt(fade_out_ms: nil)
+      if fade_out_ms
+        SDL::Mixer.fade_out_music(fade_out_ms)
+      else
+        SDL::Mixer.halt_music
+      end
     end
 
-    # フェイドアウト
-    def fade_out(ms=1000)
-      SDL::Mixer.fade_out_music(ms)
+    def fade_out(fade_out_ms: 1000)
+      halt(fade_out_ms: fade_out_ms)
     end
 
     def load(filename)
@@ -97,6 +100,7 @@ module Stylet
 
     def destroy
       if @muisc
+        raise if @muisc.destroyed?
         @muisc.destroy
         @muisc = nil
       end
@@ -105,11 +109,8 @@ module Stylet
 
   # 複数の効果音
   #
-  # Stylet::SE.load_file("path/to/foo.ogg")
-  # Stylet::SE[:foo].play
-  #
-  # Stylet::SE.load_file("path/to/foo.ogg", :key => :attack)
-  # Stylet::SE[:attack].play
+  #   Stylet::SE.load_file("path/to/foo.wav")
+  #   Stylet::SE[:foo].play
   #
   module SE
     extend self
@@ -120,6 +121,9 @@ module Stylet
     mattr_accessor :se_hash
     self.se_hash = {}
 
+    mattr_accessor :channel_groups
+    self.channel_groups = {}
+
     def [](key)
       se_hash[key.to_sym] || NullEffect.new
     end
@@ -128,52 +132,57 @@ module Stylet
       se_hash[key.to_sym]
     end
 
-    def load_file(filename, volume: nil, key: nil)
+    def load_file(filename, volume: 1.0, key: nil, channel_group: nil, preload: false)
       return if Stylet.config.silent_all
 
       filename = Pathname(filename).expand_path
       unless filename.exist?
-        Stylet.logger.debug "#{filename} not found" if Stylet.logger
+        Stylet.logger.debug "#{filename} が見つかりません" if Stylet.logger
         return
       end
+
       key ||= filename.basename(".*").to_s
       key = key.to_sym
       if se_hash[key]
+        Stylet.logger.debug "すでに #{filename} (#{key.inspect}) が登録されています" if Stylet.logger
         return
       end
 
+      channel_group ||= key
+      channel_groups[channel_group] ||= {:channel => channel_groups.size, :counter => 0}
+      channel_groups[channel_group][:counter] += 1
+
       Audio.setup_once
-      self.allocated_channels = SDL::Mixer.allocate_channels(se_hash.size.next)
-      se = SoundEffect.new(channel: se_hash.size, wave: SDL::Mixer::Wave.load(filename.to_s))
-      se.volume = volume if volume
-      Stylet.logger.debug "load_file: #{filename} volume:#{volume} allocated_channels:#{allocated_channels}" if Stylet.logger
-      se_hash[key] = se
+      self.allocated_channels = SDL::Mixer.allocate_channels(channel_groups.size)
+      se_hash[key] = SoundEffect.new(key: key, :channel_group => channel_group, filename: filename, volume: volume, preload: preload)
     end
 
+    # チャンネル利用者を減らしていき
+    # 誰もチャンネルを利用していなければチャンネル自体を解放
     def destroy_all(keys = se_hash.keys)
-      Array(keys).each{|key|
-        if se = se_hash.delete(key.to_sym)
+      Array(keys).collect(&:to_sym).each do |key|
+        if se = se_hash.delete(key)
+          raise if channel_groups[se.channel_group][:counter] <= 0
+          channel_groups[se.channel_group][:counter] -= 1
+          if channel_groups[se.channel_group][:counter] == 0
+            channel_groups.delete(se.channel_group)
+          end
           se.destroy
         end
-      }
-      self.allocated_channels = SDL::Mixer.allocate_channels(se_hash.size)
-      se_hash.each_value.with_index{|se, i|se.channel = i}
+      end
+
+      # 再割り当て
+      self.allocated_channels = SDL::Mixer.allocate_channels(channel_groups.size)
+      channel_groups.each_value.with_index{|e, i|e[:channel] = i}
     end
 
     # nil while se_hash.values.any? {|e| e.play? }
-    def wait
+    def wait_if_playing?
       nil until SDL::Mixer.playing_channels.zero?
     end
 
-    def inspect
-      out = ""
-      out << "spec=#{SDL::Mixer.spec.inspect}\n"
-      out << "self.allocated_channels=#{allocated_channels.inspect}\n"
-      out << "se_hash.keys=#{se_hash.keys.inspect}"
-    end
-
     # すべてのチャンネルを停止する
-    def channel_all_stop
+    def halt_all
       SDL::Mixer.halt(-1)
     end
 
@@ -185,10 +194,11 @@ module Stylet
         false
       end
 
-      def halt
+      def halt(*)
       end
 
-      def fade_out
+      def volume
+        0
       end
 
       def volume=(v)
@@ -199,40 +209,65 @@ module Stylet
     end
 
     class SoundEffect < Base
-      attr_accessor :channel, :wave
+      attr_accessor :filename, :key, :channel_group
+      attr_reader :volume
 
-      def initialize(channel:, wave:)
-        @channel = channel
-        # @channel = -1
-        @wave = wave
+      def initialize(filename:, key:, channel_group:, volume:, preload: false)
+        @filename = Pathname(filename).expand_path
+        @key = key
+        @channel_group = channel_group
+
+        self.volume = volume
+
+        if preload
+          preload()
+        end
+
+        Stylet.logger.debug spec if Stylet.logger
       end
 
       def play(loop: false)
-        SDL::Mixer.play_channel(@channel, @wave, loop ? -1 : 0)
+        SDL::Mixer.play_channel(channel, wave, loop ? -1 : 0)
       end
 
       def play?
-        SDL::Mixer.play?(@channel)
+        SDL::Mixer.play?(channel)
       end
 
-      def halt
-        SDL::Mixer.halt(@channel)
-      end
-
-      def fade_out(ms=1000)
-        SDL::Mixer.fade_out(@channel, ms)
+      def halt(fade_out_ms: nil)
+        if fade_out_ms
+          SDL::Mixer.fade_out(channel, fade_out_ms)
+        else
+          SDL::Mixer.halt(channel)
+        end
       end
 
       def volume=(v)
-        @wave.set_volume(Audio.volume_cast(v))
+        wave.set_volume(Audio.volume_cast(@volume = v))
+      end
+
+      def channel
+        SE.channel_groups.fetch(@channel_group)[:channel]
       end
 
       def destroy
         if @wave
-          halt
+          raise if @wave.destroyed_
           @wave.destroy
           @wave = nil
         end
+      end
+
+      def preload
+        wave
+      end
+
+      def wave
+        @wave ||= SDL::Mixer::Wave.load(@filename.to_s)
+      end
+
+      def spec
+        "#{@filename} volume:#{@volume} channel:#{channel}/#{SE.allocated_channels} #{@wave ? :loaded : :new}"
       end
     end
   end
@@ -241,23 +276,27 @@ end
 if $0 == __FILE__
   require_relative "../stylet"
 
-  # Stylet::Music.play("#{__dir__}/assets/bgm.wav")
-  # p Stylet::Music.play?
-  # sleep(3)
-  # p Stylet::Music.fade_out
-  # nil while Stylet::Music.play?
+  Stylet::Music.play("#{__dir__}/assets/bgm.wav")
+  p Stylet::Music.play?
+  sleep(3)
+  p Stylet::Music.fade_out
+  nil while Stylet::Music.play?
 
-  Stylet::SE.load_file("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO00.WAV", :key => :a)
-  Stylet::SE.load_file("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO01.WAV", :key => :b)
-  p Stylet::SE.se_hash.keys
+  Stylet::SE.load_file("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO00.WAV", :key => :a, :channel_group => :x, :volume => 0.1)
+  Stylet::SE.load_file("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO01.WAV", :key => :b, :channel_group => :x, :volume => 0.1)
+  Stylet::SE.load_file("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO02.WAV", :key => :c,                       :volume => 0.1)
+  p Stylet::SE.se_hash[:a].channel
+  p Stylet::SE.se_hash[:b].channel
+  p Stylet::SE.se_hash[:c].channel
   Stylet::SE[:a].play
-  Stylet::SE.wait
+  Stylet::SE.wait_if_playing?
   Stylet::SE[:b].play
-  Stylet::SE.wait
+  Stylet::SE.wait_if_playing?
   Stylet::SE.destroy_all(:a)
   p Stylet::SE.se_hash.keys
   p Stylet::SE.se_hash[:b].channel # a が消されたので 1 から 0 に変わっている
   Stylet::SE[:a].play              # NullEffect
   Stylet::SE[:b].play
-  Stylet::SE.wait
+  p Stylet::SE[:b].spec
+  Stylet::SE.wait_if_playing?
 end
