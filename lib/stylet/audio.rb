@@ -83,7 +83,6 @@ module Stylet
       SDL::Mixer.set_volume_music(Audio.volume_cast(v))
     end
 
-    # 曲の再生中？
     def play?
       SDL::Mixer.play_music?
     end
@@ -92,7 +91,6 @@ module Stylet
       SDL.delay(1) while SDL::Mixer.play_music?
     end
 
-    # すべてのサウンド停止
     def halt(fade_out_sec: nil)
       if fade_out_sec
         SDL::Mixer.fade_out_music(fade_out_sec * 1000.0)
@@ -190,6 +188,10 @@ module Stylet
 
     def halt_all
       SDL::Mixer.halt(-1)
+    end
+
+    def volume=(v)
+      SDL::Mixer.set_volume(-1, Audio.volume_cast(v))
     end
 
     class Base
@@ -318,6 +320,8 @@ if $0 == __FILE__
 
     it do
       Stylet::Music.play("#{__dir__}/assets/bgm.wav")
+      Stylet::Music.volume = 0.2
+
       expect(Stylet::Music.play?).to eq true
       sleep(1)
       Stylet::Music.halt(fade_out_sec: 3)
@@ -328,6 +332,8 @@ if $0 == __FILE__
       Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO00.WAV", :key => :a, :channel_group => :x, :volume => 0.1)
       Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO01.WAV", :key => :b,                       :volume => 0.1)
       Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO02.WAV", :key => :c, :channel_group => :x, :volume => 0.1)
+
+      Stylet::SE.volume = 0.2
 
       expect(Stylet::SE[:a].spec).to match(/new/)    # ロードしていない
       Stylet::SE[:a].preload                         # 明示的にロードする
