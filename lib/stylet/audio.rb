@@ -1,10 +1,20 @@
 # -*- coding: utf-8 -*-
+#
 # 曲と効果音の管理
+#
+#   曲
+#
+#     Music.play("path/to/foo.wav")
+#
+#   効果音
+#
+#     SE.load("path/to/foo.wav")
+#     SE[:foo].play
 #
 # ・表示系のライブラリとは独立
 # ・チャンネルとWAVの音量は独立している
 # ・SEの解放時、対応チャンネルを誰も使わなくなっていたら消して再割り当てする
-
+#
 require 'pathname'
 require 'singleton'
 require 'forwardable'
@@ -51,7 +61,7 @@ module Stylet
 
     mattr_accessor :current_music_file # 最後に再生したファイル
 
-    def play(filename, volume: nil, loop: true, fade_in_ms: nil)
+    def play(filename, volume: nil, loop: true, fade_in_sec: nil)
       return if Stylet.config.silent_music || Stylet.config.silent_all
 
       Audio.setup_once
@@ -60,8 +70,8 @@ module Stylet
         Stylet.logger.debug "play: #{filename}" if Stylet.logger
         bin = load(filename)
         loop = loop ? -1 : 0
-        if fade_in_ms
-          SDL::Mixer.fade_in_music(bin, loop, fade_in_ms)
+        if fade_in_sec
+          SDL::Mixer.fade_in_music(bin, loop, fade_in_sec * 1000.0)
         else
           SDL::Mixer.play_music(bin, loop)
         end
@@ -76,6 +86,10 @@ module Stylet
     # 曲の再生中？
     def play?
       SDL::Mixer.play_music?
+    end
+
+    def wait_if_play?
+      SDL.delay(1) while SDL::Mixer.play_music?
     end
 
     # すべてのサウンド停止
@@ -107,11 +121,6 @@ module Stylet
     end
   end
 
-  # 複数の効果音
-  #
-  #   Stylet::SE.load_file("path/to/foo.wav")
-  #   Stylet::SE[:foo].play
-  #
   module SE
     extend self
 
@@ -132,7 +141,7 @@ module Stylet
       se_hash[key.to_sym]
     end
 
-    def load_file(filename, volume: 1.0, key: nil, channel_group: nil, preload: false)
+    def load(filename, volume: 1.0, key: nil, channel_group: nil, preload: false)
       return if Stylet.config.silent_all
 
       filename = Pathname(filename).expand_path
@@ -157,28 +166,27 @@ module Stylet
       se_hash[key] = SoundEffect.new(key: key, :channel_group => channel_group, filename: filename, volume: volume, preload: preload)
     end
 
-    # チャンネル利用者を減らしていき
-    # 誰もチャンネルを利用していなければチャンネル自体を解放
+    # カウンターを減らして0なら解放しチャンネルを0から再割り当てする
     def destroy_all(keys = se_hash.keys)
       Array(keys).collect(&:to_sym).each do |key|
         if se = se_hash.delete(key)
-          raise if channel_groups[se.channel_group][:counter] <= 0
-          channel_groups[se.channel_group][:counter] -= 1
-          if channel_groups[se.channel_group][:counter] == 0
-            channel_groups.delete(se.channel_group)
-          end
+          raise if SE.channel_groups[se.channel_group][:counter] <= 0
+          SE.channel_groups[se.channel_group][:counter] -= 1
           se.destroy
         end
       end
+      channel_reset
+    end
 
-      # 再割り当て
+    def channel_reset
+      SE.channel_groups.delete_if{|k, e|e[:counter] == 0}
       self.allocated_channels = SDL::Mixer.allocate_channels(channel_groups.size)
-      channel_groups.each_value.with_index{|e, i|e[:channel] = i}
+      channel_groups.each_value.with_index{|e, index|e[:channel] = index}
     end
 
     # nil while se_hash.values.any? {|e| e.play? }
-    def wait_if_playing?
-      nil until SDL::Mixer.playing_channels.zero?
+    def wait_if_play?
+      SDL.delay(1) until SDL::Mixer.playing_channels.zero?
     end
 
     # すべてのチャンネルを停止する
@@ -212,8 +220,7 @@ module Stylet
     end
 
     class SoundEffect < Base
-      attr_accessor :filename, :key, :channel_group
-      attr_reader :volume
+      attr_reader :filename, :key, :channel_group, :volume
 
       def initialize(filename:, key:, channel_group:, volume:, preload: false)
         @filename = Pathname(filename).expand_path
@@ -263,15 +270,13 @@ module Stylet
         end
       end
 
-      def preload
-        wave
-      end
-
       def wave
         @wave ||= SDL::Mixer::Wave.load(@filename.to_s).tap do |obj|
           obj.set_volume(Audio.volume_cast(@volume))
         end
       end
+
+      alias preload wave
 
       def spec
         "#{@filename} volume:#{@volume} channel:#{channel}/#{SE.allocated_channels} #{@wave ? :loaded : :new}"
@@ -294,24 +299,25 @@ if $0 == __FILE__
     end
 
     it do
-      Stylet::SE.load_file("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO00.WAV", :key => :a, :channel_group => :x, :volume => 0.1)
-      Stylet::SE.load_file("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO01.WAV", :key => :b,                       :volume => 0.1)
-      Stylet::SE.load_file("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO02.WAV", :key => :c, :channel_group => :x, :volume => 0.1)
+      Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO00.WAV", :key => :a, :channel_group => :x, :volume => 0.1)
+      Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO01.WAV", :key => :b,                       :volume => 0.1)
+      Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO02.WAV", :key => :c, :channel_group => :x, :volume => 0.1)
 
-      expect(Stylet::SE[:a].spec).to match(/new/)
-      Stylet::SE[:a].preload
-      expect(Stylet::SE[:a].spec).to match(/loaded/)
+      expect(Stylet::SE[:a].spec).to match(/new/)    # ロードしていない
+      Stylet::SE[:a].preload                         # 明示的にロードする
+      expect(Stylet::SE[:a].spec).to match(/loaded/) # ロード済み
 
-      expect(Stylet::SE.se_hash.values.collect(&:channel)).to eq [0, 1, 0]
+      expect(Stylet::SE.se_hash.values.collect(&:channel)).to eq [0, 1, 0] # a と c が同じチャンネルを共有していることがわかる
 
-      Stylet::SE[:a].play
-      Stylet::SE.wait_if_playing?
-      Stylet::SE[:b].play
-      Stylet::SE.wait_if_playing?
-      Stylet::SE.destroy_all(:a)
+      Stylet::SE[:a].play       # a を再生するが
+      sleep(0.2)
+      Stylet::SE[:c].play       # c も同じチャンネルを使っているため a をキャンセルする
+      Stylet::SE[:b].play       # b は別のチャンネルなので同時に再生できる
+      Stylet::SE.wait_if_play?
+      Stylet::SE.destroy_all(:a) # a を消しても c が 0 を利用しているため 0 チャンネルは残っている
       expect(Stylet::SE.se_hash.values.collect(&:channel)).to eq [1, 0]
-      Stylet::SE.destroy_all(:c)
-      expect(Stylet::SE.se_hash.values.collect(&:channel)).to eq [0]
+      Stylet::SE.destroy_all(:c)             # c を消すと 0 チャンネルが消えて
+      expect(Stylet::SE[:b].channel).to eq 0 # 再割り当てするため 1 チャンネルが消えて 0 チャンネルのみになる
     end
   end
 end

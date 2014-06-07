@@ -5,7 +5,7 @@ class App < Stylet::Base
   include Helper::Cursor
 
   setup do
-    Stylet::SE.load_file("assets/nc26792_coin.ogg")
+    Stylet::SE.load("assets/nc26792_coin.ogg")
   end
 
   update do

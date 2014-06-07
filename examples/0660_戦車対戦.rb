@@ -358,8 +358,8 @@ class App < Stylet::Base
   attr_reader :objects
 
   setup do
-    Stylet::SE.load_file("assets/komori_explosion01.ogg")
-    Stylet::SE.load_file("assets/komori_launch01.ogg")
+    Stylet::SE.load("assets/komori_explosion01.ogg")
+    Stylet::SE.load("assets/komori_launch01.ogg")
 
     self.title = "戦車 vs 戦車"
     cursor.display = false

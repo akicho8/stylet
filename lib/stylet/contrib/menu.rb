@@ -219,11 +219,11 @@ module Stylet
 
       def initialize(*)
         super if defined? super
-        Stylet::SE.load_file("#{__dir__}/../../../sound_effects/garage_band/menu_boot.aif",   volume: 0.2)
-        Stylet::SE.load_file("#{__dir__}/../../../sound_effects/garage_band/menu_chain.aif",  volume: 0.2)
-        Stylet::SE.load_file("#{__dir__}/../../../sound_effects/garage_band/menu_select.aif", volume: 0.2)
-        Stylet::SE.load_file("#{__dir__}/../../../sound_effects/garage_band/menu_scroll.aif", volume: 0.2)
-        Stylet::SE.load_file("#{__dir__}/../../../sound_effects/garage_band/menu_back.aif",   volume: 0.2)
+        Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_boot.aif",   volume: 0.2)
+        Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_chain.aif",  volume: 0.2)
+        Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_select.aif", volume: 0.2)
+        Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_scroll.aif", volume: 0.2)
+        Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_back.aif",   volume: 0.2)
       end
 
       def notify(key)

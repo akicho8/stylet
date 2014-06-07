@@ -649,14 +649,14 @@ class App < Stylet::Base
     #   @scene_bg2 = s.display_format
     # end
 
-    Stylet::SE.load_file("assets/nc26792_coin.ogg", volume: 0.2)
-    Stylet::SE.load_file("assets/nc27131_jump.ogg", volume: 0.2)
-    Stylet::SE.load_file("assets/se_jump_short.ogg", volume: 0.5)
-    Stylet::SE.load_file("assets/nc30529_stomp.ogg", volume: 0.3)
-    Stylet::SE.load_file("assets/nc62985_zelda_secret_open.ogg", volume: 0.5)
-    Stylet::SE.load_file("assets/nc2681_1up.ogg", volume: 0.5)
-    Stylet::SE.load_file("assets/nc6131_ff_cursor.ogg", volume: 0.05)
-    Stylet::SE.load_file("assets/nc45878_buu.ogg", volume: 0.5)
+    Stylet::SE.load("assets/nc26792_coin.ogg", volume: 0.2)
+    Stylet::SE.load("assets/nc27131_jump.ogg", volume: 0.2)
+    Stylet::SE.load("assets/se_jump_short.ogg", volume: 0.5)
+    Stylet::SE.load("assets/nc30529_stomp.ogg", volume: 0.3)
+    Stylet::SE.load("assets/nc62985_zelda_secret_open.ogg", volume: 0.5)
+    Stylet::SE.load("assets/nc2681_1up.ogg", volume: 0.5)
+    Stylet::SE.load("assets/nc6131_ff_cursor.ogg", volume: 0.05)
+    Stylet::SE.load("assets/nc45878_buu.ogg", volume: 0.5)
 
     @cursor.display = false
     SDL::Mouse.hide
