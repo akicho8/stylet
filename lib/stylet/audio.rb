@@ -133,6 +133,9 @@ module Stylet
     mattr_accessor :channel_groups
     self.channel_groups = {}
 
+    mattr_accessor :preparation_channels
+    self.preparation_channels = 0
+
     def [](key)
       se_hash[key.to_sym] || NullEffect.new
     end
@@ -141,7 +144,7 @@ module Stylet
       se_hash[key.to_sym]
     end
 
-    def load(filename, volume: 1.0, key: nil, channel_group: nil, preload: false)
+    def load(filename, volume: 1.0, key: nil, channel_group: nil, preload: false, auto_assign: false)
       return if Stylet.config.silent_all
 
       filename = Pathname(filename).expand_path
@@ -157,21 +160,23 @@ module Stylet
         return
       end
 
-      channel_group ||= key
-      channel_groups[channel_group] ||= {:channel => channel_groups.size, :counter => 0}
-      channel_groups[channel_group][:counter] += 1
+      unless auto_assign
+        channel_group ||= key
+        channel_groups[channel_group] ||= {:channel => channel_groups.size, :counter => 0}
+        channel_groups[channel_group][:counter] += 1
+      end
 
       Audio.setup_once
-      self.allocated_channels = SDL::Mixer.allocate_channels(channel_groups.size)
-      se_hash[key] = SoundEffect.new(key: key, :channel_group => channel_group, filename: filename, volume: volume, preload: preload)
+      allocate_channels
+      se_hash[key] = SoundEffect.new(key: key, :channel_group => channel_group, filename: filename, volume: volume, preload: preload, auto_assign: auto_assign)
     end
 
-    # カウンターを減らして0なら解放しチャンネルを0から再割り当てする
     def destroy_all(keys = se_hash.keys)
       Array(keys).collect(&:to_sym).each do |key|
         if se = se_hash.delete(key)
-          raise if SE.channel_groups[se.channel_group][:counter] <= 0
-          SE.channel_groups[se.channel_group][:counter] -= 1
+          unless se.auto_assign
+            SE.channel_groups[se.channel_group][:counter] -= 1
+          end
           se.destroy
         end
       end
@@ -179,9 +184,14 @@ module Stylet
     end
 
     def channel_reset
+      raise if SE.channel_groups.any?{|k, e|e[:counter] < 0}
       SE.channel_groups.delete_if{|k, e|e[:counter] == 0}
-      self.allocated_channels = SDL::Mixer.allocate_channels(channel_groups.size)
+      allocate_channels
       channel_groups.each_value.with_index{|e, index|e[:channel] = index}
+    end
+
+    def allocate_channels
+      self.allocated_channels = SDL::Mixer.allocate_channels(preparation_channels + channel_groups.size)
     end
 
     # nil while se_hash.values.any? {|e| e.play? }
@@ -189,7 +199,6 @@ module Stylet
       SDL.delay(1) until SDL::Mixer.playing_channels.zero?
     end
 
-    # すべてのチャンネルを停止する
     def halt_all
       SDL::Mixer.halt(-1)
     end
@@ -220,13 +229,16 @@ module Stylet
     end
 
     class SoundEffect < Base
-      attr_reader :filename, :key, :channel_group, :volume
+      attr_reader :filename, :key, :channel_group, :volume, :auto_assign
 
-      def initialize(filename:, key:, channel_group:, volume:, preload: false)
+      def initialize(filename:, key:, channel_group:, volume:, preload: false, auto_assign: false)
+        raise if channel_group && auto_assign
+
         @filename = Pathname(filename).expand_path
         @key = key
         @channel_group = channel_group
         @volume = volume
+        @auto_assign = auto_assign
 
         if preload
           preload()
@@ -259,7 +271,14 @@ module Stylet
       end
 
       def channel
-        SE.channel_groups.fetch(@channel_group)[:channel]
+        if @auto_assign
+          if SE.allocated_channels == 0
+            raise "SE.preparation_channels でチャンネル数を指定してください"
+          end
+          -1
+        else
+          SE.channel_groups.fetch(@channel_group)[:channel]
+        end
       end
 
       def destroy
@@ -290,6 +309,10 @@ if $0 == __FILE__
   require "rspec/autorun"
 
   describe do
+    before do
+      Stylet::SE.destroy_all
+    end
+
     it do
       Stylet::Music.play("#{__dir__}/assets/bgm.wav")
       expect(Stylet::Music.play?).to eq true
@@ -318,6 +341,12 @@ if $0 == __FILE__
       expect(Stylet::SE.se_hash.values.collect(&:channel)).to eq [1, 0]
       Stylet::SE.destroy_all(:c)             # c を消すと 0 チャンネルが消えて
       expect(Stylet::SE[:b].channel).to eq 0 # 再割り当てするため 1 チャンネルが消えて 0 チャンネルのみになる
+    end
+
+    it do
+      Stylet::SE.preparation_channels = 10
+      Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO00.WAV", :key => :a, :auto_assign => true, :volume => 0.1)
+      expect(Stylet::SE[:a].spec).to match("-1/10")
     end
   end
 end
