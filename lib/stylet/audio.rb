@@ -144,7 +144,7 @@ module Stylet
       se_hash[key.to_sym]
     end
 
-    def load(filename, volume: 1.0, key: nil, channel_group: nil, preload: false, auto_assign: false)
+    def load(filename, volume: 1.0, key: nil, channel_group: nil, auto_assign: false, preload: false)
       return if Stylet.config.silent_all
 
       filename = Pathname(filename).expand_path
@@ -160,23 +160,12 @@ module Stylet
         return
       end
 
-      unless auto_assign
-        channel_group ||= key
-        channel_groups[channel_group] ||= {:channel => channel_groups.size, :counter => 0}
-        channel_groups[channel_group][:counter] += 1
-      end
-
-      Audio.setup_once
-      allocate_channels
-      se_hash[key] = SoundEffect.new(key: key, :channel_group => channel_group, filename: filename, volume: volume, preload: preload, auto_assign: auto_assign)
+      SoundEffect.new(key: key, :channel_group => channel_group, filename: filename, volume: volume,  auto_assign: auto_assign, preload: preload)
     end
 
     def destroy_all(keys = se_hash.keys)
-      Array(keys).collect(&:to_sym).each do |key|
-        if se = se_hash.delete(key)
-          unless se.auto_assign
-            SE.channel_groups[se.channel_group][:counter] -= 1
-          end
+      Array(keys).collect(&:to_sym).uniq.each do |key|
+        if se = se_hash[key]
           se.destroy
         end
       end
@@ -231,14 +220,23 @@ module Stylet
     class SoundEffect < Base
       attr_reader :filename, :key, :channel_group, :volume, :auto_assign
 
-      def initialize(filename:, key:, channel_group:, volume:, preload: false, auto_assign: false)
+      def initialize(filename:, key:, channel_group:, volume:, auto_assign: false, preload: false)
         raise if channel_group && auto_assign
 
-        @filename = Pathname(filename).expand_path
-        @key = key
-        @channel_group = channel_group
-        @volume = volume
-        @auto_assign = auto_assign
+        @filename      = Pathname(filename).expand_path
+        @key           = key
+        @channel_group = channel_group || key
+        @volume        = volume
+        @auto_assign   = auto_assign
+
+        unless @auto_assign
+          SE.channel_groups[@channel_group] ||= {:channel => SE.channel_groups.size, :counter => 0}
+          SE.channel_groups[@channel_group][:counter] += 1
+        end
+
+        Audio.setup_once
+        SE.allocate_channels
+        SE.se_hash[@key] = self
 
         if preload
           preload()
@@ -282,11 +280,16 @@ module Stylet
       end
 
       def destroy
+        raise unless SE.se_hash[@key]
+        unless @auto_assign
+          SE.channel_groups[@channel_group][:counter] -= 1
+        end
         if @wave
           raise if @wave.destroyed_
           @wave.destroy
           @wave = nil
         end
+        SE.se_hash.delete(@key)
       end
 
       def wave
