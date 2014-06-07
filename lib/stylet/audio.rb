@@ -45,8 +45,8 @@ module Stylet
     end
 
     def halt
-      SDL::Mixer.halt(-1)
-      SDL::Mixer.halt_music
+      Music.halt
+      SE.halt
     end
 
     def spec_check
@@ -186,7 +186,7 @@ module Stylet
       SDL.delay(1) until SDL::Mixer.playing_channels.zero?
     end
 
-    def halt_all
+    def halt
       SDL::Mixer.halt(-1)
     end
 
