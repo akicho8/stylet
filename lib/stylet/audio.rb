@@ -61,6 +61,9 @@ module Stylet
 
     mattr_accessor :current_music_file # 最後に再生したファイル
 
+    # mattr_reader :last_volume
+    # self.last_volume = 1.0
+
     def play(filename, volume: nil, loop: true, fade_in_sec: nil)
       return if Stylet.config.silent_music || Stylet.config.silent_all
 
@@ -80,6 +83,7 @@ module Stylet
     end
 
     def volume=(v)
+      # self.last_volume = v
       SDL::Mixer.set_volume_music(Audio.volume_cast(v))
     end
 
@@ -178,7 +182,7 @@ module Stylet
     end
 
     def allocate_channels
-      self.allocated_channels = SDL::Mixer.allocate_channels(preparation_channels + channel_groups.size)
+      self.allocated_channels = SDL::Mixer.allocate_channels(SE.preparation_channels + channel_groups.size)
     end
 
     # nil while se_hash.values.any? {|e| e.play? }
@@ -191,6 +195,7 @@ module Stylet
     end
 
     def volume=(v)
+      @volume = v
       SDL::Mixer.set_volume(-1, Audio.volume_cast(v))
     end
 
@@ -319,8 +324,8 @@ if $0 == __FILE__
     end
 
     it do
-      Stylet::Music.play("#{__dir__}/assets/bgm.wav")
       Stylet::Music.volume = 0.2
+      Stylet::Music.play("#{__dir__}/assets/bgm.wav")
 
       expect(Stylet::Music.play?).to eq true
       sleep(1)
@@ -329,11 +334,10 @@ if $0 == __FILE__
     end
 
     it do
+      Stylet::SE.volume = 0.2
       Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO00.WAV", :key => :a, :channel_group => :x, :volume => 0.1)
       Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO01.WAV", :key => :b,                       :volume => 0.1)
       Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO02.WAV", :key => :c, :channel_group => :x, :volume => 0.1)
-
-      Stylet::SE.volume = 0.2
 
       expect(Stylet::SE[:a].spec).to match(/new/)    # ロードしていない
       Stylet::SE[:a].preload                         # 明示的にロードする
