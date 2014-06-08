@@ -16,12 +16,12 @@ module Stylet
       #   1フレーム目。aだけ押されたのでaが返る
       #   a.update(true)
       #   b.update(false)
-      #   InputSupport.preference_key(a, b) #=> a
+      #   Input::Support.preference_key(a, b) #=> a
       #
       #   2フレーム目。aは押しっぱなしだが、bの方が若いのでbが返る
       #   a.update(true)
       #   b.update(true)
-      #   InputSupport.preference_key(a, b) #=> b
+      #   Input::Support.preference_key(a, b) #=> b
       #
       #   3つ以上のキーで比較する場合の麗
       #   list.sort_by{|e|(e.count.zero? ? Float::INFINITY : e.count)}.first

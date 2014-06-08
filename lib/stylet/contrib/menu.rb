@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 require "stylet"
+require "active_support/core_ext/hash/keys" # for assert_valid_keys
 
 module Stylet
   module Menu
@@ -16,16 +17,18 @@ module Stylet
       attr_reader :children
       attr_reader :state
       attr_reader :parent
-      attr_reader :select_button, :cancel_button
+      attr_reader :select_buttons, :cancel_buttons
 
-      def initialize(parent: nil, name: nil, list: [], select_button: [:btA, :btD], cancel_button: [:btB, :btC])
+      def initialize(parent: nil, name: nil, elements: [], select_buttons: [:btA, :btD], cancel_buttons: [:btB, :btC], scroll_margin: nil, bar: "─" * 40)
         super() if defined? super
 
-        @list          = list
-        @parent        = parent
-        @name         = name
-        @select_button = select_button
-        @cancel_button = cancel_button
+        @elements       = elements
+        @parent         = parent
+        @name           = name
+        @select_buttons = select_buttons
+        @cancel_buttons = cancel_buttons
+        @scroll_margin  = scroll_margin
+        @bar            = bar
 
         @cursor         = 0
         @window_cursor  = @cursor
@@ -67,6 +70,7 @@ module Stylet
             if @state.count >= 1  # サブメニューを開いた瞬間に最初の項目を押させないため
               update_cursor
               close_check
+              current_value_change
               current_run
             end
             update_window_cursor
@@ -91,25 +95,32 @@ module Stylet
           vputs @name
         end
         rendar_bar
-        @display_height.times do |i|
-          _index = @window_cursor + i
-          unless @list[_index]
-            break
-          end
-          menu_str = @list[_index][:name]
-          if _index == @cursor
-            vputs " 〉#{menu_str}"
-          else
-            vputs "   #{menu_str}"
-          end
-        end
+        @elements.slice(@window_cursor, @display_height).each {|element| element_display(element) }
         rendar_bar
       end
 
+      def element_display(element)
+        vputs " #{element_mark(element)}#{element[:name]} #{element_value(element)}".rstrip
+      end
+
+      def element_value(element)
+        if element[:value]
+          element[:value].call
+        end
+      end
+
+      def element_mark(element)
+        if element == current
+          "〉"
+        else
+          "  "
+        end
+      end
+
       def current_run
-        # if root.button.send(root.select_button).trigger? || root.axis.right.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
-        if root.select_button.any?{|e|root.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
-          current.assert_valid_keys(:name, :menu, :soft_command, :safe_command)
+        # if root.button.send(root.select_buttons).trigger? || root.axis.right.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
+        if root.select_buttons.any?{|e|root.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
+          current.assert_valid_keys(:name, :menu, :soft_command, :safe_command, :change)
           if menu = current[:menu]
             if menu.respond_to?(:call)
               menu = menu.call
@@ -147,11 +158,11 @@ module Stylet
                 d = -1
               end
             else
-              if @cursor < @list.size - 1
+              if @cursor < @elements.size - 1
                 d = 1
               end
             end
-            if d.nonzero?
+            if d != 0
               @cursor += d
               notify(:menu_scroll)
             end
@@ -160,35 +171,37 @@ module Stylet
       end
 
       def rendar_bar
-        vputs "────────────────────────────────────"
+        if @bar
+          vputs @bar
+        end
       end
 
       def close_check
-        # if root.button.send(root.cancel_button).trigger? || root.axis.left.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
-        if root.cancel_button.any?{|e|root.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
+        # if root.button.send(root.cancel_buttons).trigger? || root.axis.left.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
+        if root.cancel_buttons.any?{|e|root.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
           close
         end
       end
 
       def update_window_cursor
-        if @cursor - @window_cursor < scroll_line
+        if @cursor - @window_cursor < scroll_margin
           if @window_cursor > 0
             @window_cursor -= 1
           end
         end
-        if @cursor - @window_cursor >= @display_height - scroll_line
-          if @window_cursor < @list.size - @display_height
+        if @cursor - @window_cursor >= @display_height - scroll_margin
+          if @window_cursor < @elements.size - @display_height
             @window_cursor += 1
           end
         end
       end
 
       def current
-        @list.fetch(@cursor)
+        @elements.fetch(@cursor)
       end
 
-      def scroll_line
-        @scroll_line || (@display_height / 3)
+      def scroll_margin
+        @scroll_margin || (@display_height / 3)
       end
 
       # close methods
@@ -212,9 +225,28 @@ module Stylet
 
       def bgm_if_possible
       end
+
+      def current_value_change
+        if current[:change]
+          if plus_or_minus_integer.nonzero?
+            current[:change].call(plus_or_minus_integer)
+          end
+        end
+      end
+
+      def plus_or_minus_integer
+        case e = Input::Support.preference_key(root.axis.right, root.axis.left)
+        when root.axis.right
+          e.repeat
+        when root.axis.left
+          e.repeat * -1
+        else
+          0
+        end
+      end
     end
 
-    module MenuSound
+    module Soundable
       extend ActiveSupport::Concern
 
       def initialize(*)
@@ -241,9 +273,9 @@ module Stylet
       include Core
     end
 
-    class Soundy
+    class Basic
       include Core
-      include MenuSound
+      include Soundable
     end
   end
 
@@ -274,18 +306,21 @@ module Stylet
         def initialize
           super(Stylet::Base.active_frame)
 
-          @menu = Stylet::Menu::Soundy.new(list: [
+          @test_var = 0
+          @menu = Stylet::Menu::Basic.new(elements: [
+              {name: "モード", safe_command: proc {}, :value => -> { @test_var }, :change => proc {|v| @test_var += v }},
+
               {name: "実行", safe_command: proc { SampleWindow.new.counter_loop }},
               {name: "サブメニュー", soft_command: proc {|s|
-                  s.chain(name: "sub menu", list: [
+                  s.chain(name: "sub menu", elements: [
                       {name: "実行", safe_command: proc { SampleWindow.new.counter_loop }},
                       {name: "A", safe_command: proc { p 1 }},
                       {name: "B", safe_command: proc { p 2 }},
                       {name: "閉じる", soft_command: :close },
                     ])
                 }},
-              {name: "サブメニュー2", soft_command: proc {|s| s.chain(name: "[サブメニュー2]", list: 16.times.collect{|i|{:name => "項目#{i}"}})}},
-              {name: "サブメニュー3", menu: {name: "[サブメニュー3]", list: 16.times.collect{|i|{:name => "項目#{i}"}}}},
+              {name: "サブメニュー2", soft_command: proc {|s| s.chain(name: "[サブメニュー2]", elements: 16.times.collect{|i|{:name => "項目#{i}"}})}},
+              {name: "サブメニュー3", menu: {name: "[サブメニュー3]", elements: 16.times.collect{|i|{:name => "項目#{i}"}}}},
               {:name => "閉じる", soft_command: :close },
             ])
 
@@ -308,7 +343,7 @@ module Stylet
       # SampleWindow クラスでも update が実行されてしまう
       class App2 < Stylet::Base
         setup do
-          @menu = Stylet::Menu::Soundy.new(list: [{name: "RUN", safe_command: proc { SampleWindow.new.counter_loop }}])
+          @menu = Stylet::Menu::Basic.new(elements: [{name: "RUN", safe_command: proc { SampleWindow.new.counter_loop }}])
         end
         update do
           @menu.update
