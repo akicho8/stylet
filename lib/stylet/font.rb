@@ -3,6 +3,7 @@ module Stylet
   module Font
     attr_reader :font
     attr_reader :font_width
+    attr_reader :console_current_line
 
     def run_initializers
       super
@@ -24,7 +25,7 @@ module Stylet
 
     def before_draw
       super if defined? super
-      @_console_lines = 0
+      @console_current_line = 0
     end
 
     def after_run
@@ -54,10 +55,9 @@ module Stylet
     #   vputs "Hello", :vector => Vector[x, y], :align => :right  # 座標指定(右寄せ)
     #   vputs "Hello", :vector => Vector[x, y], :align => :center # 座標指定(中央)
     #
-    def vputs(str, vector: nil, color: :font, align: :left)
+    def vputs(str = "", vector: nil, color: :font, align: :left)
       return unless @font
       str = str.to_s
-      return if str.empty?
 
       if vector
         begin
@@ -78,9 +78,9 @@ module Stylet
         rescue RangeError
         end
       else
-        if @_console_lines
-          vputs(str, :vector => vec2[0, @_console_lines * @font.line_skip], color: color, align: align)
-          @_console_lines += 1
+        if @console_current_line
+          vputs(str, :vector => vec2[0, @console_current_line * @font.line_skip], color: color, align: align)
+          @console_current_line += 1
         end
       end
     end

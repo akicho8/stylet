@@ -91,7 +91,7 @@ module Stylet
         return
       end
       after_draw            # @screen.flip
-      before_draw           # @_console_lines = 0
+      before_draw           # @console_current_line = 0
       background_clear
       before_update         # vputs(system_line)
 
