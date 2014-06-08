@@ -14,12 +14,10 @@ module Stylet
       include Stylet::Input::StandardKeybordBind
       include Stylet::Input::JoystickBindMethod
 
-      attr_reader :children
-      attr_reader :state
-      attr_reader :parent
-      attr_reader :select_buttons, :cancel_buttons
+      attr_accessor :parent, :bar, :display_height, :select_buttons, :cancel_buttons
+      attr_reader :state, :children
 
-      def initialize(parent: nil, name: nil, elements: [], select_buttons: [:btA, :btD], cancel_buttons: [:btB, :btC], scroll_margin: nil, bar: "─" * 40)
+      def initialize(parent: nil, name: nil, elements: [], select_buttons: [:btA, :btD], cancel_buttons: [:btB, :btC], scroll_margin: nil, bar: "─" * 40, display_height: 20)
         super() if defined? super
 
         @elements       = elements
@@ -29,10 +27,10 @@ module Stylet
         @cancel_buttons = cancel_buttons
         @scroll_margin  = scroll_margin
         @bar            = bar
+        @display_height = display_height
 
         @cursor         = 0
         @window_cursor  = @cursor
-        @display_height = 20
 
         @state = State.new(:menu_boot)
         @children = []
@@ -70,9 +68,9 @@ module Stylet
             if @state.count >= 1  # サブメニューを開いた瞬間に最初の項目を押させないため
               update_cursor
               close_check
-              current_value_change
               current_run
             end
+            current_value_change
             update_window_cursor
             render
           end
