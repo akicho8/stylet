@@ -17,17 +17,18 @@ module Stylet
       attr_accessor :parent, :bar, :display_height, :select_buttons, :cancel_buttons
       attr_reader :state, :children
 
-      def initialize(parent: nil, name: nil, elements: [], select_buttons: [:btA, :btD], cancel_buttons: [:btB, :btC], scroll_margin: nil, bar: "─" * 40, display_height: 20)
+      def initialize(parent: nil, name: nil, elements: [], select_buttons: [:btA, :btD], cancel_buttons: [:btB, :btC], scroll_margin: nil, bar: "─" * 40, display_height: 20, joystick_index: nil)
         super() if defined? super
 
-        @elements       = elements
         @parent         = parent
         @name           = name
+        @elements       = elements
         @select_buttons = select_buttons
         @cancel_buttons = cancel_buttons
         @scroll_margin  = scroll_margin
         @bar            = bar
         @display_height = display_height
+        @joystick_index = joystick_index
 
         @cursor         = 0
         @window_cursor  = @cursor
@@ -48,7 +49,7 @@ module Stylet
       def update
         super if defined? super
         unless @parent
-          joys.each{|e|update_by_joy(e)}
+          active_joys.each{|e|update_by_joy(e)}
           key_counter_update_all
         end
         @state.loop_in do
@@ -240,6 +241,14 @@ module Stylet
           e.repeat * -1
         else
           0
+        end
+      end
+
+      def active_joys
+        if @joystick_index
+          joys[@joystick_index, 1]
+        else
+          joys
         end
       end
     end
