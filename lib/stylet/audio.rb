@@ -61,9 +61,6 @@ module Stylet
 
     mattr_accessor :current_music_file # 最後に再生したファイル
 
-    # mattr_reader :last_volume
-    # self.last_volume = 1.0
-
     def play(filename, volume: nil, loop: true, fade_in_sec: nil)
       return if Stylet.config.silent_music || Stylet.config.silent_all
 
@@ -83,7 +80,6 @@ module Stylet
     end
 
     def volume=(v)
-      # self.last_volume = v
       SDL::Mixer.set_volume_music(Audio.volume_cast(v))
     end
 
@@ -106,6 +102,8 @@ module Stylet
     def fade_out(fade_out_sec: 2)
       halt(fade_out_sec: fade_out_sec)
     end
+
+    private
 
     def load(filename)
       destroy
@@ -296,12 +294,14 @@ module Stylet
           @wave.destroy
           @wave = nil
         end
+        Stylet.logger.debug "destroy: #{@key.inspect}" if Stylet.logger
         SE.se_hash.delete(@key)
       end
 
       def wave
         @wave ||= SDL::Mixer::Wave.load(@filename.to_s).tap do |obj|
           obj.set_volume(Audio.volume_cast(@volume))
+          Stylet.logger.debug "disk_load: #{@key.inspect}" if Stylet.logger
         end
       end
 
