@@ -166,7 +166,7 @@ module Stylet
             end
             if d != 0
               @cursor += d
-              notify(:menu_scroll)
+              notify(:menu_cursor)
             end
           end
         end
@@ -249,7 +249,7 @@ module Stylet
 
       def active_joys
         if @joystick_index
-          joys[@joystick_index, 1]
+          joys[@joystick_index, 1] || []
         else
           joys
         end
@@ -261,11 +261,23 @@ module Stylet
 
       def initialize(*)
         super if defined? super
-        Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_boot.aif",   volume: 0.2)
-        Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_chain.aif",  volume: 0.2)
-        Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_select.aif", volume: 0.2)
-        Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_scroll.aif", volume: 0.2)
-        Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_back.aif",   volume: 0.2)
+
+        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_boot.aif",   volume: 0.2)
+        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_chain.aif",  volume: 0.2)
+        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_select.aif", volume: 0.2)
+        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_cursor.aif", volume: 0.2)
+        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_back.aif",   volume: 0.2)
+
+        Stylet::SE.load("#{__dir__}/../../../sound_effects/pc_puyo_puyo_fever/SE/039CURSOR.WAV", volume: 0.5, key: :menu_cursor)
+        Stylet::SE.load("#{__dir__}/../../../sound_effects/pc_puyo_puyo_fever/SE/036DECIDE.WAV", volume: 0.5, key: :menu_select)
+        Stylet::SE.load("#{__dir__}/../../../sound_effects/pc_puyo_puyo_fever/SE/037CANCEL.WAV", volume: 0.5, key: :menu_back)
+        Stylet::SE.load("#{__dir__}/../../../sound_effects/pc_puyo_puyo_fever/SE/036DECIDE.WAV", volume: 0.5, key: :menu_chain)
+
+        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_chain.aif",  volume: 0.2)
+        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_select.aif", volume: 0.2)
+        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_cursor.aif", volume: 0.2)
+        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_back.aif",   volume: 0.2, key: menu_back)
+
       end
 
       def notify(key)
@@ -274,7 +286,8 @@ module Stylet
 
       def bgm_if_possible
         unless Stylet::Music.play?
-          Stylet::Music.play("#{__dir__}/../../../sound_effects/garage_band/menu_boot.aif")
+          # Stylet::Music.play("#{__dir__}/../../../sound_effects/garage_band/menu_boot.aif")
+          Stylet::Music.play("#{__dir__}/../../../sound_effects/pc_puyo_puyo_fever/BGM/01_MENU.ogg")
         end
       end
     end
