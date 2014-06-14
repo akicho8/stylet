@@ -6,30 +6,32 @@ module Stylet
 
   config_accessor :production
 
-  config.fps              = nil,
+  # Screen
   config.screen_size      = [640, 480]
+  config.fps              = nil,
   config.full_screen      = false
   config.color_depth      = 16
-  config.screen_flags     = SDL::HWSURFACE | SDL::DOUBLEBUF | SDL::HWACCEL | SDL::RESIZABLE # SDL::NOFRAME
-
-  config.sound_freq       = 22050 # 44100  # SDLのデフォルトは 22050
-
-  # config.font_name      = "luxirr.ttf"
-  config.font_name        = "ipag-mona.ttf"
-
-  config.font_size        = 14
-  config.font_bold        = false
-
+  config.screen_flags     = SDL::HWSURFACE | SDL::DOUBLEBUF | SDL::HWACCEL | SDL::RESIZABLE
+  # config.screen_flags   = SDL::HWSURFACE | SDL::DOUBLEBUF | SDL::HWACCEL | SDL::RESIZABLE # SDL::NOFRAME
   config.background_image = nil # "background.bmp"
 
-  config.pause_keys       = [SDL::Key::SPACE]
+  # Mouse
+  config.hide_mouse       = false
 
-  config.optparse_enable  = true
+  # Font
+  config.font_size        = 14
+  config.font_bold        = false
+  config.font_name        = "ipag-mona.ttf"
+  # config.font_name      = "luxirr.ttf"
 
-  config.production       = false
-  config.production_keys  = [SDL::Key::K0] # [SDL::Key::RETURN]
-
+  # Audio
+  config.sound_freq       = 22050 # 44100  # SDLのデフォルトは 22050
   config.silent_music     = false
   config.silent_all       = false
-  config.hide_mouse       = false
+
+  # etc.
+  config.production       = false
+  config.production_keys  = [SDL::Key::K0] # [SDL::Key::RETURN]
+  config.pause_keys       = [SDL::Key::SPACE]
+  config.optparse_skip    = false
 end
