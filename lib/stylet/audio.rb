@@ -61,10 +61,15 @@ module Stylet
 
     mattr_accessor :current_music_file # 最後に再生したファイル
 
-    def play(filename, volume: nil, loop: true, fade_in_sec: nil)
-      return if Stylet.config.silent_music || Stylet.config.silent_all
+    def play_by(params)
+      play(params[:filename], params)
+    end
+
+    def play(filename, volume: nil, loop: true, fade_in_sec: nil, **)
+      return if Stylet.config.mute_music || Stylet.config.mute
 
       Audio.setup_once
+
       filename = Pathname(filename).expand_path
       if filename.exist?
         Stylet.logger.debug "play: #{filename}" if Stylet.logger
@@ -145,7 +150,7 @@ module Stylet
     end
 
     def load(filename, volume: 1.0, key: nil, channel_group: nil, auto_assign: false, preload: false)
-      return if Stylet.config.silent_all
+      return if Stylet.config.mute
 
       filename = Pathname(filename).expand_path
       unless filename.exist?
