@@ -190,7 +190,11 @@ module Stylet
 
     # nil while se_hash.values.any? {|e| e.play? }
     def wait_if_play?
-      SDL.delay(1) until SDL::Mixer.playing_channels.zero?
+      SDL.delay(1) while play_any?
+    end
+
+    def play_any?
+      SDL::Mixer.playing_channels.nonzero?
     end
 
     def halt
