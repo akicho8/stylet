@@ -165,7 +165,7 @@ module Stylet
         return
       end
 
-      SoundEffect.new(key: key, :channel_group => channel_group, filename: filename, volume: volume,  auto_assign: auto_assign, preload: preload)
+      SoundEffect.new(key: key, :channel_group => channel_group, filename: filename, volume: volume, auto_assign: auto_assign, preload: preload)
     end
 
     def destroy_all(keys = se_hash.keys)
@@ -195,6 +195,10 @@ module Stylet
 
     def play_any?
       SDL::Mixer.playing_channels.nonzero?
+    end
+
+    def play_none?
+      !play_any?
     end
 
     def halt
@@ -256,7 +260,7 @@ module Stylet
           preload()
         end
 
-        Stylet.logger.debug spec if Stylet.logger
+        Stylet.logger.debug "new: #{spec}" if Stylet.logger
       end
 
       def play(loop: false)
@@ -299,7 +303,7 @@ module Stylet
           SE.channel_groups[@channel_group][:counter] -= 1
         end
         if @wave
-          raise if @wave.destroyed_
+          raise if @wave.destroyed?
           @wave.destroy
           @wave = nil
         end
@@ -317,7 +321,7 @@ module Stylet
       alias preload wave
 
       def spec
-        "#{@filename} volume:#{@volume} channel:#{channel}/#{SE.allocated_channels} #{@wave ? :loaded : :new}"
+        "[channel:#{channel}/#{SE.allocated_channels}] [#{@wave ? :loaded : :new}] [volume:#{@volume}] [#{@channel_group}] [#{@key}] #{@filename}"
       end
     end
   end
