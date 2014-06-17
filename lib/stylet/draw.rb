@@ -77,8 +77,7 @@ module Stylet
             @screen_active = @sdl_event.gain
           end
         when SDL::Event::VideoResize
-          Stylet.config.screen_size = [@sdl_event.w, @sdl_event.h]
-          screen_open
+          screen_resize(@sdl_event.w, @sdl_event.h)
         when SDL::Event::Quit
           throw :exit, :break
         end
@@ -155,6 +154,11 @@ module Stylet
 
     def full_screen_toggle
       Stylet.config.full_screen = !Stylet.config.full_screen
+      screen_open
+    end
+
+    def screen_resize(w, h)
+      Stylet.config.screen_size = [w, h]
       screen_open
     end
 

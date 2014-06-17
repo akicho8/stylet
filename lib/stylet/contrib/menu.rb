@@ -122,31 +122,28 @@ module Stylet
       def current_run
         # if root.button.send(root.select_buttons).trigger? || root.axis.right.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
         if root.select_buttons.any?{|e|root.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
-          current.assert_valid_keys(:name, :menu, :soft_command, :safe_command, :change, :value)
+          current.assert_valid_keys(:name, :menu, :soft_command, :pon_command, :safe_command, :change, :value)
           if menu = current[:menu]
             if menu.respond_to?(:call)
               menu = menu.call
             end
             chain(menu)
           end
-          if soft_command = current[:soft_command]
-            case soft_command
-            when Symbol
-              send(soft_command)
-            else
-              soft_command.call(self)
-            end
+          if c = current[:soft_command]
+            command.call(self)
+          end
+          if c = current[:pon_command]
+            notify(:menu_select)
+            command.call(self)
+          end
+          if c = current[:sym_command]
+            send(c)
           end
           if safe_command = current[:safe_command]
-            case safe_command
-            when Symbol
-              send(safe_command)
-            else
-              Stylet::Audio.halt
-              safe_command.call(self)
-              Stylet::Audio.halt
-              bgm_if_possible
-            end
+            Stylet::Audio.halt
+            safe_command.call(self)
+            Stylet::Audio.halt
+            bgm_if_possible
           end
         end
       end
