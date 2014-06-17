@@ -70,8 +70,7 @@ module Stylet
             throw :exit, :break
           end
           if @sdl_event.sym == SDL::Key::F1
-            Stylet.config.full_screen = !Stylet.config.full_screen
-            screen_open
+            full_screen_toggle
           end
         when SDL::Event::Active
           if (@sdl_event.state & SDL::Event::APPINPUTFOCUS).nonzero?
@@ -152,6 +151,11 @@ module Stylet
       # return if Stylet.production
       @check_fps.update
       vputs(system_line)
+    end
+
+    def full_screen_toggle
+      Stylet.config.full_screen = !Stylet.config.full_screen
+      screen_open
     end
 
     private
