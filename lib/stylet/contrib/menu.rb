@@ -129,15 +129,15 @@ module Stylet
             end
             chain(menu)
           end
-          if c = current[:soft_command]
+          if command = current[:soft_command]
             command.call(self)
           end
-          if c = current[:pon_command]
+          if command = current[:pon_command]
             notify(:menu_select)
             command.call(self)
           end
-          if c = current[:sym_command]
-            send(c)
+          if command = current[:sym_command]
+            send(command)
           end
           if safe_command = current[:safe_command]
             Stylet::Audio.halt
