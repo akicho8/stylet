@@ -60,8 +60,8 @@ module Stylet
     extend self
 
     # 最後に再生したファイル
-    mattr_accessor :current_music_file
-    self.current_music_file = nil
+    mattr_accessor :last_music_file
+    self.last_music_file = nil
 
     # ボリュームの倍率
     mattr_accessor :volume_magnification
@@ -114,12 +114,16 @@ module Stylet
       halt(fade_out_sec: fade_out_sec)
     end
 
+    def last_music_file?(filename)
+      self.last_music_file == Pathname(filename).expand_path.to_s
+    end
+
     private
 
     def load(filename)
       destroy
       filename = Pathname(filename).expand_path.to_s
-      self.current_music_file = filename
+      self.last_music_file = filename
       @muisc = SDL::Mixer::Music.load(filename)
     end
 
