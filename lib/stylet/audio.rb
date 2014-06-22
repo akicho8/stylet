@@ -32,7 +32,7 @@ module Stylet
 
       def volume_cast(v)
         raise if v.kind_of? Integer
-        (v / 1.0 * 128).to_i
+        (Stylet::Etc.clamp(v) / 1.0 * 128).to_i
       end
     end
 
@@ -59,7 +59,13 @@ module Stylet
   module Music
     extend self
 
-    mattr_accessor :current_music_file # 最後に再生したファイル
+    # 最後に再生したファイル
+    mattr_accessor :current_music_file
+    self.current_music_file = nil
+
+    # ボリュームの倍率
+    mattr_accessor :volume_magnification
+    self.volume_magnification = 1.0
 
     def play_by(params)
       play(params[:filename], params)
@@ -85,7 +91,7 @@ module Stylet
     end
 
     def volume=(v)
-      SDL::Mixer.set_volume_music(Audio.volume_cast(v))
+      SDL::Mixer.set_volume_music(Audio.volume_cast(v * volume_magnification))
     end
 
     def play?
@@ -138,8 +144,22 @@ module Stylet
     mattr_accessor :channel_groups
     self.channel_groups = {}
 
+    # 予約チャンネル数 (channel_auto を使うときに関係してくる)
     mattr_accessor :preparation_channels
     self.preparation_channels = 0
+
+    # チャンネルボリュームの初期値
+    # SDL は何もしないと 1.0 だけど音が大きすぎるため全チャンネルを 0.5 としている
+    # WAVE毎にボリュームを設定できるため、この値は固定しておいた方がシンプルになる
+    # この設定は不要かもしれない
+    mattr_accessor :default_master_volume
+    self.default_master_volume = 0.5
+
+    # ボリューム倍率
+    # アプリケーションのオプションなどで効果音の音量を設定するときはこの値を変更する
+    # 実際に反映するのはボリュームを設定したときなので注意
+    mattr_accessor :volume_magnification
+    self.volume_magnification = 1.0
 
     def [](key)
       se_hash[key.to_sym] || NullEffect.new
@@ -149,7 +169,12 @@ module Stylet
       se_hash[key.to_sym]
     end
 
-    def load(filename, volume: 1.0, key: nil, channel_group: nil, auto_assign: false, preload: false)
+    def load_once(**params)
+      return if exist?(params[:key])
+      load(params[:filename], params.except(:filename))
+    end
+
+    def load(filename, volume: 1.0, key: nil, channel_group: nil, channel_auto: false, preload: false)
       return if Stylet.config.mute
 
       filename = Pathname(filename).expand_path
@@ -165,7 +190,7 @@ module Stylet
         return
       end
 
-      SoundEffect.new(key: key, :channel_group => channel_group, filename: filename, volume: volume, auto_assign: auto_assign, preload: preload)
+      SoundEffect.new(key: key, :channel_group => channel_group, filename: filename, volume: volume, channel_auto: channel_auto, preload: preload)
     end
 
     def destroy_all(keys = se_hash.keys)
@@ -186,6 +211,7 @@ module Stylet
 
     def allocate_channels
       self.allocated_channels = SDL::Mixer.allocate_channels(SE.preparation_channels + channel_groups.size)
+      SE.master_volume = SE.default_master_volume
     end
 
     # nil while se_hash.values.any? {|e| e.play? }
@@ -205,8 +231,8 @@ module Stylet
       SDL::Mixer.halt(-1)
     end
 
-    def volume=(v)
-      @volume = v
+    def master_volume=(v)
+      @master_volume = v
       SDL::Mixer.set_volume(-1, Audio.volume_cast(v))
     end
 
@@ -236,18 +262,18 @@ module Stylet
     end
 
     class SoundEffect < Base
-      attr_reader :filename, :key, :channel_group, :volume, :auto_assign
+      attr_reader :filename, :key, :channel_group, :volume, :channel_auto
 
-      def initialize(filename:, key:, channel_group:, volume:, auto_assign: false, preload: false)
-        raise if channel_group && auto_assign
+      def initialize(filename:, key:, channel_group:, volume:, channel_auto: false, preload: false)
+        raise if channel_group && channel_auto
 
         @filename      = Pathname(filename).expand_path
         @key           = key
         @channel_group = channel_group || key
         @volume        = volume
-        @auto_assign   = auto_assign
+        @channel_auto   = channel_auto
 
-        unless @auto_assign
+        unless @channel_auto
           SE.channel_groups[@channel_group] ||= {:channel => SE.channel_groups.size, :counter => 0}
           SE.channel_groups[@channel_group][:counter] += 1
         end
@@ -282,12 +308,12 @@ module Stylet
       def volume=(v)
         @volume = v
         if @wave
-          @wave.set_volume(Audio.volume_cast(v))
+          wave_volume_set(@wave)
         end
       end
 
       def channel
-        if @auto_assign
+        if @channel_auto
           if SE.allocated_channels == 0
             raise "SE.preparation_channels でチャンネル数を指定してください"
           end
@@ -299,7 +325,7 @@ module Stylet
 
       def destroy
         raise unless SE.se_hash[@key]
-        unless @auto_assign
+        unless @channel_auto
           SE.channel_groups[@channel_group][:counter] -= 1
         end
         if @wave
@@ -312,8 +338,8 @@ module Stylet
       end
 
       def wave
-        @wave ||= SDL::Mixer::Wave.load(@filename.to_s).tap do |obj|
-          obj.set_volume(Audio.volume_cast(@volume))
+        @wave ||= SDL::Mixer::Wave.load(@filename.to_s).tap do |wave|
+          wave_volume_set(wave)
           Stylet.logger.debug "disk_load: #{@key.inspect}" if Stylet.logger
         end
       end
@@ -322,6 +348,12 @@ module Stylet
 
       def spec
         "[channel:#{channel}/#{SE.allocated_channels}] [#{@wave ? :loaded : :new}] [volume:#{@volume}] [#{@channel_group}] [#{@key}] #{@filename}"
+      end
+
+      private
+
+      def wave_volume_set(wave)
+        wave.set_volume(Audio.volume_cast(@volume * SE.volume_magnification))
       end
     end
   end
@@ -347,7 +379,7 @@ if $0 == __FILE__
     end
 
     it do
-      Stylet::SE.volume = 0.2
+      Stylet::SE.master_volume = 0.2
       Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO00.WAV", :key => :a, :channel_group => :x, :volume => 0.1)
       Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO01.WAV", :key => :b,                       :volume => 0.1)
       Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO02.WAV", :key => :c, :channel_group => :x, :volume => 0.1)
@@ -371,7 +403,7 @@ if $0 == __FILE__
 
     it do
       Stylet::SE.preparation_channels = 10
-      Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO00.WAV", :key => :a, :auto_assign => true, :volume => 0.1)
+      Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO00.WAV", :key => :a, :channel_auto => true, :volume => 0.1)
       expect(Stylet::SE[:a].spec).to match("-1/10")
     end
   end

@@ -274,7 +274,6 @@ module Stylet
         # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_select.aif", volume: 0.2)
         # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_cursor.aif", volume: 0.2)
         # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_back.aif",   volume: 0.2, key: menu_back)
-
       end
 
       def notify(key)
