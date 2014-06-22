@@ -14,10 +14,10 @@ module Stylet
       include Stylet::Input::StandardKeybordBind
       include Stylet::Input::JoystickBindMethod
 
-      attr_accessor :parent, :bar, :display_height, :select_buttons, :cancel_buttons
+      attr_accessor :parent, :bar, :display_height, :select_buttons, :cancel_buttons, :line_format, :close_hook
       attr_reader :state, :children
 
-      def initialize(parent: nil, name: nil, elements: [], select_buttons: [:btA, :btD], cancel_buttons: [:btB, :btC], scroll_margin: nil, bar: "─" * 40, display_height: 20, joystick_index: nil)
+      def initialize(parent: nil, name: nil, elements: [], select_buttons: [:btA, :btD], cancel_buttons: [:btB, :btC], scroll_margin: nil, bar: "─" * 40, display_height: 20, joystick_index: nil, line_format: " %{cursor}%{name} %{value}", close_hook: nil)
         super() if defined? super
 
         @parent         = parent
@@ -29,6 +29,8 @@ module Stylet
         @bar            = bar
         @display_height = display_height
         @joystick_index = joystick_index
+        @line_format    = line_format
+        @close_hook     = close_hook
 
         @cursor         = 0
         @window_cursor  = @cursor
@@ -92,30 +94,50 @@ module Stylet
         unless @bar
           vputs
         end
-        if @name
+        if menu_name
           rendar_bar
-          vputs @name
+          vputs menu_name
         end
         rendar_bar
         @elements.slice(@window_cursor, @display_height).each {|element| element_display(element) }
         rendar_bar
       end
 
+      def menu_name
+        if @name.respond_to?(:call)
+          @name.call
+        else
+          @name
+        end
+      end
+
       def element_display(element)
-        vputs " #{element_mark(element)}#{element[:name]} #{element_value(element)}".rstrip
+        vputs line_format % {
+          :cursor => element_cursor(element),
+          :name   => element_name(element),
+          :value  => element_value(element),
+        }
+      end
+
+      def element_cursor(element)
+        if element == current
+          "〉"
+        else
+          "  "
+        end
+      end
+
+      def element_name(element)
+        if element[:name].respond_to?(:call)
+          element[:name].call
+        else
+          element[:name]
+        end
       end
 
       def element_value(element)
         if element[:value]
           element[:value].call
-        end
-      end
-
-      def element_mark(element)
-        if element == current
-          "〉"
-        else
-          "  "
         end
       end
 
@@ -207,6 +229,9 @@ module Stylet
       begin
         def close_and_parent_restart
           if parent
+            if @close_hook
+              @close_hook.call(self)
+            end
             parent.children.delete(self)
             parent.state.jump_to(:menu_restart)
           end
