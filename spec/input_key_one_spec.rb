@@ -44,9 +44,9 @@ module Stylet
     it "キーを離した瞬間がわかる" do
       a = Input::KeyOne.new
       a.update(true)
-      a.free_trigger?.should be_false
+      a.free_trigger?.should == false
       a.update(false)
-      a.free_trigger?.should be_true
+      a.free_trigger?.should == true
     end
 
     it "0.0 or 1.0 を返す(キーリピート対応)" do
