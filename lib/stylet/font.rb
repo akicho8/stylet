@@ -79,10 +79,14 @@ module Stylet
         end
       else
         if @console_current_line
-          vputs(str, :vector => vec2[0, @console_current_line * @font.line_skip], color: color, align: align)
+          vputs(str, :vector => vputs_vector, color: color, align: align)
           @console_current_line += 1
         end
       end
+    end
+
+    def vputs_vector
+      vec2[0, @console_current_line * @font.line_skip]
     end
   end
 end
