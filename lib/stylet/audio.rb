@@ -232,6 +232,7 @@ module Stylet
     end
 
     def master_volume=(v)
+      Audio.setup_once
       @master_volume = v
       SDL::Mixer.set_volume(-1, Audio.volume_cast(v))
     end
