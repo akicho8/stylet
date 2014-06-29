@@ -68,8 +68,8 @@ module Stylet
             end
             @state.jump_to(:menu_alive)
           when :menu_alive
-            if @state.count >= 1  # サブメニューを開いた瞬間に最初の項目を押させないため
-              update_cursor
+            update_cursor
+            if @state.count >= 2  # サブメニューを開いた瞬間に最初の項目を押させないため
               close_check
               current_run
             end
@@ -86,6 +86,10 @@ module Stylet
         else
           self
         end
+      end
+
+      def force_close
+        throw :exit, :break
       end
 
       private
@@ -144,7 +148,7 @@ module Stylet
       def current_run
         # if root.button.send(root.select_buttons).trigger? || root.axis.right.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
         if root.select_buttons.any?{|e|root.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
-          current.assert_valid_keys(:name, :menu, :soft_command, :pon_command, :safe_command, :sym_command, :change, :value)
+          current.assert_valid_keys(:name, :menu, :soft_command, :pon_command, :safe_command, :change, :value)
           if menu = current[:menu]
             if menu.respond_to?(:call)
               menu = menu.call
@@ -158,14 +162,19 @@ module Stylet
             notify(:menu_select)
             command.call(self)
           end
-          if command = current[:sym_command]
-            send(command)
-          end
+          # if command = current[:sym_command]
+          #   send(command)
+          # end
           if safe_command = current[:safe_command]
             Stylet::Audio.halt
+            notify(:menu_select)
             safe_command.call(self)
             Stylet::Audio.halt
             bgm_if_possible
+
+            # ブロックの中でBキャンセルしたときにこのメニューもBキャンセルが反応してしまうのを防ぐため
+            # メニューをリスタートさせる。リスタートすることで2フレーム間、Bキャンセルをかわせる
+            @state.jump_to(:menu_restart)
           end
         end
       end
@@ -200,7 +209,7 @@ module Stylet
       def close_check
         # if root.button.send(root.cancel_buttons).trigger? || root.axis.left.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
         if root.cancel_buttons.any?{|e|root.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
-          close
+          close_and_parent_restart
         end
       end
 
@@ -226,21 +235,13 @@ module Stylet
       end
 
       # close methods
-      begin
-        def close_and_parent_restart
-          if parent
-            if @close_hook
-              @close_hook.call(self)
-            end
-            parent.children.delete(self)
-            parent.state.jump_to(:menu_restart)
+      def close_and_parent_restart
+        if parent
+          if @close_hook
+            @close_hook.call(self)
           end
-        end
-
-        alias close close_and_parent_restart
-
-        def force_close
-          throw :exit, :break
+          parent.children.delete(self)
+          parent.state.jump_to(:menu_restart)
         end
       end
 
@@ -360,12 +361,12 @@ module Stylet
                       {name: "実行", safe_command: proc { SampleWindow.new.counter_loop }},
                       {name: "A", safe_command: proc { p 1 }},
                       {name: "B", safe_command: proc { p 2 }},
-                      {name: "閉じる", soft_command: :close },
+                      {name: "閉じる", soft_command: :close_and_parent_restart },
                     ])
                 }},
               {name: "サブメニュー2", soft_command: proc {|s| s.chain(name: "[サブメニュー2]", elements: 16.times.collect{|i|{:name => "項目#{i}"}})}},
               {name: "サブメニュー3", menu: {name: "[サブメニュー3]", elements: 16.times.collect{|i|{:name => "項目#{i}"}}}},
-              {:name => "閉じる", soft_command: :close },
+              {:name => "閉じる", soft_command: :close_and_parent_restart },
             ])
 
         end
