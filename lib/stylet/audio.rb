@@ -274,9 +274,12 @@ module Stylet
 
         @filename      = Pathname(filename).expand_path
         @key           = key
-        @channel_group = channel_group || key
+        @channel_auto  = channel_auto
         @volume        = volume
-        @channel_auto   = channel_auto
+
+        unless @channel_auto
+          @channel_group = channel_group || key
+        end
 
         unless @channel_auto
           SE.channel_groups[@channel_group] ||= {:channel => SE.channel_groups.size, :counter => 0}
