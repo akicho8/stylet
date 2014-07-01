@@ -69,8 +69,9 @@ module Stylet
             @state.jump_to(:menu_alive)
           when :menu_alive
             update_cursor
-            if @state.count >= 2  # サブメニューを開いた瞬間に最初の項目を押させないため
+            if @state.count > 1 # サブメニューを開いた瞬間や戻ってきたときに最初の項目を押させないため
               close_check
+              all_run
               current_run
             end
             current_value_change
@@ -145,10 +146,19 @@ module Stylet
         end
       end
 
+      def all_run
+        @elements.each do |elem|
+          if command = elem[:every_command]
+            command.call(self)
+          end
+        end
+      end
+
       def current_run
+        current.assert_valid_keys(:name, :menu, :soft_command, :pon_command, :safe_command, :change, :value, :every_command)
+
         # if root.button.send(root.select_buttons).trigger? || root.axis.right.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
         if root.select_buttons.any?{|e|root.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
-          current.assert_valid_keys(:name, :menu, :soft_command, :pon_command, :safe_command, :change, :value)
           if menu = current[:menu]
             if menu.respond_to?(:call)
               menu = menu.call
