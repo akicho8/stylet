@@ -14,6 +14,12 @@
 # ・表示系のライブラリとは独立
 # ・チャンネルとWAVの音量は独立している
 # ・SEの解放時、対応チャンネルを誰も使わなくなっていたら消して再割り当てする
+# ・SE.preparation_channels SE自由席の数。
+# ・チャンネルは先頭から [自由席] → [指定席] の順で使うようにしている。これ重要。
+#   もし自由席の方が後だったらおかしなことになる。
+#   SDLは《先頭から》空いているチャンネルを探して使う。
+#   開始合図のラッパが0チャンネルが空いてるからと思って使った直後に0チャンネルを使う予定のSEが鳴ったらラッパの音消えてしまう。
+#   したがってチャンネルは[自由席][指定席]の順になっている
 #
 require 'pathname'
 require 'singleton'
@@ -210,7 +216,7 @@ module Stylet
       raise if SE.channel_groups.any?{|k, e|e[:counter] < 0}
       SE.channel_groups.delete_if{|k, e|e[:counter] == 0}
       allocate_channels
-      channel_groups.each_value.with_index{|e, index|e[:channel] = index}
+      channel_groups.each_value.with_index{|e, index|e[:channel] = SE.preparation_channels + index}
     end
 
     def allocate_channels
@@ -282,7 +288,7 @@ module Stylet
         end
 
         unless @channel_auto
-          SE.channel_groups[@channel_group] ||= {:channel => SE.channel_groups.size, :counter => 0}
+          SE.channel_groups[@channel_group] ||= {:channel => SE.preparation_channels + SE.channel_groups.size, :counter => 0}
           SE.channel_groups[@channel_group][:counter] += 1
         end
 
