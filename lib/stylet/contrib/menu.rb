@@ -4,30 +4,10 @@ require_relative "shared_pad"
 
 module Stylet
   module Menu
-    # class DefaultInput
-    #   extend ActiveSupport::Concern
-    # 
-    #   include Stylet::Input::Base
-    #   include Stylet::Input::ExtensionButton
-    # 
-    #   include Stylet::Input::StandardKeybordBind
-    #   include Stylet::Input::JoystickBindMethod
-    # 
-    #   # def next_frame(*args)
-    #   #   update(*args)
-    #   #   key_counter_update_all
-    #   # end
-    # end
-
     module Core
       extend ActiveSupport::Concern
 
       include Stylet::Delegators
-      # include Stylet::Input::Base
-      # include Stylet::Input::ExtensionButton
-      # 
-      # include Stylet::Input::StandardKeybordBind
-      # include Stylet::Input::JoystickBindMethod
 
       attr_accessor :parent, :bar, :display_height, :select_buttons, :cancel_buttons, :line_format, :close_hook, :input
       attr_reader :state, :children
@@ -315,21 +295,10 @@ module Stylet
       def initialize(*)
         super if defined? super
 
-        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_boot.aif",   volume: 0.2)
-        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_chain.aif",  volume: 0.2)
-        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_select.aif", volume: 0.2)
-        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_cursor.aif", volume: 0.2)
-        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_back.aif",   volume: 0.2)
-
         Stylet::SE.load("#{__dir__}/../../../sound_effects/pc_puyo_puyo_fever/SE/039CURSOR.WAV", volume: 0.5, key: :menu_cursor)
         Stylet::SE.load("#{__dir__}/../../../sound_effects/pc_puyo_puyo_fever/SE/036DECIDE.WAV", volume: 0.5, key: :menu_select)
         Stylet::SE.load("#{__dir__}/../../../sound_effects/pc_puyo_puyo_fever/SE/037CANCEL.WAV", volume: 0.5, key: :menu_back)
         Stylet::SE.load("#{__dir__}/../../../sound_effects/pc_puyo_puyo_fever/SE/036DECIDE.WAV", volume: 0.5, key: :menu_chain)
-
-        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_chain.aif",  volume: 0.2)
-        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_select.aif", volume: 0.2)
-        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_cursor.aif", volume: 0.2)
-        # Stylet::SE.load("#{__dir__}/../../../sound_effects/garage_band/menu_back.aif",   volume: 0.2, key: menu_back)
       end
 
       def notify(key)
@@ -338,7 +307,6 @@ module Stylet
 
       def bgm_if_possible
         unless Stylet::Music.play?
-          # Stylet::Music.play("#{__dir__}/../../../sound_effects/garage_band/menu_boot.aif")
           Stylet::Music.play("#{__dir__}/../../../sound_effects/pc_puyo_puyo_fever/BGM/01_MENU.ogg")
         end
       end
@@ -394,8 +362,8 @@ module Stylet
                       {name: "閉じる", soft_command: :close_and_parent_restart },
                     ])
                 }},
-              {name: "サブメニュー2", soft_command: proc {|s| s.chain(name: "[サブメニュー2]", elements: 16.times.collect{|i|{:name => "項目#{i}"}})}},
-              {name: "サブメニュー3", menu: {name: "[サブメニュー3]", elements: 16.times.collect{|i|{:name => "項目#{i}"}}}},
+              {name: "サブメニュー2", soft_command: proc {|s| s.chain(name: "[サブメニュー2]", elements: 50.times.collect{|i|{:name => "項目#{i}"}})}},
+              {name: "サブメニュー3", menu: {name: "[サブメニュー3]", elements: 50.times.collect{|i|{:name => "項目#{i}"}}}},
               {:name => "閉じる", soft_command: :close_and_parent_restart },
             ])
 

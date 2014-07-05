@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+# ・すべてのジョイスティックに反応する
+# ・Singleton にするかも
 
-if $0 == __FILE__
-  require_relative "../../stylet"
-end
+require "stylet"
 
 module Stylet
   module Input
