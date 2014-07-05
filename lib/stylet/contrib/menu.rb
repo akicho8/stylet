@@ -1,23 +1,38 @@
 # -*- coding: utf-8 -*-
 require "stylet"
-require "active_support/core_ext/hash/keys" # for assert_valid_keys
+require_relative "shared_pad"
 
 module Stylet
   module Menu
+    # class DefaultInput
+    #   extend ActiveSupport::Concern
+    # 
+    #   include Stylet::Input::Base
+    #   include Stylet::Input::ExtensionButton
+    # 
+    #   include Stylet::Input::StandardKeybordBind
+    #   include Stylet::Input::JoystickBindMethod
+    # 
+    #   # def next_frame(*args)
+    #   #   update(*args)
+    #   #   key_counter_update_all
+    #   # end
+    # end
+
     module Core
       extend ActiveSupport::Concern
 
       include Stylet::Delegators
-      include Stylet::Input::Base
-      include Stylet::Input::ExtensionButton
+      # include Stylet::Input::Base
+      # include Stylet::Input::ExtensionButton
+      # 
+      # include Stylet::Input::StandardKeybordBind
+      # include Stylet::Input::JoystickBindMethod
 
-      include Stylet::Input::StandardKeybordBind
-      include Stylet::Input::JoystickBindMethod
-
-      attr_accessor :parent, :bar, :display_height, :select_buttons, :cancel_buttons, :line_format, :close_hook
+      attr_accessor :parent, :bar, :display_height, :select_buttons, :cancel_buttons, :line_format, :close_hook, :input
       attr_reader :state, :children
 
-      def initialize(parent: nil, name: nil, elements: [], select_buttons: [:btA, :btD], cancel_buttons: [:btB, :btC], scroll_margin: nil, bar: "─" * 40, display_height: 20, joystick_index: nil, line_format: " %{cursor}%{name} %{value}", close_hook: nil)
+      def initialize(parent: nil, name: nil, elements: [], select_buttons: [:btA, :btD], cancel_buttons: [:btB, :btC], scroll_margin: nil, bar: "─" * 40, display_height: 20, joystick_index: nil, line_format: " %{cursor}%{name} %{value}", close_hook: nil, input: Input::SharedPad.new)
         super() if defined? super
 
         @parent         = parent
@@ -31,6 +46,7 @@ module Stylet
         @joystick_index = joystick_index
         @line_format    = line_format
         @close_hook     = close_hook
+        @input          = input
 
         @cursor         = 0
         @window_cursor  = @cursor
@@ -51,8 +67,12 @@ module Stylet
       def update
         super if defined? super
         unless @parent
-          active_joys.each{|e|update_by_joy(e)}
-          key_counter_update_all
+
+          @input.key_bit_update_all
+          @input.key_counter_update_all
+
+          # active_joys.each{|e|bit_update_by_joy(e)}
+          # key_counter_update_all
         end
         @state.loop_in do
           case @state.state
@@ -157,8 +177,8 @@ module Stylet
       def current_run
         current.assert_valid_keys(:name, :menu, :soft_command, :pon_command, :safe_command, :change, :value, :every_command)
 
-        # if root.button.send(root.select_buttons).trigger? || root.axis.right.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
-        if root.select_buttons.any?{|e|root.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
+        # if root.input.button.send(root.select_buttons).trigger? || root.input.axis.right.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
+        if root.select_buttons.any?{|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
           if menu = current[:menu]
             if menu.respond_to?(:call)
               menu = menu.call
@@ -190,10 +210,10 @@ module Stylet
       end
 
       def update_cursor
-        if v = Stylet::Input::Support.preference_key(root.axis.up, root.axis.down)
+        if v = Stylet::Input::Support.preference_key(root.input.axis.up, root.input.axis.down)
           if v.repeat >= 1
             d = 0
-            if v == root.axis.up
+            if v == root.input.axis.up
               if @cursor > 0
                 d = -1
               end
@@ -217,8 +237,8 @@ module Stylet
       end
 
       def close_check
-        # if root.button.send(root.cancel_buttons).trigger? || root.axis.left.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
-        if root.cancel_buttons.any?{|e|root.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
+        # if root.input.button.send(root.cancel_buttons).trigger? || root.input.axis.left.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
+        if root.cancel_buttons.any?{|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
           close_and_parent_restart
         end
       end
@@ -270,10 +290,10 @@ module Stylet
       end
 
       def plus_or_minus_integer
-        case e = Input::Support.preference_key(root.axis.right, root.axis.left)
-        when root.axis.right
+        case e = Input::Support.preference_key(root.input.axis.right, root.input.axis.left)
+        when root.input.axis.right
           e.repeat
-        when root.axis.left
+        when root.input.axis.left
           e.repeat * -1
         else
           0

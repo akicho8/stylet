@@ -5,7 +5,7 @@
 module Stylet
   module Input
     module StandardKeybordBind
-      def update(*args)
+      def key_bit_update_all(*args)
         super if defined? super
         @axis.up    << SDL::Key.press?(SDL::Key::UP)
         @axis.down  << SDL::Key.press?(SDL::Key::DOWN)
@@ -19,7 +19,7 @@ module Stylet
     end
 
     module MouseButtonBind
-      def update(*args)
+      def key_bit_update_all(*args)
         super if defined? super
         @button.btA << @mouse.button.a
         @button.btB << @mouse.button.b
@@ -28,7 +28,7 @@ module Stylet
     end
 
     module HjklKeyboardBind
-      def update(*args)
+      def key_bit_update_all(*args)
         super if defined? super
         @axis.up    << SDL::Key.press?(SDL::Key::K)
         @axis.down  << SDL::Key.press?(SDL::Key::J)
@@ -42,7 +42,7 @@ module Stylet
     end
 
     module JoystickBindMethod
-      def update_by_joy(joy)
+      def bit_update_by_joy(joy)
         return unless joy
         @axis.up    << joy.lever_on?(:up)
         @axis.down  << joy.lever_on?(:down)

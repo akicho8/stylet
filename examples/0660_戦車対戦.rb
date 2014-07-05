@@ -40,10 +40,11 @@ class Tank
 
     if @joystick_index
       if joy = joys[@joystick_index]
-        update_by_joy(joy)
+        bit_update_by_joy(joy)
       end
     end
 
+    key_bit_update_all
     key_counter_update_all
 
     # ハンドル
@@ -104,9 +105,10 @@ class Tank
     begin
       # 指定の方向に合わせる
       if joy = joys[@joystick_index]
-        vec = joy.adjusted_analog_levers[:right]
-        if vec.magnitude > 0.5
-          @cannon_dir += Stylet::Etc.shortest_angular_difference(vec.angle, @cannon_dir) * 0.1
+        if vec = joy.adjusted_analog_levers[:right]
+          if vec.magnitude > 0.5
+            @cannon_dir += Stylet::Etc.shortest_angular_difference(vec.angle, @cannon_dir) * 0.1
+          end
         end
       end
 

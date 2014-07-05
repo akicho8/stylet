@@ -3,6 +3,8 @@
 require_relative "helper"
 require "pathname"
 
+Stylet.production = true
+
 Stylet::Palette[:background] = [107, 140, 255]
 Stylet::Palette[:font]       = [255, 255, 255]
 
@@ -196,7 +198,8 @@ class PlayerBase < ObjectX
     end
 
     if __frame__.state != :edit_mode
-      update_by_joy(joys[@joystick_index]) if @joystick_index
+      key_bit_update_all
+      bit_update_by_joy(joys[@joystick_index]) if @joystick_index
       key_counter_update_all
     end
 
@@ -544,10 +547,14 @@ class Mario < PlayerBase
 
   def update
     super
-    if __frame__.ext_button.btL1.press?
+    if Stylet.production
       @joystick_index = 0
     else
-      @joystick_index = nil
+      if __frame__.ext_button.btL1.press?
+        @joystick_index = 0
+      else
+        @joystick_index = nil
+      end
     end
   end
 end
@@ -568,10 +575,14 @@ class Luigi < PlayerBase
 
   def update
     super
-    if __frame__.ext_button.btR1.press?
-      @joystick_index = 0
+    if Stylet.production
+      @joystick_index = 1
     else
-      @joystick_index = nil
+      if __frame__.ext_button.btR1.press?
+        @joystick_index = 0
+      else
+        @joystick_index = nil
+      end
     end
   end
 end
@@ -1039,7 +1050,10 @@ class App < Stylet::Base
       # これで右端が画像の右端と一致する
       ox = (@scene_main_bg.w - rect.w).to_f / (virtual_rect.w - rect.w) * camera_offset.x
       oy = (@scene_main_bg.h - rect.h).to_f / (virtual_rect.h - rect.h) * camera_offset.y
-      SDL::Surface.blit(@scene_main_bg, ox, oy, rect.w, rect.h, @screen, 0, 0)
+      begin
+        SDL::Surface.blit(@scene_main_bg, ox, oy, rect.w, rect.h, @screen, 0, 0)
+      rescue RangeError
+      end
     end
     if @bg_mode == :ff_effect
       # FF7で敵に遭遇したときの画面エフェクト

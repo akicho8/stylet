@@ -18,11 +18,9 @@ class GunShip
     super if defined? super
 
     if @joystick_index
-      if joy = @win.joys[@joystick_index]
-        update_by_joy(joy)
-      end
+      bit_update_by_joy(@win.joys[@joystick_index])
     end
-
+    key_bit_update_all
     key_counter_update_all
 
     if dir = axis_angle

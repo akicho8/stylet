@@ -61,8 +61,9 @@ module Helper
       super if defined? super
 
       if joy = joys.first
-        update_by_joy(joy)
+        bit_update_by_joy(joy)
       end
+      key_bit_update_all
       key_counter_update_all
 
       if mouse.moved?

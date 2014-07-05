@@ -13,8 +13,9 @@ class Player
   end
 
   def update
-    super if defined? super
-    update_by_joy(joys[@joystick_index])
+    raise if defined? super
+    bit_update_by_joy(joys[@joystick_index])
+    key_bit_update_all
     key_counter_update_all
 
     if angle = axis_angle

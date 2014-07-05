@@ -68,7 +68,7 @@ module Stylet
 
       # @state の状態を @count に反映する
       #   引数が指定されていればそれを直近の状態に設定して更新する
-      def update(state = nil)
+      def counter_update(state = nil)
         if state
           self << state
         end

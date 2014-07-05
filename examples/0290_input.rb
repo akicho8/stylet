@@ -7,7 +7,8 @@ class Player
   include Stylet::Input::StandardKeybordBind
 
   def update
-    super
+    raise if defined? super
+    key_bit_update_all
     key_counter_update_all
     __frame__.vputs(to_s)
     __frame__.vputs(axis_angle_index.to_s)

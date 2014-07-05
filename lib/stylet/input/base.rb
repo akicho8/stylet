@@ -59,7 +59,7 @@ module Stylet
       # ボタンとレバーのカウンタを更新する
       #   実行後に state は false になる
       def key_counter_update_all
-        key_objects.each{|e|e.update}
+        key_objects.each{|e|e.counter_update}
       end
 
       # レバーの状態から8方向の番号インデックスに変換

@@ -19,9 +19,8 @@ module Helper
       end
 
       update do
-        if joy = joys.first
-          update_by_joy(joy)
-        end
+        joys.each{|joy|bit_update_by_joy(joy)}
+        key_bit_update_all
         key_counter_update_all
 
         if mouse.moved?
