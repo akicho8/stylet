@@ -6,6 +6,7 @@ require 'stylet_math/all'
 # gem
 require 'sdl'
 require 'active_support/concern'
+require 'active_support/core_ext/module/concerning'
 require 'active_support/callbacks'
 
 # ruby library
