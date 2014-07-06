@@ -9,7 +9,7 @@ module Stylet
 
       include Stylet::Delegators
 
-      attr_accessor :parent, :bar, :display_height, :select_buttons, :cancel_buttons, :line_format, :close_hook, :input
+      attr_accessor :parent, :bar, :display_height, :select_buttons, :cancel_buttons, :line_format, :close_hook, :input, :elements
       attr_reader :state, :children
 
       def initialize(parent: nil, name: nil, elements: [], select_buttons: [:btA, :btD], cancel_buttons: [:btB, :btC], scroll_margin: nil, bar: "─" * 40, display_height: 20, joystick_index: nil, line_format: " %{cursor}%{name} %{value}", close_hook: nil, input: Input::SharedPad.new, aroundable: true, cursor: 0)
@@ -92,6 +92,10 @@ module Stylet
 
       def force_close
         throw :exit, :break
+      end
+
+      def close_trigger?
+        root.cancel_buttons.any?{|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
       end
 
       begin
@@ -234,8 +238,7 @@ module Stylet
         end
 
         def close_check
-          # if root.input.button.send(root.cancel_buttons).trigger? || root.input.axis.left.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
-          if root.cancel_buttons.any?{|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
+          if close_trigger?
             close_and_parent_restart
           end
         end
