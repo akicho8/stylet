@@ -12,7 +12,7 @@ module Stylet
       attr_accessor :parent, :bar, :display_height, :select_buttons, :cancel_buttons, :line_format, :close_hook, :input
       attr_reader :state, :children
 
-      def initialize(parent: nil, name: nil, elements: [], select_buttons: [:btA, :btD], cancel_buttons: [:btB, :btC], scroll_margin: nil, bar: "─" * 40, display_height: 20, joystick_index: nil, line_format: " %{cursor}%{name} %{value}", close_hook: nil, input: Input::SharedPad.new)
+      def initialize(parent: nil, name: nil, elements: [], select_buttons: [:btA, :btD], cancel_buttons: [:btB, :btC], scroll_margin: nil, bar: "─" * 40, display_height: 20, joystick_index: nil, line_format: " %{cursor}%{name} %{value}", close_hook: nil, input: Input::SharedPad.new, aroundable: true, cursor: 0)
         super() if defined? super
 
         @parent         = parent
@@ -27,8 +27,9 @@ module Stylet
         @line_format    = line_format
         @close_hook     = close_hook
         @input          = input
+        @aroundable     = aroundable
 
-        @cursor         = 0
+        @cursor         = cursor
         @window_cursor  = @cursor
 
         @state = State.new(:menu_boot)
@@ -68,14 +69,14 @@ module Stylet
             end
             @state.jump_to(:menu_alive)
           when :menu_alive
-            update_cursor
+            cursor_update
             if @state.count > 1 # サブメニューを開いた瞬間や戻ってきたときに最初の項目を押させないため
               close_check
               all_run
               current_run
             end
             current_value_change
-            update_window_cursor
+            window_cursor_update
             render
           end
         end
@@ -93,198 +94,222 @@ module Stylet
         throw :exit, :break
       end
 
-      private
+      begin
+        private
 
-      def render
-        unless @bar
-          vputs
-        end
-        if menu_name
+        def render
+          unless @bar
+            vputs
+          end
+          if menu_name
+            rendar_bar
+            vputs menu_name
+          end
           rendar_bar
-          vputs menu_name
+          @elements.slice(@window_cursor, @display_height).each {|element| element_display(element) }
+          rendar_bar
         end
-        rendar_bar
-        @elements.slice(@window_cursor, @display_height).each {|element| element_display(element) }
-        rendar_bar
-      end
 
-      def menu_name
-        if @name.respond_to?(:call)
-          @name.call
-        else
-          @name
-        end
-      end
-
-      def element_display(element)
-        vputs line_format % {
-          :cursor => element_cursor(element),
-          :name   => element_name(element),
-          :value  => element_value(element),
-        }
-      end
-
-      def element_cursor(element)
-        if element == current
-          "〉"
-        else
-          "  "
-        end
-      end
-
-      def element_name(element)
-        if element[:name].respond_to?(:call)
-          element[:name].call
-        else
-          element[:name]
-        end
-      end
-
-      def element_value(element)
-        if element[:value]
-          element[:value].call
-        end
-      end
-
-      def all_run
-        @elements.each do |elem|
-          if command = elem[:every_command]
-            command.call(self)
+        def menu_name
+          if @name.respond_to?(:call)
+            @name.call
+          else
+            @name
           end
         end
-      end
 
-      def current_run
-        current.assert_valid_keys(:name, :menu, :soft_command, :pon_command, :safe_command, :change, :value, :every_command)
+        def element_display(element)
+          vputs line_format % {
+            :cursor => element_cursor(element),
+            :name   => element_name(element),
+            :value  => element_value(element),
+          }
+        end
 
-        # if root.input.button.send(root.select_buttons).trigger? || root.input.axis.right.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
-        if root.select_buttons.any?{|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
-          if menu = current[:menu]
-            if menu.respond_to?(:call)
-              menu = menu.call
+        def element_cursor(element)
+          if element == current
+            "〉"
+          else
+            "  "
+          end
+        end
+
+        def element_name(element)
+          if element[:name].respond_to?(:call)
+            element[:name].call
+          else
+            element[:name]
+          end
+        end
+
+        def element_value(element)
+          if element[:value]
+            element[:value].call
+          end
+        end
+
+        def all_run
+          @elements.each do |elem|
+            if command = elem[:every_command]
+              command.call(self)
             end
-            chain(menu)
-          end
-          if command = current[:soft_command]
-            command.call(self)
-          end
-          if command = current[:pon_command]
-            notify(:menu_select)
-            command.call(self)
-          end
-          # if command = current[:sym_command]
-          #   send(command)
-          # end
-          if safe_command = current[:safe_command]
-            Stylet::Audio.halt
-            notify(:menu_select)
-            safe_command.call(self)
-            Stylet::Audio.halt
-            bgm_if_possible
-
-            # ブロックの中でBキャンセルしたときにこのメニューもBキャンセルが反応してしまうのを防ぐため
-            # メニューをリスタートさせる。リスタートすることで2フレーム間、Bキャンセルをかわせる
-            @state.jump_to(:menu_restart)
           end
         end
-      end
 
-      def update_cursor
-        if v = Stylet::Input::Support.preference_key(root.input.axis.up, root.input.axis.down)
-          if v.repeat >= 1
-            d = 0
-            if v == root.input.axis.up
-              if @cursor > 0
-                d = -1
+        def current_run
+          current.assert_valid_keys(:name, :menu, :soft_command, :pon_command, :safe_command, :change, :value, :every_command, :cursor_in, :cursor_out)
+
+          # if root.input.button.send(root.select_buttons).trigger? || root.input.axis.right.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
+          if root.select_buttons.any?{|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
+            if menu = current[:menu]
+              if menu.respond_to?(:call)
+                menu = menu.call
               end
-            else
-              if @cursor < @elements.size - 1
-                d = 1
+              chain(menu)
+            end
+            if command = current[:soft_command]
+              command.call(self)
+            end
+            if command = current[:pon_command]
+              notify(:menu_select)
+              command.call(self)
+            end
+            # if command = current[:sym_command]
+            #   send(command)
+            # end
+            if safe_command = current[:safe_command]
+              Stylet::Audio.halt
+              notify(:menu_select)
+              safe_command.call(self)
+              Stylet::Audio.halt
+              bgm_if_possible
+
+              # ブロックの中でBキャンセルしたときにこのメニューもBキャンセルが反応してしまうのを防ぐため
+              # メニューをリスタートさせる。リスタートすることで2フレーム間、Bキャンセルをかわせる
+              @state.jump_to(:menu_restart)
+            end
+          end
+        end
+
+        def cursor_update
+          if v = Stylet::Input::Support.preference_key(root.input.axis.up, root.input.axis.down)
+            if v.repeat >= 1
+              d = 0
+              if v == root.input.axis.up
+                if @aroundable || @cursor > 0
+                  d = -1
+                end
+              else
+                if @aroundable || @cursor < @elements.size - 1
+                  d = 1
+                end
+              end
+              if d != 0
+                c = (@cursor + d).modulo(@elements.size)
+                if c != @cursor
+                  before = current
+                  @cursor = c
+                  notify(:menu_cursor)
+
+                  if m = before[:cursor_out]
+                    if m.respond_to?(:call)
+                      m.call(self)
+                    end
+                  end
+                  if m = current[:cursor_in]
+                    if m.respond_to?(:call)
+                      m.call(self)
+                    end
+                  end
+                end
               end
             end
-            if d != 0
-              @cursor += d
-              notify(:menu_cursor)
+          end
+        end
+
+        def rendar_bar
+          if @bar
+            vputs @bar
+          end
+        end
+
+        def close_check
+          # if root.input.button.send(root.cancel_buttons).trigger? || root.input.axis.left.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
+          if root.cancel_buttons.any?{|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
+            close_and_parent_restart
+          end
+        end
+
+        def window_cursor_update
+          d = scroll_margin - (@cursor - @window_cursor)
+          if d >= 1
+            @window_cursor -= d
+          end
+          d = (@cursor - @window_cursor) - (@display_height - scroll_margin - 1)
+          if d >= 1
+            @window_cursor += d
+          end
+          @window_cursor = Stylet::Etc.clamp(@window_cursor, window_range)
+        end
+
+        def window_range
+          max = @elements.size - @display_height
+          if max < 0
+            max = 0
+          end
+          0..max
+        end
+
+        def current
+          @elements.fetch(@cursor)
+        end
+
+        def scroll_margin
+          @scroll_margin || (@display_height / 3)
+        end
+
+        # close methods
+        def close_and_parent_restart
+          if parent
+            if @close_hook
+              @close_hook.call(self)
+            end
+            parent.children.delete(self)
+            parent.state.jump_to(:menu_restart)
+          end
+        end
+
+        def notify(key)
+        end
+
+        def bgm_if_possible
+        end
+
+        def current_value_change
+          if current[:change]
+            if plus_or_minus_integer.nonzero?
+              current[:change].call(plus_or_minus_integer)
             end
           end
         end
-      end
 
-      def rendar_bar
-        if @bar
-          vputs @bar
-        end
-      end
-
-      def close_check
-        # if root.input.button.send(root.cancel_buttons).trigger? || root.input.axis.left.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
-        if root.cancel_buttons.any?{|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
-          close_and_parent_restart
-        end
-      end
-
-      def update_window_cursor
-        if @cursor - @window_cursor < scroll_margin
-          if @window_cursor > 0
-            @window_cursor -= 1
+        def plus_or_minus_integer
+          case e = Input::Support.preference_key(root.input.axis.right, root.input.axis.left)
+          when root.input.axis.right
+            e.repeat
+          when root.input.axis.left
+            e.repeat * -1
+          else
+            0
           end
         end
-        if @cursor - @window_cursor >= @display_height - scroll_margin
-          if @window_cursor < @elements.size - @display_height
-            @window_cursor += 1
+
+        def active_joys
+          if @joystick_index
+            joys[@joystick_index, 1] || []
+          else
+            joys
           end
-        end
-      end
-
-      def current
-        @elements.fetch(@cursor)
-      end
-
-      def scroll_margin
-        @scroll_margin || (@display_height / 3)
-      end
-
-      # close methods
-      def close_and_parent_restart
-        if parent
-          if @close_hook
-            @close_hook.call(self)
-          end
-          parent.children.delete(self)
-          parent.state.jump_to(:menu_restart)
-        end
-      end
-
-      def notify(key)
-      end
-
-      def bgm_if_possible
-      end
-
-      def current_value_change
-        if current[:change]
-          if plus_or_minus_integer.nonzero?
-            current[:change].call(plus_or_minus_integer)
-          end
-        end
-      end
-
-      def plus_or_minus_integer
-        case e = Input::Support.preference_key(root.input.axis.right, root.input.axis.left)
-        when root.input.axis.right
-          e.repeat
-        when root.input.axis.left
-          e.repeat * -1
-        else
-          0
-        end
-      end
-
-      def active_joys
-        if @joystick_index
-          joys[@joystick_index, 1] || []
-        else
-          joys
         end
       end
     end
