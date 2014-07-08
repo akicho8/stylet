@@ -73,7 +73,7 @@ class SprineApp < Stylet::Base
 
     _c[num-1] = _b[num-1]
     j = num - 1
-    while j > 0 do
+    while j > 0
       # ベクトル同士のかけ算のメソッドを用意してないためこれでいい
       _c[j-1] = Stylet::Vector.new(
         _b[j - 1].x - _a[j - 1][2] * _c[j].x,

@@ -54,7 +54,7 @@ module Stylet
       def <<(value)
         case value
         when String
-          value = !!@match_chars.any?{|m|value.include?(m)}
+          value = @match_chars.any?{|m|value.include?(m)}
         when Fixnum
           value = value.nonzero?
         end

@@ -53,12 +53,15 @@ class State
 
   def loop_in(&block)
     @depth += 1
-    begin
+    loop do
       ret = catch(transit_key) do
         yield
-        true
+        :__loop_break__
       end
-    end until ret == true
+      if ret == :__loop_break__
+        break
+      end
+    end
     @depth -= 1
     pass
   end

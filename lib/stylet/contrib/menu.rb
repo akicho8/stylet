@@ -377,14 +377,17 @@ module Stylet
               {name: "モード", safe_command: proc {}, :value => -> { @test_var }, :change => proc {|v| @test_var += v }},
 
               {name: "実行", safe_command: proc { SampleWindow.new.counter_loop }},
-              {name: "サブメニュー", soft_command: proc {|s|
+              {
+                name: "サブメニュー",
+                soft_command: proc {|s|
                   s.chain(name: "sub menu", elements: [
                       {name: "実行", safe_command: proc { SampleWindow.new.counter_loop }},
                       {name: "A", safe_command: proc { p 1 }},
                       {name: "B", safe_command: proc { p 2 }},
                       {name: "閉じる", soft_command: :close_and_parent_restart },
                     ])
-                }},
+                },
+              },
               {name: "サブメニュー2", soft_command: proc {|s| s.chain(name: "[サブメニュー2]", elements: 50.times.collect{|i|{:name => "項目#{i}"}})}},
               {name: "サブメニュー3", menu: {name: "[サブメニュー3]", elements: 50.times.collect{|i|{:name => "項目#{i}"}}}},
               {:name => "閉じる", soft_command: :close_and_parent_restart },

@@ -297,7 +297,7 @@ module Stylet
         SE.se_hash[@key] = self
 
         if preload
-          preload()
+          preload!
         end
 
         Stylet.logger.debug "new: #{spec}" if Stylet.logger
@@ -358,7 +358,7 @@ module Stylet
         end
       end
 
-      alias preload wave
+      alias preload! wave
 
       def spec
         "[channel:#{channel}/#{SE.allocated_channels}] [#{@wave ? :loaded : :new}] [volume:#{@volume}] [#{@channel_group}] [#{@key}] #{@filename}"
@@ -399,7 +399,7 @@ if $0 == __FILE__
       Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO02.WAV", :key => :c, :channel_group => :x, :volume => 0.1)
 
       expect(Stylet::SE[:a].spec).to match(/new/)    # ロードしていない
-      Stylet::SE[:a].preload                         # 明示的にロードする
+      Stylet::SE[:a].preload!                        # 明示的にロードする
       expect(Stylet::SE[:a].spec).to match(/loaded/) # ロード済み
 
       expect(Stylet::SE.se_hash.values.collect(&:channel)).to eq [0, 1, 0] # a と c が同じチャンネルを共有していることがわかる

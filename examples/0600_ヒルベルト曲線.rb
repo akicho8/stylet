@@ -28,7 +28,7 @@ class App < Stylet::Base
 
   def line_to(x, y)
     dir = Stylet::Vector.new(x * @delta, y * @delta)
-    @current = @current + dir
+    @current += dir
     draw_line(@before_point, @current)
     @before_point = @current.clone
   end

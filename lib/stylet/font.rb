@@ -96,7 +96,7 @@ if $0 == __FILE__
   Stylet.config.font_name = "VeraMono.ttf"
   Stylet.config.font_size = 20
   Stylet.run do
-    vputs ("A".."Z").to_a.join
+    vputs [*"A".."Z"].join
     vputs "left",   :vector => rect.center + [0, 20*0], :align => :left
     vputs "center", :vector => rect.center + [0, 20*1], :align => :center
     vputs "right",  :vector => rect.center + [0, 20*2], :align => :right

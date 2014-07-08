@@ -16,16 +16,16 @@ Lint/AssignmentInCondition:
 
 # Offense count: 3
 Lint/BlockAlignment:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 1
 Lint/EmptyEnsure:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 1
 # Configuration parameters: AlignWith, SupportedStyles.
 Lint/EndAlignment:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 3
 Lint/Eval:
@@ -41,11 +41,11 @@ Lint/LiteralInCondition:
 
 # Offense count: 1
 Lint/Loop:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 1
 Lint/ParenthesesAsGroupedExpression:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 28
 Lint/ShadowingOuterLocalVariable:
@@ -72,7 +72,7 @@ Lint/UnusedMethodArgument:
 
 # Offense count: 1
 Lint/UselessAccessModifier:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 32
 Lint/UselessAssignment:
@@ -119,7 +119,7 @@ Style/AndOr:
 
 # Offense count: 1
 Style/ArrayJoin:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 2131
 Style/AsciiComments:
@@ -128,7 +128,7 @@ Style/AsciiComments:
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/BlockComments:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 36
 Style/BlockNesting:
@@ -174,7 +174,7 @@ Style/ColonMethodCall:
 # Offense count: 1
 # Configuration parameters: Keywords.
 Style/CommentAnnotation:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 5
 # Cop supports --auto-correct.
@@ -195,7 +195,7 @@ Style/Documentation:
 
 # Offense count: 2
 Style/DoubleNegation:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 34
 # Cop supports --auto-correct.
@@ -225,7 +225,7 @@ Style/FileName:
 # Offense count: 1
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/For:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 11
 # Configuration parameters: EnforcedStyle, SupportedStyles.
@@ -291,7 +291,7 @@ Style/LineLength:
 # Offense count: 2
 # Cop supports --auto-correct.
 Style/MethodCallParentheses:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 173
 # Configuration parameters: CountComments.
@@ -309,7 +309,7 @@ Style/MultilineIfThen:
 # Offense count: 2
 # Cop supports --auto-correct.
 Style/NegatedIf:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 35
 # Configuration parameters: EnforcedStyle, SupportedStyles.
@@ -351,7 +351,7 @@ Style/PerlBackrefs:
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/RedundantBegin:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 15
 # Cop supports --auto-correct.
@@ -365,7 +365,7 @@ Style/RegexpLiteral:
 
 # Offense count: 1
 Style/SelfAssignment:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 19
 # Cop supports --auto-correct.
@@ -382,7 +382,7 @@ Style/SignalException:
 # Offense count: 2
 # Configuration parameters: Methods.
 Style/SingleLineBlockParams:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 38
 # Cop supports --auto-correct.
@@ -489,12 +489,12 @@ Style/WhenThen:
 # Offense count: 2
 # Cop supports --auto-correct.
 Style/WhileUntilDo:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 1
 # Configuration parameters: MaxLineLength.
 Style/WhileUntilModifier:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 5
 # Cop supports --auto-correct.
