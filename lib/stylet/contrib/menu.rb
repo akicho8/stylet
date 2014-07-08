@@ -12,7 +12,7 @@ module Stylet
       attr_accessor :parent, :bar, :display_height, :select_buttons, :cancel_buttons, :line_format, :close_hook, :input, :elements
       attr_reader :state, :children
 
-      def initialize(parent: nil, name: nil, elements: [], select_buttons: [:btA, :btD], cancel_buttons: [:btB, :btC], scroll_margin: nil, bar: "─" * 40, display_height: 20, joystick_index: nil, line_format: " %{cursor}%{name} %{value}", close_hook: nil, input: Input::SharedPad.new, aroundable: true, cursor: 0)
+      def initialize(parent: nil, name: nil, elements: [], select_buttons: [:btA, :btD], cancel_buttons: [:btB, :btC], scroll_margin: nil, bar: "─" * 40, display_height: 20, joystick_index: nil, line_format: " %{cursor}%{name} %{value}", close_hook: nil, input: Input::SharedPad.new, aroundable: false, cursor: 0)
         super() if defined? super
 
         @parent         = parent
@@ -28,10 +28,9 @@ module Stylet
         @close_hook     = close_hook
         @input          = input
         @aroundable     = aroundable
-
         @cursor         = cursor
-        @window_cursor  = @cursor
 
+        @window_cursor  = @cursor
         @state = State.new(:menu_boot)
         @children = []
       end
@@ -163,7 +162,6 @@ module Stylet
         def current_run
           current.assert_valid_keys(:name, :menu, :soft_command, :pon_command, :safe_command, :change, :value, :every_command, :cursor_in, :cursor_out)
 
-          # if root.input.button.send(root.select_buttons).trigger? || root.input.axis.right.trigger? || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
           if root.select_buttons.any?{|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
             if menu = current[:menu]
               if menu.respond_to?(:call)
@@ -178,9 +176,6 @@ module Stylet
               notify(:menu_select)
               command.call(self)
             end
-            # if command = current[:sym_command]
-            #   send(command)
-            # end
             if safe_command = current[:safe_command]
               Stylet::Audio.halt
               notify(:menu_select)
