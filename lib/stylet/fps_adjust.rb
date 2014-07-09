@@ -55,7 +55,7 @@ if $0 == __FILE__
   puts "SDL関数使用版"
   require "rubygems"
   require "sdl"
-  x = Stylet::FpsAdjust.new(1) {SDL::getTicks}
+  x = Stylet::FpsAdjust.new(1) {SDL.getTicks}
   count.times{|i| puts i; x.wait}
 
   puts "time_out試用版"

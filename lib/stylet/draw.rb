@@ -57,7 +57,7 @@ module Stylet
     def title=(title)
       @title = title
       if @screen
-        SDL::WM::set_caption(@title.to_s, @title.to_s)
+        SDL::WM.set_caption(@title.to_s, @title.to_s)
       end
     end
 

@@ -11,7 +11,7 @@ module Stylet
     # 入力優先順位テスト
     it "preference_key" do
       # 最初は両方押されていないので nil が返る。
-      preference_key.should == nil
+      preference_key.should be_nil
 
       # 左だけ押されると、もちろん左が優先される。
       @left.counter_update(true)
@@ -26,7 +26,7 @@ module Stylet
       # 次のフレーム。両方離した。nil が返る。
       @left.counter_update(false)
       @right.counter_update(false)
-      preference_key.should == nil
+      preference_key.should be_nil
 
       # 次のフレーム。両方同時押し。左が優先される。
       @left.counter_update(true)

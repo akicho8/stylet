@@ -685,8 +685,8 @@ class App < Stylet::Base
     if @state == :init
       if @state_counter == 0
         # @players.each{|player|kill_task(player)}
-        # set_task Mario.new(pos: vec2[rect.half_w - rect.half_w * 0.1, @ground_y - 32])
-        # set_task Luigi.new(pos: vec2[rect.half_w + rect.half_w * 0.1, @ground_y - 32])
+        # task_set Mario.new(pos: vec2[rect.half_w - rect.half_w * 0.1, @ground_y - 32])
+        # task_set Luigi.new(pos: vec2[rect.half_w + rect.half_w * 0.1, @ground_y - 32])
         @state = :start
         @state_counter = 0
       end
@@ -879,7 +879,7 @@ class App < Stylet::Base
 
         if rdiff > 0
           # 反発すると同時にジャンプボタンを押したら反発力4倍
-          rebound = -> p, sign {
+          rebound = proc{|p, sign|
             if true
               # めり込んでない位置まで反発する(さらに反発するなら処理を減らすためにここはスキップしてもいい)
               p.pos += diff.normalize * rdiff * sign / 2
@@ -913,8 +913,8 @@ class App < Stylet::Base
               p.speed = vec2.angle_at(a) * p.speed.magnitude * @head_jump_mul # だんだんスピードが大きくなる
             end
           }
-          rebound.(p1, +1)
-          rebound.(p2, -1)
+          rebound.call(p1, +1)
+          rebound.call(p2, -1)
         end
       end
     end
@@ -1096,12 +1096,12 @@ class App < Stylet::Base
     @hold_block = @select_blocks[@edit_select_object_index.modulo(@select_blocks.size)]
     if @hold_block
       @hold_block.pos = @edit_cursor_center.clone # すぐに座標を設定しておくの重要
-      set_task @hold_block
+      task_set @hold_block
     end
   end
 
   def edit_func_block_stamp
-    set_task @hold_block.class.new(pos: @hold_block.pos) # clone だといろいろ共有されてしまう
+    task_set @hold_block.class.new(pos: @hold_block.pos) # clone だといろいろ共有されてしまう
   end
 
   def edit_func_kill_hold_object
@@ -1152,7 +1152,7 @@ class App < Stylet::Base
       if @one_stage
         @one_stage[:positions].each do |klass, positions|
           positions.each do |pos|
-            set_task klass.constantize.new(pos: vec2[*pos])
+            task_set klass.constantize.new(pos: vec2[*pos])
           end
         end
       end
@@ -1169,8 +1169,8 @@ class App < Stylet::Base
             klass = SoftBlock
           end
           v = vec2[16 + @virtual_rect.w / n * (i + (j.next.modulo(2) * 0.5)), @ground_y - 16 - 32*2 - 32*3*j]
-          set_task klass.new(pos: v)
-          set_task Coin.new(pos: v + [0, -32])
+          task_set klass.new(pos: v)
+          task_set Coin.new(pos: v + [0, -32])
         end
       end
       @scene_main_bg = Sprite.surface_load("assets/bg960x640_town.png", :mask => false)
@@ -1186,8 +1186,8 @@ class App < Stylet::Base
 
       (m = 5).times.each do |j|
         (n = 40).times.each do |i|
-          set_task Coin.new(pos:  vec2[16 + @virtual_rect.w / n * i, @ground_y - 100 - j * 100 - 32])
-          set_task [*[SoftBlock]*3, HardBlock].sample.new(pos: vec2[16 + @virtual_rect.w / n * i, @ground_y - 100 - j * 100])
+          task_set Coin.new(pos:  vec2[16 + @virtual_rect.w / n * i, @ground_y - 100 - j * 100 - 32])
+          task_set [*[SoftBlock]*3, HardBlock].sample.new(pos: vec2[16 + @virtual_rect.w / n * i, @ground_y - 100 - j * 100])
         end
       end
 
@@ -1207,11 +1207,11 @@ class App < Stylet::Base
 
     begin
       if @coins.empty?
-        set_task Coin.new(pos: vec2[32 / 2, @ground_y - 32 / 2])
+        task_set Coin.new(pos: vec2[32 / 2, @ground_y - 32 / 2])
       end
       if @players.empty?
-        set_task Mario.new(pos: vec2[rect.half_w - rect.half_w * 0.1, @ground_y - 32])
-        set_task Luigi.new(pos: vec2[rect.half_w + rect.half_w * 0.1, @ground_y - 32])
+        task_set Mario.new(pos: vec2[rect.half_w - rect.half_w * 0.1, @ground_y - 32])
+        task_set Luigi.new(pos: vec2[rect.half_w + rect.half_w * 0.1, @ground_y - 32])
       end
     end
 
@@ -1221,7 +1221,7 @@ class App < Stylet::Base
   end
 
   # FIXME: 冗長すぎる
-  def set_task(v)
+  def task_set(v)
     if v.kind_of? BlockBase
       @blocks << v
     end

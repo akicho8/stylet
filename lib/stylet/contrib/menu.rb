@@ -374,7 +374,7 @@ module Stylet
 
           @test_var = 0
           @menu = Stylet::Menu::Basic.new(elements: [
-              {name: "モード", safe_command: proc {}, :value => -> { @test_var }, :change => proc {|v| @test_var += v }},
+              {name: "モード", safe_command: proc {}, :value => proc { @test_var }, :change => proc {|v| @test_var += v }},
 
               {name: "実行", safe_command: proc { SampleWindow.new.counter_loop }},
               {
