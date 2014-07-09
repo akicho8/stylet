@@ -8,7 +8,7 @@ module Stylet
 
   # Screen
   config.screen_size      = [640, 480]
-  config.fps              = nil,
+  config.fps              = nil
   config.full_screen      = false
   config.color_depth      = 16
   config.screen_flags     = SDL::HWSURFACE | SDL::DOUBLEBUF | SDL::HWACCEL | SDL::RESIZABLE
@@ -26,8 +26,8 @@ module Stylet
 
   # Audio
   config.sound_freq       = 22050 # 44100  # SDLのデフォルトは 22050
-  config.mute_music     = false
-  config.mute       = false
+  config.mute_music       = false
+  config.mute             = false
 
   # etc.
   config.production       = false
