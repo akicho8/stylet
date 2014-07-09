@@ -72,10 +72,10 @@ class App < Stylet::Base
 
       face = faces.sort.first.last
       diff = case face
-             when :r; Stylet::Vector.new(_r + 1, 0)
-             when :d; Stylet::Vector.new(0, _d + 1)
-             when :u; Stylet::Vector.new(0, -(_u + 1))
-             when :l; Stylet::Vector.new(-(_l + 1), 0)
+             when :r then Stylet::Vector.new(_r + 1, 0)
+             when :d then Stylet::Vector.new(0, _d + 1)
+             when :u then Stylet::Vector.new(0, -(_u + 1))
+             when :l then Stylet::Vector.new(-(_l + 1), 0)
              end
 
       @collision = true
