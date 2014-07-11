@@ -44,10 +44,12 @@ if $0 == __FILE__
   Stylet::Base.run
 
   # 方法2
-  class Stylet::Base
-    setup { @b = "B" }
-    update { vputs @b }
-    run
+  module Stylet
+    class Base
+      setup { @b = "B" }
+      update { vputs @b }
+      run
+    end
   end
 
   # 方法3 (他の方法のあとに呼ぶとだめなのはなぜ？)

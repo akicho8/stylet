@@ -19,13 +19,13 @@ module Stylet
         oparser = OptionParser.new do |oparser|
           oparser.on("--fps=INTEGER", Integer)             {|v| Stylet.config.fps = v                                        }
           oparser.on("--shutdown=INTEGER", Integer)        {|v| Stylet.config.shutdown = v                                   }
-          oparser.on("-f", "--full-screen", TrueClass)     {|v| Stylet.config.full_screen = true                             }
+          oparser.on("-f", "--full-screen", TrueClass)     {|v| Stylet.config.full_screen = v                                }
           oparser.on("-p", "--production", TrueClass)      {|v| Stylet.production = v                                        }
           oparser.on("-s", "--screen-size=SIZE", String)   {|v| Stylet.config.screen_size = [*v.scan(/\d+/).collect(&:to_i)] }
           oparser.on("-c", "--color-depth=DEPTH", Integer) {|v| Stylet.config.color_depth = v                                }
-          oparser.on("-m", "--mute-mute", TrueClass)       {|v| Stylet.config.mute_music = true                              }
-          oparser.on("-M", "--mute", TrueClass)            {|v| Stylet.config.mute = true                                    }
-          oparser.on("-i", "--hide-mouse", TrueClass)      {|v| Stylet.config.hide_mouse = true                              }
+          oparser.on("-m", "--mute-mute", TrueClass)       {|v| Stylet.config.mute_music = v                                 }
+          oparser.on("-M", "--mute", TrueClass)            {|v| Stylet.config.mute = v                                       }
+          oparser.on("-i", "--hide-mouse", TrueClass)      {|v| Stylet.config.hide_mouse = v                                 }
         end
         oparser.order!(ARGV)
       end

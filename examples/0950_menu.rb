@@ -17,4 +17,4 @@ menu = Stylet::Menu::Basic.new(name: "[メニュー]", elements: [
     {:name => "閉じる", :safe_command => :close_and_parent_restart },
   ])
 
-Stylet.run {|s| menu.update }
+Stylet.run {|_| menu.update }

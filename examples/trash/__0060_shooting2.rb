@@ -5,7 +5,7 @@ module BulletTrigger
   def compute
     super
     dir = Fee.angle(@x, @y, @target.x, @target.y)
-    if (joy && joy.button(0))
+    if joy && joy.button(0)
       if @count.modulo(60 / 6).zero?
         @win.bullets << Bullet.new(@win, @x, @y, dir, 3.00)
       end

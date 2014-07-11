@@ -137,7 +137,7 @@ module Stylet
       # end
 
       def inspect
-        "#{to_s}#{@count}"
+        "#{self}#{@count}"
       end
 
       # 押されているときだけ自分のマークを返す

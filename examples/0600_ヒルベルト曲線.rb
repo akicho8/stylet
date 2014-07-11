@@ -43,7 +43,7 @@ class App < Stylet::Base
   end
 
   def urd(n)
-    if (n > 0)
+    if n > 0
       rul(n-1); line_to(0, -1) # ↑
       urd(n-1); line_to(1, 0)  # →
       urd(n-1); line_to(0, 1)  # ↓
@@ -52,7 +52,7 @@ class App < Stylet::Base
   end
 
   def rul(n)
-    if (n > 0)
+    if n > 0
       urd(n-1); line_to(1, 0)  # →
       rul(n-1); line_to(0, -1) # ↑
       rul(n-1); line_to(-1, 0) # ←
@@ -61,7 +61,7 @@ class App < Stylet::Base
   end
 
   def dlu(n)
-    if (n > 0)
+    if n > 0
       ldr(n-1); line_to(0, 1)  # ↓
       dlu(n-1); line_to(-1, 0) # ←
       dlu(n-1); line_to(0, -1) # ↑

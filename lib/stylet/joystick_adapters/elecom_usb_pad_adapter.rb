@@ -28,4 +28,3 @@ module Stylet
     end
   end
 end
-

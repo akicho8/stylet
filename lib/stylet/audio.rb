@@ -77,7 +77,7 @@ module Stylet
       play(params[:filename], params)
     end
 
-    def play(filename, volume: nil, loop: true, fade_in_sec: nil, **)
+    def play(filename, volume: nil, loop: true, fade_in_sec: nil, **unsed_options)
       return if Stylet.config.mute_music || Stylet.config.mute
 
       Audio.setup_once
@@ -121,7 +121,7 @@ module Stylet
     end
 
     def last_music_file?(filename)
-      self.last_music_file == Pathname(filename).expand_path.to_s
+      last_music_file == Pathname(filename).expand_path.to_s
     end
 
     private
@@ -213,8 +213,8 @@ module Stylet
     end
 
     def channel_reset
-      raise if SE.channel_groups.any?{|k, e|e[:counter] < 0}
-      SE.channel_groups.delete_if{|k, e|e[:counter] == 0}
+      raise if SE.channel_groups.any?{|_, e|e[:counter] < 0}
+      SE.channel_groups.delete_if{|_, e|e[:counter] == 0}
       allocate_channels
       channel_groups.each_value.with_index{|e, index|e[:channel] = SE.preparation_channels + index}
     end

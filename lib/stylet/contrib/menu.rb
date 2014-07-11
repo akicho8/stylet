@@ -12,23 +12,25 @@ module Stylet
       attr_accessor :parent, :bar, :display_height, :select_buttons, :cancel_buttons, :line_format, :close_hook, :input, :elements
       attr_reader :state, :children
 
-      def initialize(parent: nil, name: nil, elements: [], select_buttons: [:btA, :btD], cancel_buttons: [:btB, :btC], scroll_margin: nil, bar: "─" * 40, display_height: 20, joystick_index: nil, line_format: " %{cursor}%{name} %{value}", close_hook: nil, input: Input::SharedPad.new, aroundable: false, cursor: 0)
+      def initialize(**params)
         super() if defined? super
 
-        @parent         = parent
-        @name           = name
-        @elements       = elements
-        @select_buttons = select_buttons
-        @cancel_buttons = cancel_buttons
-        @scroll_margin  = scroll_margin
-        @bar            = bar
-        @display_height = display_height
-        @joystick_index = joystick_index
-        @line_format    = line_format
-        @close_hook     = close_hook
-        @input          = input
-        @aroundable     = aroundable
-        @cursor         = cursor
+        {
+          :parent         => nil,
+          :name           => nil,
+          :elements       => [],
+          :select_buttons => [:btA, :btD],
+          :cancel_buttons => [:btB, :btC],
+          :scroll_margin  => nil,
+          :bar            => "─" * 40,
+          :display_height => 20,
+          :joystick_index => nil,
+          :line_format    => " %{cursor}%{name} %{value}",
+          :close_hook     => nil,
+          :input          => Input::SharedPad.new,
+          :aroundable     => false,
+          :cursor         => 0,
+        }.merge(params).each{|k, v|instance_variable_set("@#{k}", v)}
 
         @window_cursor  = @cursor
         @state = State.new(:menu_boot)
@@ -160,6 +162,7 @@ module Stylet
         end
 
         def current_run
+          return unless current
           current.assert_valid_keys(:name, :menu, :soft_command, :pon_command, :safe_command, :change, :value, :every_command, :cursor_in, :cursor_out)
 
           if root.select_buttons.any?{|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
@@ -259,7 +262,9 @@ module Stylet
         end
 
         def current
-          @elements.fetch(@cursor)
+          unless @elements.empty?
+            @elements.fetch(@cursor)
+          end
         end
 
         def scroll_margin
@@ -284,7 +289,7 @@ module Stylet
         end
 
         def current_value_change
-          if current[:change]
+          if current && current[:change]
             if plus_or_minus_integer.nonzero?
               current[:change].call(plus_or_minus_integer)
             end
@@ -353,7 +358,7 @@ module Stylet
       end
 
       def counter_loop
-        main_loop do |x|
+        main_loop do |_|
           if @c >= 60
             break
           end
@@ -372,31 +377,34 @@ module Stylet
         def initialize
           super(Stylet::Base.active_frame)
 
-          @test_var = 0
-          @menu = Stylet::Menu::Basic.new(elements: [
-              {name: "モード", safe_command: proc {}, :value => proc { @test_var }, :change => proc {|v| @test_var += v }},
+          if false
+            @menu = Stylet::Menu::Basic.new
+          else
+            @test_var = 0
+            @menu = Stylet::Menu::Basic.new(elements: [
+                {name: "モード", safe_command: proc {}, :value => proc { @test_var }, :change => proc {|v| @test_var += v }},
 
-              {name: "実行", safe_command: proc { SampleWindow.new.counter_loop }},
-              {
-                name: "サブメニュー",
-                soft_command: proc {|s|
-                  s.chain(name: "sub menu", elements: [
-                      {name: "実行", safe_command: proc { SampleWindow.new.counter_loop }},
-                      {name: "A", safe_command: proc { p 1 }},
-                      {name: "B", safe_command: proc { p 2 }},
-                      {name: "閉じる", soft_command: :close_and_parent_restart },
-                    ])
+                {name: "実行", safe_command: proc { SampleWindow.new.counter_loop }},
+                {
+                  name: "サブメニュー",
+                  soft_command: proc {|s|
+                    s.chain(name: "sub menu", elements: [
+                        {name: "実行", safe_command: proc { SampleWindow.new.counter_loop }},
+                        {name: "A", safe_command: proc { p 1 }},
+                        {name: "B", safe_command: proc { p 2 }},
+                        {name: "閉じる", soft_command: :close_and_parent_restart },
+                      ])
+                  },
                 },
-              },
-              {name: "サブメニュー2", soft_command: proc {|s| s.chain(name: "[サブメニュー2]", elements: 50.times.collect{|i|{:name => "項目#{i}"}})}},
-              {name: "サブメニュー3", menu: {name: "[サブメニュー3]", elements: 50.times.collect{|i|{:name => "項目#{i}"}}}},
-              {:name => "閉じる", soft_command: :close_and_parent_restart },
-            ])
-
+                {name: "サブメニュー2", soft_command: proc {|s| s.chain(name: "[サブメニュー2]", elements: 50.times.collect{|i|{:name => "項目#{i}"}})}},
+                {name: "サブメニュー3", menu: {name: "[サブメニュー3]", elements: 50.times.collect{|i|{:name => "項目#{i}"}}}},
+                {:name => "閉じる", soft_command: :close_and_parent_restart },
+              ])
+          end
         end
 
         def counter_loop
-          main_loop{|s| @menu.update }
+          main_loop{|_| @menu.update }
         end
       end
 
