@@ -13,6 +13,7 @@ module Stylet
   config.color_depth      = 16
   config.screen_flags     = SDL::HWSURFACE | SDL::DOUBLEBUF | SDL::HWACCEL | SDL::RESIZABLE
   # config.screen_flags   = SDL::HWSURFACE | SDL::DOUBLEBUF | SDL::HWACCEL | SDL::RESIZABLE # SDL::NOFRAME
+  # config.screen_flags   = SDL::HWSURFACE | SDL::DOUBLEBUF | SDL::HWACCEL | SDL::RESIZABLE | SDL::SRCALPHA
   config.background_image = nil # "background.bmp"
 
   # Mouse
