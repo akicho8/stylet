@@ -1,14 +1,15 @@
-require "forwardable"
+# require "forwardable"
 require "active_support/concern"
+require "active_support/core_ext/module/delegation"
 
 module Stylet
   module Delegators
     extend ActiveSupport::Concern
     included do
-      extend Forwardable
+      # extend Forwardable
 
       unless self <= Stylet::Base
-        instance_delegate [
+        delegate *[
           :vputs,
           :dputs,
           :rect,
@@ -31,10 +32,10 @@ module Stylet
 
           :vec2,
           :rect2,
-        ] => "Stylet::Base.active_frame"
+        ], :to => "Stylet::Base.active_frame"
       end
 
-      instance_delegate [:rsin, :rcos] => "Stylet::Fee"
+      delegate *[:rsin, :rcos], :to => "Stylet::Fee"
     end
   end
 end
