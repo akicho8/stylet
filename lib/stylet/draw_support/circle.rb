@@ -16,7 +16,7 @@ module Stylet
         :angle  => Fee.r270, # 開始地点(初期値は時計の12時)
       }.merge(options)
 
-      raise "options[:vertex] is not Integer" unless options[:vertex].kind_of? Integer
+      raise "options[:vertex] is not Integer" unless options[:vertex].is_a? Integer
       raise "options[:vertex] >= 1" if options[:vertex].to_i.zero?
       raise "zero vector" if options[:vertex].zero?
 

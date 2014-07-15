@@ -85,7 +85,7 @@ module Stylet
     end
 
     def key_down?(sym)
-      if @sdl_event.kind_of? SDL::Event::KeyDown
+      if @sdl_event.is_a? SDL::Event::KeyDown
         @sdl_event.sym == sym
       end
     end

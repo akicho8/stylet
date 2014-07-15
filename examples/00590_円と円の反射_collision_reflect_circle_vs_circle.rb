@@ -202,7 +202,7 @@ class App < Stylet::Base
 
   def c_state(resp)
     return unless resp
-    # return if resp.kind_of? StandardError
+    # return if resp.is_a? StandardError
     if resp[:f0] > 0 && resp[:f1] > 0
       "tikazuki"
     elsif resp[:f0] < 0 && resp[:f1] < 0

@@ -1222,13 +1222,13 @@ class App < Stylet::Base
 
   # FIXME: 冗長すぎる
   def task_set(v)
-    if v.kind_of? BlockBase
+    if v.is_a? BlockBase
       @blocks << v
     end
-    if v.kind_of? PlayerBase
+    if v.is_a? PlayerBase
       @players << v
     end
-    if v.kind_of? Coin
+    if v.is_a? Coin
       @coins << v
     end
     @objects << v
@@ -1236,13 +1236,13 @@ class App < Stylet::Base
 
   def kill_task(v)
     @objects.delete(v)
-    if v.kind_of? BlockBase
+    if v.is_a? BlockBase
       @blocks.delete(v)
     end
-    if v.kind_of? PlayerBase
+    if v.is_a? PlayerBase
       @players.delete(v)
     end
-    if v.kind_of? Coin
+    if v.is_a? Coin
       @coins.delete(v)
     end
   end

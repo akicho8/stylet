@@ -37,7 +37,7 @@ module Stylet
       delegate :halt, :to => "Stylet::Audio.instance"
 
       def volume_cast(v)
-        raise if v.kind_of? Integer
+        raise if v.is_a? Integer
         (Stylet::Etc.clamp(v) / 1.0 * 128).to_i
       end
     end
