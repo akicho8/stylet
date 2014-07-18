@@ -163,7 +163,7 @@ module Stylet
 
         def current_run
           return unless current
-          current.assert_valid_keys(:name, :menu, :soft_command, :pon_command, :safe_command, :change, :value, :every_command, :cursor_in, :cursor_out)
+          current.assert_valid_keys(:name, :menu, :simple_command, :se_command, :safe_command, :change, :value, :every_command, :cursor_in, :cursor_out)
 
           if root.select_buttons.any?{|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
             if menu = current[:menu]
@@ -172,17 +172,17 @@ module Stylet
               end
               chain(menu)
             end
-            if command = current[:soft_command]
+            if command = current[:simple_command]
               command.call(self)
             end
-            if command = current[:pon_command]
+            if command = current[:se_command]
               notify(:menu_select)
               command.call(self)
             end
-            if safe_command = current[:safe_command]
+            if command = current[:safe_command]
               Stylet::Audio.halt
               notify(:menu_select)
-              safe_command.call(self)
+              command.call(self)
               Stylet::Audio.halt
               bgm_if_possible
 
@@ -387,18 +387,18 @@ module Stylet
                 {name: "実行", safe_command: proc { SampleWindow.new.counter_loop }},
                 {
                   name: "サブメニュー",
-                  soft_command: proc {|s|
+                  simple_command: proc {|s|
                     s.chain(name: "sub menu", elements: [
                         {name: "実行", safe_command: proc { SampleWindow.new.counter_loop }},
                         {name: "A", safe_command: proc { p 1 }},
                         {name: "B", safe_command: proc { p 2 }},
-                        {name: "閉じる", soft_command: :close_and_parent_restart },
+                        {name: "閉じる", simple_command: :close_and_parent_restart },
                       ])
                   },
                 },
-                {name: "サブメニュー2", soft_command: proc {|s| s.chain(name: "[サブメニュー2]", elements: 50.times.collect{|i|{:name => "項目#{i}"}})}},
+                {name: "サブメニュー2", simple_command: proc {|s| s.chain(name: "[サブメニュー2]", elements: 50.times.collect{|i|{:name => "項目#{i}"}})}},
                 {name: "サブメニュー3", menu: {name: "[サブメニュー3]", elements: 50.times.collect{|i|{:name => "項目#{i}"}}}},
-                {:name => "閉じる", soft_command: :close_and_parent_restart },
+                {:name => "閉じる", simple_command: :close_and_parent_restart },
               ])
           end
         end
