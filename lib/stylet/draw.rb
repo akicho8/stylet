@@ -96,13 +96,14 @@ module Stylet
 
     #
     # draw_rect の場合、デフォルトだと幅+1ドット描画されるため -1 してある
+    # draw_rect(0, 0, 0, 0) で 1 ドット表示されてしまう
     #
     def _draw_rect(x, y, w, h, options = {})
       options = {
         :color => :foreground,
       }.merge(options)
-      raise "w, h は正を指定するように" if w < 0 || h < 0
       return if w.zero? || h.zero?
+      # raise "w, h は正を指定するように" if w < 0 || h < 0
       if options[:fill]
         method = :fill_rect
         w = w.abs
@@ -130,7 +131,7 @@ module Stylet
     end
 
     def draw_rect(rect, options = {})
-      _draw_rect(rect.x, rect.y, rect.w, rect.h, options)
+      _draw_rect(*rect, options)
     end
 
     def save_bmp(fname)
