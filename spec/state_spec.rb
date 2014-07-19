@@ -16,7 +16,7 @@ describe State do
           end
         when :idle
           if object.count_at?(1)
-            object.jump_to(:active)
+            object.jump_to :active
           end
         end
       end

@@ -7,7 +7,7 @@
 #     case object.state
 #     when :idle
 #       if object.count_at?(1)
-#         object.jump_to(:active)
+#         object.jump_to :active
 #       end
 #     when :active
 #       if object.start?

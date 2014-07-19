@@ -43,24 +43,20 @@ module Stylet
         params = params.dup
         menu_class = params.delete(:menu_class) || self.class
         @children << menu_class.new({:name => current[:name], :parent => self}.merge(params))
-        @state.jump_to(:menu_sleep)
+        @state.jump_to :menu_sleep
       end
 
       def update
         super if defined? super
         unless @parent
-
           @input.key_bit_update_all
           @input.key_counter_update_all
-
-          # active_joys.each{|e|bit_update_by_joy(e)}
-          # key_counter_update_all
         end
         @state.loop_in do
           case @state.state
           when :menu_boot
             bgm_if_possible
-            @state.jump_to(:menu_alive)
+            @state.jump_to :menu_alive
           when :menu_sleep
             @children.each(&:update)
           when :menu_restart
@@ -68,7 +64,7 @@ module Stylet
               bgm_if_possible
               notify(:menu_back)
             end
-            @state.jump_to(:menu_alive)
+            @state.jump_to :menu_alive
           when :menu_alive
             cursor_update
             if @state.count > 1 # サブメニューを開いた瞬間や戻ってきたときに最初の項目を押させないため
@@ -165,7 +161,7 @@ module Stylet
           return unless current
           current.assert_valid_keys(:name, :menu, :simple_command, :se_command, :safe_command, :change, :value, :every_command, :cursor_in, :cursor_out)
 
-          if root.select_buttons.any?{|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
+          if current_run_trigger?
             if menu = current[:menu]
               if menu.respond_to?(:call)
                 menu = menu.call
@@ -180,15 +176,7 @@ module Stylet
               command.call(self)
             end
             if command = current[:safe_command]
-              Stylet::Audio.halt
-              notify(:menu_select)
-              command.call(self)
-              Stylet::Audio.halt
-              bgm_if_possible
-
-              # ブロックの中でBキャンセルしたときにこのメニューもBキャンセルが反応してしまうのを防ぐため
-              # メニューをリスタートさせる。リスタートすることで2フレーム間、Bキャンセルをかわせる
-              @state.jump_to(:menu_restart)
+              safe_command_around(command)
             end
           end
         end
@@ -271,14 +259,13 @@ module Stylet
           @scroll_margin || (@display_height / 3)
         end
 
-        # close methods
         def close_and_parent_restart
           if parent
             if @close_hook
               @close_hook.call(self)
             end
             parent.children.delete(self)
-            parent.state.jump_to(:menu_restart)
+            parent.state.jump_to :menu_restart
           end
         end
 
@@ -313,6 +300,23 @@ module Stylet
           else
             joys
           end
+        end
+
+        def current_run_trigger?
+          root.select_buttons.any?{|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
+        end
+
+        def safe_command_around
+          Stylet::Audio.halt
+          notify(:menu_select)
+          yield
+          Stylet::Audio.halt
+          bgm_if_possible
+
+          # yield内でBキャンセルしたときにこのメニューもBキャンセルが反応してしまう。
+          # この対策としてメニューをリスタートさせる。
+          # リスタートすることで2フレーム間Bキャンセルを回避できる。
+          @state.jump_to :menu_restart
         end
       end
     end
