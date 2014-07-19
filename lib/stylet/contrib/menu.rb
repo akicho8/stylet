@@ -30,6 +30,7 @@ module Stylet
           :input          => Input::SharedPad.new,
           :aroundable     => false,
           :cursor         => 0,
+          :xcommand       => proc {},
         }.merge(params).each{|k, v|instance_variable_set("@#{k}", v)}
 
         @window_cursor  = @cursor
@@ -150,6 +151,9 @@ module Stylet
         end
 
         def all_run
+          if @xcommand
+            @xcommand.call(self)
+          end
           @elements.each do |elem|
             if command = elem[:every_command]
               command.call(self)
@@ -176,7 +180,7 @@ module Stylet
               command.call(self)
             end
             if command = current[:safe_command]
-              safe_command_around(command)
+              safe_command_around { command.call(self) }
             end
           end
         end
