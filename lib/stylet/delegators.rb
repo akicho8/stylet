@@ -11,6 +11,7 @@ module Stylet
       unless self <= Stylet::Base
         delegate *[
           :vputs,
+          :vputs_vector,
           :dputs,
           :rect,
           :count,
@@ -22,16 +23,18 @@ module Stylet
           :draw_square,
           :draw_angle_rect,
           :draw_rect,
-          :_draw_rect,
+          :draw_rect4,
           :draw_vector,
           :draw_arrow,
           :draw_polygon,
           :screen,
+          :font_width,
 
           :check_fps,
 
           :vec2,
           :rect2,
+          :rect4,
         ], :to => "Stylet::Base.active_frame"
       end
 

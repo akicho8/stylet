@@ -98,25 +98,22 @@ module Stylet
     # draw_rect の場合、デフォルトだと幅+1ドット描画されるため -1 してある
     # draw_rect(0, 0, 0, 0) で 1 ドット表示されてしまう
     #
-    def _draw_rect(x, y, w, h, options = {})
-      options = {
-        :color => :foreground,
-      }.merge(options)
+    def draw_rect4(x, y, w, h, color: :foreground, fill: false, alpha: nil)
       return if w.zero? || h.zero?
+      color = Palette.fetch(color)
       # raise "w, h は正を指定するように" if w < 0 || h < 0
-      if options[:fill]
-        method = :fill_rect
-        w = w.abs
-        h = h.abs
+      if fill
+        if alpha
+          @screen.draw_rect(x, y, w.abs - 1, h.abs - 1, color, true, alpha)
+        else
+          @screen.fill_rect(x, y, w.abs, h.abs, color)
+        end
       else
-        method = :draw_rect
-        w = w.abs - 1
-        h = h.abs - 1
+        @screen.draw_rect(x, y, w.abs - 1, h.abs - 1, color, false, alpha)
       end
-      @screen.send(method, x, y, w, h, Palette.fetch(options[:color]))
     end
 
-    def draw_line(p0, p1, options = {})
+    def draw_line(p0, p1, **options)
       options = {
         :color => :foreground,
       }.merge(options)
@@ -126,12 +123,12 @@ module Stylet
       # raise error
     end
 
-    def draw_dot(p0, options = {})
+    def draw_dot(p0, **options)
       draw_line(p0, p0, options)
     end
 
-    def draw_rect(rect, options = {})
-      _draw_rect(*rect, options)
+    def draw_rect(rect, **options)
+      draw_rect4(*rect, options)
     end
 
     def save_bmp(fname)

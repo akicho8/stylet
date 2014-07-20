@@ -34,7 +34,7 @@ module Stylet
         }.merge(params).each{|k, v|instance_variable_set("@#{k}", v)}
 
         @window_cursor  = @cursor
-        @state = State.new(:menu_boot)
+        @state = State.new(:boot)
         @children = []
       end
 
@@ -44,7 +44,7 @@ module Stylet
         params = params.dup
         menu_class = params.delete(:menu_class) || self.class
         @children << menu_class.new({:name => current[:name], :parent => self}.merge(params))
-        @state.jump_to :menu_sleep
+        @state.jump_to :ms_sleep
       end
 
       def update
@@ -53,31 +53,7 @@ module Stylet
           @input.key_bit_update_all
           @input.key_counter_update_all
         end
-        @state.loop_in do
-          case @state.state
-          when :menu_boot
-            bgm_if_possible
-            @state.jump_to :menu_alive
-          when :menu_sleep
-            @children.each(&:update)
-          when :menu_restart
-            if @state.start?
-              bgm_if_possible
-              notify(:menu_back)
-            end
-            @state.jump_to :menu_alive
-          when :menu_alive
-            cursor_update
-            if @state.count > 1 # サブメニューを開いた瞬間や戻ってきたときに最初の項目を押させないため
-              close_check
-              all_run
-              current_run
-            end
-            current_value_change
-            window_cursor_update
-            render
-          end
-        end
+        @state.loop_in { send @state.state }
       end
 
       def root
@@ -99,10 +75,39 @@ module Stylet
       begin
         private
 
-        def render
-          unless @bar
-            vputs
+        def boot
+          bgm_if_possible
+          @state.jump_to :ms_alive
+        end
+
+        def ms_sleep
+          @children.each(&:update)
+        end
+
+        def ms_restart
+          if @state.start?
+            bgm_if_possible
+            notify(:menu_back)
           end
+          @state.jump_to :ms_alive
+        end
+
+        def ms_alive
+          cursor_update
+          if @state.count > 1 # サブメニューを開いた瞬間や戻ってきたときに最初の項目を押させないため
+            close_check
+            all_run
+            current_run
+          end
+          current_value_change
+          window_cursor_update
+          render
+        end
+
+        def render
+          # unless @bar
+          #   vputs
+          # end
           if menu_name
             rendar_bar
             vputs menu_name
@@ -269,7 +274,7 @@ module Stylet
               @close_hook.call(self)
             end
             parent.children.delete(self)
-            parent.state.jump_to :menu_restart
+            parent.state.jump_to :ms_restart
           end
         end
 
@@ -320,7 +325,7 @@ module Stylet
           # yield内でBキャンセルしたときにこのメニューもBキャンセルが反応してしまう。
           # この対策としてメニューをリスタートさせる。
           # リスタートすることで2フレーム間Bキャンセルを回避できる。
-          @state.jump_to :menu_restart
+          @state.jump_to :ms_restart
         end
       end
     end
