@@ -361,7 +361,7 @@ module Stylet
       alias preload! wave
 
       def spec
-        "[channel:#{channel}/#{SE.allocated_channels}] [#{@wave ? :loaded : :new}] [volume:#{@volume}] [#{@channel_group}] [#{@key}] #{@filename}"
+        "[channel:#{channel}/#{SE.allocated_channels}] [#{@wave ? :loaded : :new}] [volume:#{@volume}] [#{@channel_group}] [#{@key}] #{@filename.basename}"
       end
 
       private
