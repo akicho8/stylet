@@ -30,8 +30,8 @@ module Stylet
         repeat
       end
 
-      attr_reader :name, :count, :free_count
-      attr_accessor :match_chars
+      attr_reader :count, :free_count
+      attr_accessor :name, :match_chars
       attr_accessor :state
 
       def initialize(name = "?", match_chars = nil)

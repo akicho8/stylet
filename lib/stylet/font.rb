@@ -18,6 +18,7 @@ module Stylet
               @font.style = SDL::TTF::STYLE_BOLD
             end
             @font_width = @font.text_size("A").first
+            @console_current_line = nil
           end
         end
       end
@@ -86,7 +87,9 @@ module Stylet
     end
 
     def vputs_vector
-      vec2[0, @console_current_line * @font.line_skip]
+      if @console_current_line
+        vec2[0, @console_current_line * @font.line_skip]
+      end
     end
   end
 end
