@@ -237,14 +237,25 @@ module Stylet
       !play_any?
     end
 
-    def halt
-      SDL::Mixer.halt(-1)
+    def halt(fade_out_sec: nil)
+      if fade_out_sec
+        SDL::Mixer.fade_out(-1, fade_out_sec * 1000.0)
+      else
+        SDL::Mixer.halt(-1)
+      end
+    end
+
+    def fade_out(fade_out_sec: 2)
+      halt(fade_out_sec: fade_out_sec)
     end
 
     def master_volume=(v)
       Audio.setup_once
       @master_volume = v
-      SDL::Mixer.set_volume(-1, Audio.volume_cast(v))
+      # チャンネル数0の状態で呼ぶと落ちるため
+      if allocated_channels >= 1
+        SDL::Mixer.set_volume(-1, Audio.volume_cast(v))
+      end
     end
 
     class Base
