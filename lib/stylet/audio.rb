@@ -269,6 +269,10 @@ module Stylet
       def halt(*)
       end
 
+      def fade_out(fade_out_sec: 2)
+        halt(fade_out_sec: fade_out_sec)
+      end
+
       def volume
         0
       end
@@ -428,6 +432,16 @@ if $0 == __FILE__
       expect(Stylet::SE.se_hash.values.collect(&:channel)).to eq [1, 0]
       Stylet::SE.destroy_all(:c)             # c を消すと 0 チャンネルが消えて
       expect(Stylet::SE[:b].channel).to eq 0 # 再割り当てするため 1 チャンネルが消えて 0 チャンネルのみになる
+    end
+
+    it "効果音を複数同時にフェイドアウトできる" do
+      Stylet::SE.master_volume = 0.2
+      Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH03VO09.WAV", :key => :a, :preload => true, :volume => 0.1)
+      Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH04VO20.WAV", :key => :b, :preload => true, :volume => 0.1)
+      Stylet::SE[:a].play
+      Stylet::SE[:b].play
+      Stylet::SE.halt(:fade_out_sec => 1)
+      Stylet::SE.wait_if_play?
     end
 
     it do
