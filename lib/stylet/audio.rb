@@ -388,8 +388,12 @@ if $0 == __FILE__
   require_relative "../stylet"
   require "rspec/autorun"
 
+  RSpec.configure do |config|
+  end
+
   describe do
     before do
+      Stylet::Audio.setup_once
       Stylet::SE.destroy_all
     end
 
