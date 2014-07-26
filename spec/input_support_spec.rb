@@ -4,8 +4,8 @@ require "spec_helper"
 module Stylet
   describe Input::Support do
     before do
-      @left = Input::KeyOne.new
-      @right = Input::KeyOne.new
+      @left  = Input::KeyOne.new(name: "L", match_chars: ["L"], store_char: "L", index: 0)
+      @right = Input::KeyOne.new(name: "R", match_chars: ["R"], store_char: "R", index: 0)
     end
 
     # 入力優先順位テスト
@@ -35,8 +35,6 @@ module Stylet
     end
 
     it "key_power_effective?" do
-      @left = Input::KeyOne.new
-      @right = Input::KeyOne.new
       @right.counter_update(true)
       Input::Support.key_power_effective?(@left, @right, 2).should == false
       @right.counter_update(true)

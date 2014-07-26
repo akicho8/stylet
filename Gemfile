@@ -9,7 +9,8 @@ else
 end
 
 gem "ruby-opengl", :require => false
-gem "rubocop", :github => "bbatsov/rubocop", :require => false
+# gem "rubocop", :github => "bbatsov/rubocop", :require => false
+gem "rubocop", :require => false
 
 # bundle config build.rubysdl --enable-bundled-sge
 # ~/.bundle/config

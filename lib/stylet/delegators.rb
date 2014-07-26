@@ -1,44 +1,42 @@
-# require "forwardable"
 require "active_support/concern"
 require "active_support/core_ext/module/delegation"
 
 module Stylet
   module Delegators
     extend ActiveSupport::Concern
+
     included do
-      # extend Forwardable
+      unless self <= Base
+        delegate(*[
+            :vputs,
+            :vputs_vector,
+            :dputs,
+            :rect,
+            :count,
+            :joys,
+            :draw_dot,
+            :draw_line,
+            :draw_circle,
+            :draw_triangle,
+            :draw_square,
+            :draw_angle_rect,
+            :draw_rect,
+            :draw_rect4,
+            :draw_vector,
+            :draw_arrow,
+            :draw_polygon,
+            :screen,
+            :font_width,
 
-      unless self <= Stylet::Base
-        delegate *[
-          :vputs,
-          :vputs_vector,
-          :dputs,
-          :rect,
-          :count,
-          :joys,
-          :draw_dot,
-          :draw_line,
-          :draw_circle,
-          :draw_triangle,
-          :draw_square,
-          :draw_angle_rect,
-          :draw_rect,
-          :draw_rect4,
-          :draw_vector,
-          :draw_arrow,
-          :draw_polygon,
-          :screen,
-          :font_width,
+            :check_fps,
 
-          :check_fps,
-
-          :vec2,
-          :rect2,
-          :rect4,
-        ], :to => "Stylet::Base.active_frame"
+            :vec2,
+            :rect2,
+            :rect4,
+          ], :to => "Stylet::Base.active_frame")
       end
 
-      delegate *[:rsin, :rcos], :to => "Stylet::Fee"
+      delegate(*[:rsin, :rcos], :to => "Stylet::Fee")
     end
   end
 end

@@ -10,16 +10,32 @@ module Stylet
       Button = Struct.new(:btA, :btB, :btC, :btD)
 
       attr_reader :axis, :button
+      attr_reader :key_objects
 
       def initialize(*)
         super if defined? super
-        @axis   = Axis.new(KeyOne.new("u"), KeyOne.new("d"), KeyOne.new("l"), KeyOne.new("r"))
-        @button = Button.new(KeyOne.new("AL"), KeyOne.new("BR"), KeyOne.new("C"), KeyOne.new("D"))
+
+        @key_objects = []
+
+        @axis = Axis.new(*[
+            factory(name: "u", match_chars: "u", store_char: "u"),
+            factory(name: "d", match_chars: "d", store_char: "d"),
+            factory(name: "l", match_chars: "l", store_char: "l"),
+            factory(name: "r", match_chars: "r", store_char: "r"),
+          ])
+
+        @button = Button.new(*[
+            factory(:name => "A", :match_chars => "AL", store_char: "A"),
+            factory(:name => "B", :match_chars => "BR", store_char: "B"),
+            factory(:name => "C", :match_chars => "C", store_char: "C"),
+            factory(:name => "D", :match_chars => "D", store_char: "D"),
+          ])
       end
 
-      # 上下左右とボタンの状態を配列で返す
-      def key_objects
-        @axis.values + @button.values
+      def factory(attrs)
+        KeyOne.new(attrs.merge(:index => @key_objects.size)).tap do |e|
+          @key_objects << e
+        end
       end
 
       # レバーの更新前のビット状態を取得
@@ -28,38 +44,27 @@ module Stylet
         @axis.values.collect{|e|e.state_to_s}.join
       end
 
-      # # 適当に文字列化
-      # def to_s(stype=nil)
-      #   case stype.to_s
-      #   when "axis"
-      #     @axis.values.to_s
-      #   when "button"
-      #     @button.values.to_s
-      #   when "ext_button"
-      #     @ext_button.values.to_s
-      #   else
-      #     key_objects.to_s
-      #   end
-      # end
-
-      def to_s
-        key_objects.join
+      def key_objs_dump
+        key_objects.inject(0){|a, e|a + e.press_bit_value}
       end
+
+      def key_objs_load(obj)
+        key_objects.each{|v|v << obj}
+      end
+
+      # def to_s
+      #   key_objects.join
+      # end
 
       # 左右の溜めが完了しているか?(次の状態から使えるか?)
       def key_power_effective?(power_delay)
         Input::Support.key_power_effective?(@axis.left, @axis.right, power_delay)
       end
 
-      # # ここで各ボタンを押す
-      # def update
-      #   # raise NotImplementedError, "#{__method__} is not implemented"
-      # end
-
       # ボタンとレバーのカウンタを更新する
       #   実行後に state は false になる
       def key_counter_update_all
-        key_objects.each{|e|e.counter_update}
+        key_objects.each(&:counter_update)
       end
 
       # レバーの状態から8方向の番号インデックスに変換
@@ -81,19 +86,16 @@ module Stylet
 
       def initialize(*)
         super if defined? super
-        @ext_button = Button.new(*[
-            KeyOne.new("R1", ""), # 第二引数は TextInputUnit が反応する文字
-            KeyOne.new("R2", ""),
-            KeyOne.new("L1", ""), # ホールド用 FIXME
-            KeyOne.new("L2", ""),
-            KeyOne.new("SELECT", ""),
-            KeyOne.new("START", ""),
-            KeyOne.new("PS", ""),
-          ])
-      end
 
-      def key_objects
-        super + @ext_button.values
+        @ext_button = Button.new(*[
+            factory(name: "R1",     match_chars: nil, store_char: nil),
+            factory(name: "R2",     match_chars: nil, store_char: nil),
+            factory(name: "L1",     match_chars: nil, store_char: nil),
+            factory(name: "L2",     match_chars: nil, store_char: nil),
+            factory(name: "SELECT", match_chars: nil, store_char: nil),
+            factory(name: "START",  match_chars: nil, store_char: nil),
+            factory(name: "PS",     match_chars: nil, store_char: nil),
+          ])
       end
     end
   end

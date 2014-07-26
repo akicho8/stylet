@@ -10,36 +10,41 @@ module Stylet
     #   state をセットして update することでカウンタが更新される
     #
     class KeyOne
-      # キーリピート2としたときの挙動
-      # 3フレーム目に押された場合
-      #
-      #        2 3 4 5 6 7 (__frame__)
-      #  count 0 1 2 3 4 5
-      # repeat 0 1 0 0 2 3
-      #            ^ ^  の数(1と2の間がの数)がkey_repeat
-      #
-      def self.repeat(count, key_repeat)
-        repeat = 0
-        if count == 1
-          repeat = 1
-        elsif count > key_repeat + 1
-          repeat = count - key_repeat
-        else
+      class << self
+        # キーリピート2としたときの挙動
+        # 3フレーム目に押された場合
+        #
+        #        2 3 4 5 6 7 (__frame__)
+        #  count 0 1 2 3 4 5
+        # repeat 0 1 0 0 2 3
+        #            ^ ^  の数(1と2の間がの数)がkey_repeat
+        #
+        def repeat(count, key_repeat)
           repeat = 0
+          if count == 1
+            repeat = 1
+          elsif count > key_repeat + 1
+            repeat = count - key_repeat
+          else
+            repeat = 0
+          end
+          repeat
         end
-        repeat
       end
 
-      attr_reader :count, :free_count
-      attr_accessor :name, :match_chars
+      attr_accessor :name, :match_chars, :store_char, :index
       attr_accessor :state
+      attr_reader :count, :free_count
 
-      def initialize(name = "?", match_chars = nil)
-        @name = name.to_s
-        @match_chars = (match_chars || @name).to_s.chars # # "AL" だったら A と L に対応
+      def initialize(name:, match_chars: nil, store_char: nil, index: nil)
+        @name        = name
+        @match_chars = match_chars
+        @store_char  = store_char
+        @index       = index
+
         @count = 0
         @free_count = 0
-        @state = false              # 直近のフラグ
+        @state = false
       end
 
       # 直近フラグを設定。falseにはできない。
@@ -55,15 +60,15 @@ module Stylet
         case value
         when String
           value = @match_chars.any?{|m|value.include?(m)}
-        when Fixnum
-          value = value.nonzero?
+        when Integer
+          value = (value & _bit_value).nonzero?
         end
         @state |= value
       end
 
       # 更新する前のon/off状態を取得(廃止予定)
       def state_to_s
-        @state ? name[0] : ""
+        @state ? @store_char : ""
       end
 
       # @state の状態を @count に反映する
@@ -123,26 +128,30 @@ module Stylet
         @free_count == 1
       end
 
-      # #
-      # # 優先度チェック用
-      # #
-      # #   FIXME: もっと簡潔に書けるはず
-      # #
-      # def <=>(other)                # sortで優先度の高い順に並べる為の比較処理
-      #   if @count == 0 || other.count == 0
-      #     other.count <=> @count    # 0はもっとも優先度が低い為逆にする
-      #   else
-      #     @count <=> other.count
-      #   end
-      # end
-
       def inspect
         "#{self}#{@count}"
       end
 
-      # 押されているときだけ自分のマークを返す
-      def to_s
-        press? ? @name[0] : ""
+      # # 押されているときだけ自分のマークを返す
+      # def to_s2
+      #   if press?
+      #     @store_char
+      #   end
+      # end
+
+      def press_bit_value
+        if press?
+          _bit_value
+        else
+          0
+        end
+      end
+
+      begin
+        private
+        def _bit_value
+          1 << @index
+        end
       end
     end
   end
