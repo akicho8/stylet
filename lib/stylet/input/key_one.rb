@@ -59,7 +59,11 @@ module Stylet
       def <<(value)
         case value
         when String
-          value = @match_chars.any?{|m|value.include?(m)}
+          if @match_chars
+            value = @match_chars.chars.any?{|m|value.include?(m)}
+          else
+            value = nil
+          end
         when Integer
           value = (value & _bit_value).nonzero?
         end
@@ -132,12 +136,11 @@ module Stylet
         "#{self}#{@count}"
       end
 
-      # # 押されているときだけ自分のマークを返す
-      # def to_s2
-      #   if press?
-      #     @store_char
-      #   end
-      # end
+      def to_s2
+        if press?
+          @store_char
+        end
+      end
 
       def press_bit_value
         if press?

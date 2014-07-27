@@ -4,7 +4,7 @@ require "spec_helper"
 module Stylet
   describe Input::KeyOne do
     before do
-      @key_one = Input::KeyOne.new(name: "A", match_chars: ["A"], store_char: "A", index: 0)
+      @key_one = Input::KeyOne.new(name: "A", match_chars: "A", store_char: "A", index: 0)
     end
 
     it "repeat" do

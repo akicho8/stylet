@@ -4,8 +4,8 @@ require "spec_helper"
 module Stylet
   describe Input::Support do
     before do
-      @left  = Input::KeyOne.new(name: "L", match_chars: ["L"], store_char: "L", index: 0)
-      @right = Input::KeyOne.new(name: "R", match_chars: ["R"], store_char: "R", index: 0)
+      @left  = Input::KeyOne.new(name: "L", match_chars: "L", store_char: "L", index: 0)
+      @right = Input::KeyOne.new(name: "R", match_chars: "R", store_char: "R", index: 0)
     end
 
     # 入力優先順位テスト

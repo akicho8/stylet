@@ -72,6 +72,17 @@ module Stylet
         root.cancel_buttons.any?{|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
       end
 
+      def diff_val
+        case e = Input::Support.preference_key(root.input.axis.right, root.input.axis.left)
+        when root.input.axis.right
+          e.repeat
+        when root.input.axis.left
+          e.repeat * -1
+        else
+          0
+        end
+      end
+
       begin
         private
 
@@ -168,7 +179,7 @@ module Stylet
 
         def current_run
           return unless current
-          current.assert_valid_keys(:name, :menu, :simple_command, :se_command, :safe_command, :change, :value, :every_command, :cursor_in, :cursor_out)
+          current.assert_valid_keys(:name, :menu, :simple_command, :se_command, :safe_command, :change, :change2, :value, :every_command, :cursor_in, :cursor_out)
 
           if current_run_trigger?
             if menu = current[:menu]
@@ -285,21 +296,15 @@ module Stylet
         end
 
         def current_value_change
-          if current && current[:change]
-            if plus_or_minus_integer.nonzero?
-              current[:change].call(plus_or_minus_integer)
+          if current
+            if diff_val.nonzero?
+              if current[:change]
+                current[:change].call(diff_val)
+              end
+              if current[:change2]
+                current[:change2].call(self)
+              end
             end
-          end
-        end
-
-        def plus_or_minus_integer
-          case e = Input::Support.preference_key(root.input.axis.right, root.input.axis.left)
-          when root.input.axis.right
-            e.repeat
-          when root.input.axis.left
-            e.repeat * -1
-          else
-            0
           end
         end
 
