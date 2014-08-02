@@ -7,8 +7,7 @@
 /.yardoc
 /TODO
 /examples/_*
-/examples/assets/*
+/examples/assets
 /_*
-/sound_effects
-/image_resources
+/assets
 /audacity

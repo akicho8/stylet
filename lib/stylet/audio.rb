@@ -413,9 +413,9 @@ if $0 == __FILE__
 
     it do
       Stylet::SE.master_volume = 0.2
-      Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO00.WAV", :key => :a, :channel_group => :x, :volume => 0.1)
-      Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO01.WAV", :key => :b,                       :volume => 0.1)
-      Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO02.WAV", :key => :c, :channel_group => :x, :volume => 0.1)
+      Stylet::SE.load("#{__dir__}/../../assets/audios/pc_puyo_puyo_fever/VOICE/CH00VO00.WAV", :key => :a, :channel_group => :x, :volume => 0.1)
+      Stylet::SE.load("#{__dir__}/../../assets/audios/pc_puyo_puyo_fever/VOICE/CH00VO01.WAV", :key => :b,                       :volume => 0.1)
+      Stylet::SE.load("#{__dir__}/../../assets/audios/pc_puyo_puyo_fever/VOICE/CH00VO02.WAV", :key => :c, :channel_group => :x, :volume => 0.1)
 
       expect(Stylet::SE[:a].spec).to match(/new/)    # ロードしていない
       Stylet::SE[:a].preload!                        # 明示的にロードする
@@ -436,8 +436,8 @@ if $0 == __FILE__
 
     it "効果音を複数同時にフェイドアウトできる" do
       Stylet::SE.master_volume = 0.2
-      Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH03VO09.WAV", :key => :a, :preload => true, :volume => 0.1)
-      Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH04VO20.WAV", :key => :b, :preload => true, :volume => 0.1)
+      Stylet::SE.load("#{__dir__}/../../assets/audios/pc_puyo_puyo_fever/VOICE/CH03VO09.WAV", :key => :a, :preload => true, :volume => 0.1)
+      Stylet::SE.load("#{__dir__}/../../assets/audios/pc_puyo_puyo_fever/VOICE/CH04VO20.WAV", :key => :b, :preload => true, :volume => 0.1)
       Stylet::SE[:a].play
       Stylet::SE[:b].play
       Stylet::SE.halt(:fade_out_sec => 1)
@@ -446,7 +446,7 @@ if $0 == __FILE__
 
     it do
       Stylet::SE.preparation_channels = 10
-      Stylet::SE.load("#{__dir__}/../../sound_effects/pc_puyo_puyo_fever/VOICE/CH00VO00.WAV", :key => :a, :channel_auto => true, :volume => 0.1)
+      Stylet::SE.load("#{__dir__}/../../assets/audios/pc_puyo_puyo_fever/VOICE/CH00VO00.WAV", :key => :a, :channel_auto => true, :volume => 0.1)
       expect(Stylet::SE[:a].spec).to match("-1/10")
     end
   end

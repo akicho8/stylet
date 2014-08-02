@@ -44,7 +44,7 @@ class App < Stylet::Base
     GL::End()           # 点の設定を終了
 
     GL::MatrixMode(GL::MODELVIEW)
-    # GL::Rotate(0.5, 0.5, 0.5, 0.5) # ここを有効にするとなんか知らんが回転する
+    GL::Rotate(0.5, 0.5, 0.5, 0.5) # ここを有効にするとなんか知らんが回転する
 
     SDL::GL.swap_buffers
   end

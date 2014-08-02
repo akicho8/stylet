@@ -3,6 +3,11 @@
 # 再帰曲線 ヒルベルト曲線(アルゴリズム)
 # http://www.softist.com/programming/hilbert/hilbert.htm
 #
+# ヒルベルト曲線 - Wikipedia
+# http://ja.wikipedia.org/wiki/%E3%83%92%E3%83%AB%E3%83%99%E3%83%AB%E3%83%88%E6%9B%B2%E7%B7%9A#
+# Hilbert curve は、フラクタル図形の一つで
+# 空間を覆い尽くす空間充填曲線の一つ。ドイツの数学者ダフィット・ヒルベルトが1891年に考案した
+#
 require_relative "helper"
 
 class App < Stylet::Base

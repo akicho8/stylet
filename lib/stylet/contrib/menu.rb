@@ -9,28 +9,28 @@ module Stylet
 
       include Stylet::Delegators
 
-      attr_accessor :parent, :bar, :display_height, :select_buttons, :cancel_buttons, :line_format, :close_hook, :input, :elements
+      attr_accessor :parent, :bar, :display_height, :select_buttons, :cancel_buttons, :line_format, :close_hook, :input, :elements, :every_command_all
       attr_reader :state, :children
 
       def initialize(**params)
         super() if defined? super
 
         {
-          :parent         => nil,
-          :name           => nil,
-          :elements       => [],
-          :select_buttons => [:btA, :btD],
-          :cancel_buttons => [:btB, :btC],
-          :scroll_margin  => nil,
-          :bar            => "─" * 40,
-          :display_height => 20,
-          :joystick_index => nil,
-          :line_format    => " %{cursor}%{name} %{value}",
-          :close_hook     => nil,
-          :input          => Input::SharedPad.new,
-          :aroundable     => false,
-          :cursor         => 0,
-          :xcommand       => proc {},
+          :parent            => nil,
+          :name              => nil,
+          :elements          => [],
+          :select_buttons    => [:btA, :btD],
+          :cancel_buttons    => [:btB, :btC],
+          :scroll_margin     => nil,
+          :bar               => "─" * 40,
+          :display_height    => 20,
+          :joystick_index    => nil,
+          :line_format       => " %{cursor}%{name} %{value}",
+          :close_hook        => nil,
+          :input             => Input::SharedPad.new,
+          :aroundable        => false,
+          :cursor            => 0,
+          :every_command_all => nil,
         }.merge(params).each{|k, v|instance_variable_set("@#{k}", v)}
 
         @window_cursor  = @cursor
@@ -167,11 +167,11 @@ module Stylet
         end
 
         def all_run
-          if @xcommand
-            @xcommand.call(self)
+          if @every_command_all
+            @every_command_all.call(self)
           end
           @elements.each do |elem|
-            if command = elem[:every_command]
+            if command = elem[:danger_every_command_all]
               command.call(self)
             end
           end
@@ -179,7 +179,11 @@ module Stylet
 
         def current_run
           return unless current
-          current.assert_valid_keys(:name, :menu, :simple_command, :se_command, :safe_command, :change, :change2, :value, :every_command, :cursor_in, :cursor_out)
+          current.assert_valid_keys(:name, :menu, :simple_command, :se_command, :safe_command, :change, :change2, :value, :danger_every_command_all, :every_command_one, :cursor_in, :cursor_out)
+
+          if command = current[:every_command_one]
+            command.call(self)
+          end
 
           if current_run_trigger?
             if menu = current[:menu]
@@ -341,10 +345,10 @@ module Stylet
       def initialize(*)
         super if defined? super
 
-        Stylet::SE.load("#{__dir__}/../../../sound_effects/pc_puyo_puyo_fever/SE/039CURSOR.WAV", volume: 0.5, key: :menu_cursor)
-        Stylet::SE.load("#{__dir__}/../../../sound_effects/pc_puyo_puyo_fever/SE/036DECIDE.WAV", volume: 0.5, key: :menu_select)
-        Stylet::SE.load("#{__dir__}/../../../sound_effects/pc_puyo_puyo_fever/SE/037CANCEL.WAV", volume: 0.5, key: :menu_back)
-        Stylet::SE.load("#{__dir__}/../../../sound_effects/pc_puyo_puyo_fever/SE/036DECIDE.WAV", volume: 0.5, key: :menu_chain)
+        Stylet::SE.load("#{__dir__}/../../../assets/audios/pc_puyo_puyo_fever/SE/039CURSOR.WAV", volume: 0.5, key: :menu_cursor)
+        Stylet::SE.load("#{__dir__}/../../../assets/audios/pc_puyo_puyo_fever/SE/036DECIDE.WAV", volume: 0.5, key: :menu_select)
+        Stylet::SE.load("#{__dir__}/../../../assets/audios/pc_puyo_puyo_fever/SE/037CANCEL.WAV", volume: 0.5, key: :menu_back)
+        Stylet::SE.load("#{__dir__}/../../../assets/audios/pc_puyo_puyo_fever/SE/036DECIDE.WAV", volume: 0.5, key: :menu_chain)
       end
 
       def notify(key)
@@ -353,7 +357,7 @@ module Stylet
 
       def bgm_if_possible
         unless Stylet::Music.play?
-          Stylet::Music.play("#{__dir__}/../../../sound_effects/pc_puyo_puyo_fever/BGM/01_MENU.ogg")
+          Stylet::Music.play("#{__dir__}/../../../assets/audios/pc_puyo_puyo_fever/BGM/01_MENU.ogg")
         end
       end
     end

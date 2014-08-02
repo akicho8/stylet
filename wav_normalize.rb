@@ -2,7 +2,7 @@
 # 22050 or 44100 に統一
 require "pathname"
 require "shellwords"
-path = "sound_effects/replacement/**/*.{WAV,wav}"
+path = "assets/audios/replacement/**/*.{WAV,wav}"
 
 def normalize(in_file, hz)
   out_file = in_file.dirname + "tmp_#{in_file.basename('.*')}.WAV"

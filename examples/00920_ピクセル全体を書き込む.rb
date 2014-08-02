@@ -11,14 +11,14 @@ class App < Stylet::Base
   end
 
   update do
-    screen.h.times.each{|y|
-      screen.w.times.each{|x|
+    screen.h.times.each do |y|
+      screen.w.times.each do |x|
         r = 127 * Stylet::Fee.rsin(1.0 / 256 / 2 * count * x)
         g = 0
         b = 127 * Stylet::Fee.rsin(1.0 / 256 / 2 * count * y)
         screen[x, y] = screen.format.map_rgb(r, g, b)
-      }
-    }
+      end
+    end
   end
 
   def background_clear
