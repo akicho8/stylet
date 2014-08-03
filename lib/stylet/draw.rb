@@ -13,6 +13,7 @@ module Stylet
       super
       init_on(:draw) do
         @count = 0
+        @fps_adjust = FpsAdjust.new
         @fps_stat = FpsStat.new
         @cpu_stat = CpuStat.new
         @screen_active = true
@@ -43,6 +44,7 @@ module Stylet
     # ハードウェアのフレーム数(60FPS)以上にはならない
     def after_draw
       super
+      @fps_adjust.delay
       @fps_stat.update
       @cpu_stat.benchmark { @screen.flip }
       @count += 1

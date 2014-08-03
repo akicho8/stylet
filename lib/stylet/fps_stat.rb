@@ -16,9 +16,9 @@ module Stylet
     attr_reader :fps
 
     def initialize
-      @old_time = SDL.get_ticks
       @fps = 0
       @counter = 0
+      @old_time = SDL.get_ticks
     end
 
     def update
