@@ -28,7 +28,8 @@ module Stylet
             :screen,
             :font_width,
 
-            :check_fps,
+            :fps_stat,
+            :cpu_stat,
 
             :vec2,
             :rect2,

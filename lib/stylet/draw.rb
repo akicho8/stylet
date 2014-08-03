@@ -5,14 +5,16 @@
 
 module Stylet
   module Draw
-    attr_reader :count, :check_fps, :sdl_event, :rect, :screen, :screen_active
+    attr_reader :count, :sdl_event, :rect, :screen, :screen_active
+    attr_reader :fps_stat, :cpu_stat
     attr_accessor :title
 
     def run_initializers
       super
       init_on(:draw) do
         @count = 0
-        @check_fps = CheckFPS.new
+        @fps_stat = FpsStat.new
+        @cpu_stat = CpuStat.new
         @screen_active = true
 
         screen_open
@@ -37,11 +39,12 @@ module Stylet
       end
     end
 
-    # ハードウェアがダブルバッファ対応の場合、flipで自動的にVSYNCを待って切り替えるため
-    # ハードウェアのフレーム数(60FPS)以上にはならないことに注意
+    # ハードウェアがダブルバッファ対応の場合flipで自動的にVSYNCを待って切り替えるため
+    # ハードウェアのフレーム数(60FPS)以上にはならない
     def after_draw
       super
-      @screen.flip
+      @fps_stat.update
+      @cpu_stat.benchmark { @screen.flip }
       @count += 1
     end
 
@@ -135,19 +138,29 @@ module Stylet
       @screen.save_bmp(fname)
     end
 
-    def system_line
+    def system_infos
+      list = [
+        @count,
+        "FPS:#{@fps_stat.fps}",
+        "CPU:#{format("%4.2f", @cpu_stat.cpu_rate)}",
+        # "FREE:#{format("%4.2f", @cpu_stat.free_rate)}",
+      ]
       if Stylet.production
-        "#{@count} #{@check_fps.fps}"
       else
-        "#{@count} #{@check_fps.fps} FPS SE:#{SDL::Mixer.playing_channels}/#{SE.allocated_channels} M#{SDL::Mixer.play_music? ? 1 : 0} #{@rect.w}x#{@rect.h} #{app_state}"
+        list += [
+          "SE:#{SDL::Mixer.playing_channels}/#{SE.allocated_channels}",
+          "M#{SDL::Mixer.play_music? ? 1 : 0}",
+          "#{@rect.w}x#{@rect.h}",
+          app_state,
+        ]
       end
+      list
     end
 
     def before_update
       super
       # return if Stylet.production
-      @check_fps.update
-      vputs(system_line)
+      vputs system_infos.compact.join(" ")
     end
 
     def full_screen_toggle

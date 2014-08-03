@@ -93,7 +93,7 @@ module Stylet
       after_draw            # @screen.flip
       before_draw           # @console_current_line = 0
       background_clear
-      before_update         # vputs(system_line)
+      before_update         # vputs(system_infos)
 
       # ここからユーザーの処理
       # ということは next_frame の中のブロックから呼ぶ必要はない？
