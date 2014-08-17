@@ -31,6 +31,10 @@ module Stylet
   class Audio
     include Singleton
 
+    # 全体のフィイドアウト秒数
+    cattr_accessor :fade_out_default
+    self.fade_out_default = 2
+
     class << self
       alias setup_once instance
 
@@ -116,7 +120,7 @@ module Stylet
       end
     end
 
-    def fade_out(fade_out_sec: 2)
+    def fade_out(fade_out_sec: Audio.fade_out_default)
       halt(fade_out_sec: fade_out_sec)
     end
 
@@ -224,7 +228,7 @@ module Stylet
       SE.master_volume = SE.default_master_volume
     end
 
-    # nil while se_hash.values.any? {|e| e.play? }
+    # nil while se_hash.values.any? {|e| e.play? } と同等
     def wait_if_play?
       SDL.delay(1) while play_any?
     end
@@ -245,14 +249,14 @@ module Stylet
       end
     end
 
-    def fade_out(fade_out_sec: 2)
+    def fade_out(fade_out_sec: Audio.fade_out_default)
       halt(fade_out_sec: fade_out_sec)
     end
 
     def master_volume=(v)
       Audio.setup_once
       @master_volume = v
-      # チャンネル数0の状態で呼ぶと落ちるため
+      # チャンネル数が0の状態で呼ぶとエラーになるため1以上としている
       if allocated_channels >= 1
         SDL::Mixer.set_volume(-1, Audio.volume_cast(v))
       end
@@ -269,7 +273,7 @@ module Stylet
       def halt(*)
       end
 
-      def fade_out(fade_out_sec: 2)
+      def fade_out(fade_out_sec: Audio.fade_out_default)
         halt(fade_out_sec: fade_out_sec)
       end
 
@@ -293,10 +297,10 @@ module Stylet
       def initialize(filename:, key:, channel_group:, volume:, channel_auto: false, preload: false)
         raise if channel_group && channel_auto
 
-        @filename      = Pathname(filename).expand_path
-        @key           = key
-        @channel_auto  = channel_auto
-        @volume        = volume
+        @filename     = Pathname(filename).expand_path
+        @key          = key
+        @channel_auto = channel_auto
+        @volume       = volume
 
         unless @channel_auto
           @channel_group = channel_group || key
@@ -320,6 +324,8 @@ module Stylet
 
       def play(loop: false)
         SDL::Mixer.play_channel(channel, wave, loop ? -1 : 0)
+      rescue SDL::Error => error
+        Stylet.logger.debug "ERROR: #{error.inspect}" if Stylet.logger
       end
 
       def play?
@@ -372,7 +378,6 @@ module Stylet
           Stylet.logger.debug "disk_load: #{@key.inspect}" if Stylet.logger
         end
       end
-
       alias preload! wave
 
       def spec
@@ -395,8 +400,8 @@ if $0 == __FILE__
   RSpec.configure do |config|
   end
 
-  describe do
-    before do
+  sub_test_case do
+    setup do
       Stylet::Audio.setup_once
       Stylet::SE.destroy_all
     end

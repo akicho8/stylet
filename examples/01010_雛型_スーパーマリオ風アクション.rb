@@ -160,7 +160,7 @@ class PlayerBase < ObjectX
     ## ブロックに下からパンチ
     @punch_collistion_h            = 32.0      # ブロックにめり込んだYの差分がこの値より小さければブロックにパンチできる
     @punch_collision_wsub          = 10        # 横の当たり判定をどれだけゆるくするか？
-    @punch_rebound_rate            = 0.2       # ブロックを壊したときの下方向への反発率
+    @punch_rebound_ratio            = 0.2       # ブロックを壊したときの下方向への反発率
 
     ## 壁蹴り
     @kabeeno_tikasa                = 16        # 壁蹴りが有効な壁との距離
@@ -371,7 +371,7 @@ class PlayerBase < ObjectX
                   # __frame__.objects.delete(block)
                   block.player_panch(self)
                   @pos.y = bottom_y + @rc.half_h
-                  @speed.y = -@speed.y * @punch_rebound_rate
+                  @speed.y = -@speed.y * @punch_rebound_ratio
                   collistion_blocks[block.object_id] = true
                   draw_circle(block.pos - __frame__.camera_offset, :radius => block.rc.half_w * 2) unless Stylet.production
                   break

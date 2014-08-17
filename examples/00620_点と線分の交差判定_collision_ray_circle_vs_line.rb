@@ -76,7 +76,7 @@ class App < Stylet::Base
 
       # 線分ABの法線を見える化(長さに意味はない)
       vN = @normal.normalize.scale(64)
-      origin = Stylet::Vector.pos_vector_rate(@pA, @pB, 0.5)
+      origin = Stylet::Vector.pos_vector_ratio(@pA, @pB, 0.5)
       draw_vector(vN, :origin => origin, :arrow_size => 8)
       vputs "vN", :vector => origin + vN
     end

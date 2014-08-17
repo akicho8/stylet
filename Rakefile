@@ -2,10 +2,15 @@
 require "bundler"
 Bundler::GemHelper.install_tasks
 
-require "rspec/core/rake_task"
-RSpec::Core::RakeTask.new
-task :default => :spec
-task :test => :spec
+task :default => :test
+
+require "rake/testtask"
+Rake::TestTask.new do |t|
+  t.libs << "test"
+  # t.test_files = FileList['test/test*.rb']
+  # t.verbose = true
+  # t.options = "--no-use-color"
+end
 
 require "yard"
 YARD::Rake::YardocTask.new

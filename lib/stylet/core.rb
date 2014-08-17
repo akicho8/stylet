@@ -77,7 +77,7 @@ module Stylet
     end
 
     def main_loop(&block)
-      catch(:exit) do
+      catch :exit do
         loop do
           next_frame(&block)
         end

@@ -36,7 +36,7 @@ module Stylet
       end
     end
 
-    def update                  # FIXME: update をつかわないようにする
+    def update
       super
       if Stylet.config.production_keys.any?{|key|key_down?(key)}
         Stylet.production = !Stylet.production

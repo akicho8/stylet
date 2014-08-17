@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-# ・すべてのジョイスティックに反応する
-# ・Singleton にするかも
+# すべてのジョイスティックに反応
 
 require "stylet"
 

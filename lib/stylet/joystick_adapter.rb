@@ -55,19 +55,19 @@ module Stylet
       end
 
       def adjusted_axes
-        [:up, :down, :right, :left].collect do |dir|
+        [:up, :down, :right, :left].collect { |dir|
           if lever_on?(dir)
             dir.to_s.slice(/^(.)/).upcase
           end
-        end.compact
+        }.compact
       end
 
       def adjusted_buttons
-        button_assigns.keys.collect do |key|
+        button_assigns.keys.collect {|key|
           if button_on?(key)
             key.to_s.sub("bt", "").upcase
           end
-        end.compact
+        }.compact
       end
     end
 
@@ -78,11 +78,11 @@ module Stylet
       end
 
       def raw_active_button_numbers
-        @object.num_buttons.times.collect do |index|
+        @object.num_buttons.times.collect {|index|
           if @object.button(index)
             index
           end
-        end.compact
+        }.compact
       end
 
       def raw_analog_lever_status

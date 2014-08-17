@@ -27,9 +27,9 @@ module Stylet
       attr_accessor :button, :point, :vector
 
       def initialize
-        @button      = Struct.new(:a, :b, :c).new
-        @point       = Vector.zero
-        @history     = []
+        @button  = Struct.new(:a, :b, :c).new
+        @point   = Vector.zero
+        @history = []
       end
 
       def update

@@ -9,9 +9,7 @@ require "optparse"
 
 module Stylet
   module ClOptions
-    module Base
-      extend ActiveSupport::Concern
-
+    concerning :Base do
       def initialize
         super if defined? super
         return if Stylet.config.optparse_skip || ENV["STYLET_OPTPARSE_SKIP"]
@@ -31,19 +29,13 @@ module Stylet
       end
     end
 
-    module Shutdown
+    concerning :Shutdown do
       def update
         super if defined? super
         if Stylet.config.shutdown && @count >= Stylet.config.shutdown
           throw :exit, :break
         end
       end
-    end
-
-    module All
-      extend ActiveSupport::Concern
-      include Base
-      include Shutdown
     end
   end
 end

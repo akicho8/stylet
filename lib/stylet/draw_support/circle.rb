@@ -51,14 +51,14 @@ module Stylet
       draw_polygon(points, options)
     end
   end
+end
 
-  if $0 == __FILE__
-    require_relative "../../stylet"
-    Base.run do
-      draw_circle(rect.center)
-      draw_triangle(rect.center)
-      draw_square(rect.center)
-      draw_angle_rect(rect.center)
-    end
+if $0 == __FILE__
+  require_relative "../../stylet"
+  Stylet::Base.run do
+    draw_circle(rect.center)
+    draw_triangle(rect.center)
+    draw_square(rect.center)
+    draw_angle_rect(rect.center)
   end
 end

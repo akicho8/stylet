@@ -39,7 +39,6 @@ require_relative 'shortcut'
 require_relative 'draw_support/circle'
 require_relative 'draw_support/polygon'
 require_relative 'draw_support/arrow'
-require_relative 'draw_support/bar'
 
 # 入力系
 require_relative 'joystick'
@@ -57,13 +56,14 @@ module Stylet
     include Core
     include Callbacks
     include Draw
+    include DeprecateBackground
     include DrawSupport
     include Font
     include Joystick
     include Keyboard
     include Mouse
     include Pause
-    include ClOptions::All
+    include ClOptions
     include Shortcut
     include Delegators
   end

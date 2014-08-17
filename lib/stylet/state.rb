@@ -22,7 +22,7 @@ class State
 
   def initialize(state = nil)
     @depth = 0
-    soft_jump_to(state)
+    jump_to(state)
   end
 
   def start?
@@ -37,13 +37,6 @@ class State
     @count == count
   end
 
-  # 状態遷移
-  def soft_jump_to(state)
-    @state = state
-    @count = 0
-  end
-
-  # 一気に次の状態に移行する
   def jump_to(state)
     soft_jump_to(state)
     if @depth.nonzero?
@@ -53,24 +46,30 @@ class State
 
   def loop_in(&block)
     @depth += 1
-    loop do
-      ret = catch(transit_key) do
-        yield
-        :__loop_break__
-      end
-      if ret == :__loop_break__
-        break
+    catch :__loop_break__ do
+      loop do
+        catch transit_key do
+          yield
+          throw :__loop_break__
+        end
       end
     end
     @depth -= 1
     pass
   end
 
+  def to_s
+    "#{@state}: #{@count} (#{transit_key})"
+  end
+
+  private
+
   def transit_key
     :"transit_#{object_id}"
   end
 
-  def to_s
-    "#{@state}: #{@count} (#{transit_key})"
+  def soft_jump_to(state)
+    @state = state
+    @count = 0
   end
 end

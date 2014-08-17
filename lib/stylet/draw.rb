@@ -29,8 +29,6 @@ module Stylet
           self.title = @title
         end
 
-        backgroud_image_load
-
         # background_clear
 
         # SGE関係でウィンドウを自動ロックさせる(これは必要なのか？)
@@ -144,8 +142,7 @@ module Stylet
       list = [
         @count,
         "FPS:#{@fps_stat.fps}",
-        "CPU:#{format("%4.2f", @cpu_stat.cpu_rate)}",
-        # "FREE:#{format("%4.2f", @cpu_stat.free_rate)}",
+        "CPU:#{format("%4.2f", @cpu_stat.cpu_ratio)}",
       ]
       if Stylet.production
       else
@@ -200,14 +197,18 @@ module Stylet
 
     def screen_info_check
       # フルスクリーンで利用可能なサイズ
-      Stylet.logger.debug "SDL::Screen.list_modes # => #{SDL::Screen.list_modes(SDL::FULLSCREEN|SDL::HWSURFACE).inspect}"
+      logger.debug "SDL::Screen.list_modes # => #{SDL::Screen.list_modes(SDL::FULLSCREEN|SDL::HWSURFACE).inspect}"
 
       # 画面情報
-      Stylet.logger.debug "SDL::Screen.info # => #{SDL::Screen.info.inspect}"
+      logger.debug "SDL::Screen.info # => #{SDL::Screen.info.inspect}"
     end
 
     def app_state
-      app_state_list = {SDL::Event::APPMOUSEFOCUS => "M", SDL::Event::APPINPUTFOCUS => "K", SDL::Event::APPACTIVE => "A"}
+      app_state_list = {
+        SDL::Event::APPMOUSEFOCUS => "M",
+        SDL::Event::APPINPUTFOCUS => "K",
+        SDL::Event::APPACTIVE     => "A",
+      }
       app_state_list.collect{|k, v|
         if (SDL::Event.app_state & k).nonzero?
           v
@@ -215,28 +216,34 @@ module Stylet
       }.join
     end
 
-    def backgroud_image_load
-      unless @backgroud_image
-        if Stylet.config.background_image
-          file = Pathname(Stylet.config.background_image)
-          unless file.exist?
-            file = Pathname("#{__dir__}/assets/#{file}")
-          end
-          if file.exist?
-            bin = SDL::Surface.load(file.to_s)              # SDL.image があればBMP以外をロード可
-            bin.set_color_key(SDL::SRCCOLORKEY, 0) if false # 黒を抜き色にするなら
-            @backgroud_image = bin.display_format
-          end
-        end
-      end
+    # オーバーライド推奨
+    def background_clear
+      draw_rect(@rect, :color => :background, :fill => true)
+    end
+  end
+
+  concern :DeprecateBackground do
+    def screen_open
+      super
+
+      @backgroud_image ||= __background_image
     end
 
-    # オーバーライド推奨
     def background_clear
       if @backgroud_image
         SDL::Surface.blit(@backgroud_image, @rect.x, @rect.y, @rect.w, @rect.h, @screen, 0, 0)
       else
-        draw_rect(@rect, :color => :background, :fill => true)
+        super
+      end
+    end
+
+    def __background_image
+      return unless Stylet.config.background_image
+
+      file = Pathname(Stylet.config.background_image)
+      if file.exist?
+        bin = SDL::Surface.load(file.to_s)
+        bin.display_format
       end
     end
   end

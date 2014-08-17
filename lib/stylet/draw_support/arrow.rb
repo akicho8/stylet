@@ -45,13 +45,13 @@ module Stylet
       draw_line(p1, p1 + Vector.angle_at(a - options[:angle]).scale(options[:arrow_size]), options)
     end
   end
+end
 
-  if $0 == __FILE__
-    require_relative "../../stylet"
-    Base.run do
-      draw_arrow(rect.center, rect.center + [50, 50])
-      draw_vector(vec2[100, -100], :origin => rect.center, :label => "ok")
-      draw_vector(vec2[100, 0], :origin => vec2[50, 50], :label => "ok")
-    end
+if $0 == __FILE__
+  require_relative "../../stylet"
+  Stylet::Base.run do
+    draw_arrow(rect.center, rect.center + [50, 50])
+    draw_vector(vec2[100, -100], :origin => rect.center, :label => "ok")
+    draw_vector(vec2[100, 0], :origin => vec2[50, 50], :label => "ok")
   end
 end

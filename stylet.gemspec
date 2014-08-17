@@ -25,6 +25,10 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "rcodetools"
   s.add_development_dependency "debugger"
-  s.add_development_dependency "rspec"
+  # s.add_development_dependency "rspec"
   s.add_development_dependency "yard"
+  s.add_development_dependency "test-unit"
+  # s.add_development_dependency "test-unit-activesupport"
+  # s.add_development_dependency "test-unit-notify"
+  # s.add_development_dependency "power_assert"
 end

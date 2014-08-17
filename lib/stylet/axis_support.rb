@@ -16,29 +16,27 @@ module Stylet
     #         2
     #        [D]
     def axis_angle_index(axis)
-      dir = nil
       if axis.up.press?
         if axis.right.press?
-          dir = 7
+          7
         elsif axis.left.press?
-          dir = 5
+          5
         else
-          dir = 6
+          6
         end
       elsif axis.down.press?
         if axis.right.press?
-          dir = 1
+          1
         elsif axis.left.press?
-          dir = 3
+          3
         else
-          dir = 2
+          2
         end
       elsif axis.right.press?
-        dir = 0
+        0
       elsif axis.left.press?
-        dir = 4
+        4
       end
-      dir
     end
 
     # 8方向レバーの状態から一周を1.0としたときの方向を返す

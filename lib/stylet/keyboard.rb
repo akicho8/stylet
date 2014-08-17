@@ -4,8 +4,7 @@ module Stylet
     def run_initializers
       super
       init_on(:keyboard) do
-        # SDL::Key.press? のタイミングが難しくなるためとにかく最初に scan しておく
-        SDL::Key.scan
+        SDL::Key.scan           # 先に SDL::Key.press? を呼ぶとエラーになるため
       end
     end
 

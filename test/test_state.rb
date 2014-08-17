@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-require "spec_helper"
+require "test_helper"
 
-describe State do
-  it "call" do
+class TestState < Test::Unit::TestCase
+  description "あいうえお"
+  test "all" do
     trace_ary = []
     object = State.new(:idle)
     loop_flag = true
@@ -21,6 +22,6 @@ describe State do
         end
       end
     end
-    trace_ary.should == [[:idle, 0], [:idle, 1], [:active, 0], [:active, 1]]
+    assert_equal [[:idle, 0], [:idle, 1], [:active, 0], [:active, 1]], trace_ary
   end
 end
