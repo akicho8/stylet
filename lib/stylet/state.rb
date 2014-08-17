@@ -18,9 +18,11 @@
 #   end
 #
 class State
+
   attr_reader :count, :state
 
   def initialize(state = nil)
+    @_loop_break = Object.new
     @depth = 0
     jump_to(state)
   end
@@ -46,11 +48,11 @@ class State
 
   def loop_in(&block)
     @depth += 1
-    catch :__loop_break__ do
+    catch @_loop_break do
       loop do
         catch transit_key do
           yield
-          throw :__loop_break__
+          throw @_loop_break
         end
       end
     end
@@ -65,7 +67,7 @@ class State
   private
 
   def transit_key
-    :"transit_#{object_id}"
+    "transit_#{object_id}"
   end
 
   def soft_jump_to(state)
