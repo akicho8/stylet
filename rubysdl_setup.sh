@@ -1,4 +1,8 @@
 #!/bin/sh
+brew uninstall libogg
+brew uninstall libvorbis
+brew uninstall libpng
+
 brew uninstall sdl
 brew uninstall sdl_ttf
 brew uninstall sdl_mixer
@@ -6,8 +10,13 @@ brew uninstall sdl_image
 brew uninstall sge
 
 brew update
+
+brew install libogg
+brew install libvorbis
+brew install libpng
+
 brew install sdl
-brew install sdl_mixer
+brew install sdl_mixer -- --with-libvorbis
 brew install sdl_ttf
 brew install sdl_image
 # brew install https://gist.github.com/mitmul/5410467/raw/c4fa716635e951b61f489726976b10f00dd41306/sge.rb

@@ -64,16 +64,11 @@ module Stylet
     def after_run
     end
 
-    def run(*args, &block)
-      options = {
-      }.merge(args.extract_options!)
-      if options[:title]
-        @title = options[:title]
-      end
+    def run(title: nil, &block)
+      self.title = title
       run_initializers                # SDL.init(@init_code)
       setup                         # for user
       main_loop(&block)
-      # after_run                 # @screen.destroy
     end
 
     def main_loop(&block)

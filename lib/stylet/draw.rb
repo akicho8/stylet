@@ -28,8 +28,6 @@ module Stylet
         if @title
           self.title = @title
         end
-
-        # background_clear
       end
     end
 
@@ -52,33 +50,35 @@ module Stylet
       end
     end
 
-    def title=(title)
-      @title = title
-      if @screen
-        SDL::WM.set_caption(@title.to_s, @title.to_s)
+    def title=(str)
+      if str
+        if @title != str
+          @title = str
+          if @screen
+            SDL::WM.set_caption(@title.to_s, @title.to_s)
+          end
+        end
       end
     end
 
     def polling
       super
-      if @sdl_event = SDL::Event.poll
-        case @sdl_event
-        when SDL::Event::KeyDown
-          if @sdl_event.sym == SDL::Key::ESCAPE || @sdl_event.sym == SDL::Key::Q
-            throw :exit, :break
-          end
-          if @sdl_event.sym == SDL::Key::F1
-            full_screen_toggle
-          end
-        when SDL::Event::Active
-          if (@sdl_event.state & SDL::Event::APPINPUTFOCUS).nonzero?
-            @screen_active = @sdl_event.gain
-          end
-        when SDL::Event::VideoResize
-          screen_resize(@sdl_event.w, @sdl_event.h)
-        when SDL::Event::Quit
+      case @sdl_event = SDL::Event.poll
+      when SDL::Event::KeyDown
+        if @sdl_event.sym == SDL::Key::ESCAPE || @sdl_event.sym == SDL::Key::Q
           throw :exit, :break
         end
+        if @sdl_event.sym == SDL::Key::F1
+          full_screen_toggle
+        end
+      when SDL::Event::Active
+        if (@sdl_event.state & SDL::Event::APPINPUTFOCUS).nonzero?
+          @screen_active = @sdl_event.gain
+        end
+      when SDL::Event::VideoResize
+        screen_resize(@sdl_event.w, @sdl_event.h)
+      when SDL::Event::Quit
+        throw :exit, :break
       end
     end
 
