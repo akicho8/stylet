@@ -30,11 +30,6 @@ module Stylet
         end
 
         # background_clear
-
-        # SGE関係でウィンドウを自動ロックさせる(これは必要なのか？)
-        if SDL.respond_to?(:auto_lock)
-          SDL.auto_lock = true
-        end
       end
     end
 
