@@ -23,6 +23,7 @@ class State
 
   def initialize(state = nil)
     @_loop_break = Object.new
+    @_transit_key = Object.new
     @depth = 0
     jump_to(state)
   end
@@ -42,7 +43,7 @@ class State
   def jump_to(state)
     soft_jump_to(state)
     if @depth.nonzero?
-      throw transit_key
+      throw @_transit_key
     end
   end
 
@@ -50,7 +51,7 @@ class State
     @depth += 1
     catch @_loop_break do
       loop do
-        catch transit_key do
+        catch @_transit_key do
           yield
           throw @_loop_break
         end
@@ -61,14 +62,10 @@ class State
   end
 
   def to_s
-    "#{@state}: #{@count} (#{transit_key})"
+    "#{@state}: #{@count} (#{_transit_key})"
   end
 
   private
-
-  def transit_key
-    "transit_#{object_id}"
-  end
 
   def soft_jump_to(state)
     @state = state
