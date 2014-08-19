@@ -179,7 +179,7 @@ module Stylet
 
         def current_run
           return unless current
-          current.assert_valid_keys(:name, :menu, :simple_command, :se_command, :safe_command, :change, :change2, :value, :danger_every_command_all, :every_command_one, :cursor_in, :cursor_out)
+          current.assert_valid_keys(:name, :menu, :simple_command, :se_command, :safe_command, :change, :change2, :change_with_se, :value, :danger_every_command_all, :every_command_one, :cursor_in, :cursor_out)
 
           if command = current[:every_command_one]
             command.call(self)
@@ -307,6 +307,10 @@ module Stylet
               end
               if current[:change2]
                 current[:change2].call(self)
+              end
+              if current[:change_with_se]
+                current[:change_with_se].call(diff_val)
+                notify(:menu_select)
               end
             end
           end
