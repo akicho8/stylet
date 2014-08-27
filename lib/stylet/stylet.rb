@@ -14,7 +14,11 @@ module Stylet
     Base.run(*args, &block)
   end
 
-  def __frame__(&block)
+  # Stylet.context {|e| e.vputs "Hello" }
+  # Stylet.context { vputs "Hello" }
+  # Stylet.context.vputs "Hello"
+  # Stylet.context.instance_exec(args{|args|...}
+  def context(&block)
     if block
       if block.arity == 1
         block.call(Base.active_frame)
@@ -31,17 +35,11 @@ module Stylet
   end
 end
 
-module Kernel
-  def __frame__(&block)
-    Stylet.__frame__(&block)
-  end
-end
-
 if $0 == __FILE__
   Stylet.run do
     vputs "a"
-    __frame__.vputs "b"
-    __frame__ { vputs "c" }
-    __frame__ {|f| f.vputs "d" }
+    Stylet.context.vputs "b"
+    Stylet.context { vputs "c" }
+    Stylet.context {|f| f.vputs "d" }
   end
 end

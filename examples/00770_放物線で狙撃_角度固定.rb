@@ -67,7 +67,7 @@ class App < Stylet::Base
     @points.each_with_index{|e, i|vputs("p#{i}", :vector => e)}
 
     # アナログレバーの方向を向く
-    if (joy = __frame__.joys.first) && (al = joy.adjusted_analog_levers[:right]) && al.magnitude >= 0.5
+    if (joy = Stylet.context.joys.first) && (al = joy.adjusted_analog_levers[:right]) && al.magnitude >= 0.5
       if al.magnitude >= 0.5
         @rot = al.angle
       end

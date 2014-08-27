@@ -30,8 +30,8 @@ class App < Stylet::Base
 
     # 実際の標準偏差の位置確認
     pos = _sd / h
-    bar(pos, -1, "orange")
-    bar(-pos, -1, "orange")
+    bar(pos, -1, :orange)
+    bar(-pos, -1, :orange)
 
     vputs "指定の標準偏差: #{@sd}"
     vputs "実際の標準偏差: #{_sd}"
@@ -42,7 +42,7 @@ class App < Stylet::Base
     vputs ["±3*σ割合(0.9974): ", (list.count{|v|(-(_sd*3)..(_sd*3)).include?(v - avg)}.to_f / list.size)].join
   end
 
-  def bar(pos, length, color = "white")
+  def bar(pos, length, color = :white)
     p0 = rect.center + Stylet::Vector.new(pos * 4, rect.h / 4)
     p1 = p0 + Stylet::Vector.new(0, -length * 8)
     draw_line(p0, p1, :color => color)

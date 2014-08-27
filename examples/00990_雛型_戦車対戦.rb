@@ -143,7 +143,7 @@ class Tank
         if count.modulo(3).zero?
           (@speed * 4).round.times do
             if rand(3).zero?
-              __frame__.objects << Dust.new(@pos, @body_dir + 0.5 + rand(-0.10..0.10), @speed * rand(6..8), rand(0.7..0.8), rand(15..20))
+              Stylet.context.objects << Dust.new(@pos, @body_dir + 0.5 + rand(-0.10..0.10), @speed * rand(6..8), rand(0.7..0.8), rand(15..20))
             end
           end
         end
@@ -167,7 +167,7 @@ class Tank
       @anger += 1
       @bullet_max += 1          # 不利になると弾数が増える
       (n = 16).times do |i|
-        __frame__.objects << Dust.new(@pos, 1.0 / n * i, rand(6..8), rand(0.7..0.9), 0)
+        Stylet.context.objects << Dust.new(@pos, 1.0 / n * i, rand(6..8), rand(0.7..0.9), 0)
       end
       Stylet::SE["explosion01"].play
     end
@@ -185,10 +185,10 @@ module BulletTrigger
     super
     bt = ext_button.btR1
 
-    if bt.trigger? || __frame__.key_down?(SDL::Key::B)
+    if bt.trigger? || Stylet.context.key_down?(SDL::Key::B)
       if @bullet_count < @bullet_max
         @speed -= 0.8           # 玉を打つと反動で下がる。(BUG: 横に向けて砲台を打っているときに後車するのはおかしい)
-        __frame__.objects << Bullet.new(self, @pos.clone, @cannon_dir, 8)
+        Stylet.context.objects << Bullet.new(self, @pos.clone, @cannon_dir, 8)
       end
     end
 
@@ -202,7 +202,7 @@ module BulletTrigger
     if @free_count == 1
       if @power >= 60 * 2
         @speed -= 0.3           # 玉を打つと反動で下がる
-        1.times { __frame__.objects << Missile.new(self, @cannon_dir) }
+        1.times { Stylet.context.objects << Missile.new(self, @cannon_dir) }
       end
       @power = 0
     end
@@ -250,16 +250,16 @@ class Bullet
   def update
     @radius += @speed
     _pos = @pos + Stylet::Vector.angle_at(@dir) * @radius
-    __frame__.draw_triangle(_pos, :radius => @size, :angle => @dir, :vertex => 8)
+    Stylet.context.draw_triangle(_pos, :radius => @size, :angle => @dir, :vertex => 8)
     rc = Stylet::Rect4.centered_create(@size * 1.5).add_vector(_pos)
-    __frame__.draw_rect(rc) if $DEBUG
+    Stylet.context.draw_rect(rc) if $DEBUG
     if Stylet::CollisionSupport.rect_in?(rc, @tank.target.pos)
       if @tank.target.life >= 1
         @tank.target.damage
         final
       end
     end
-    if Stylet::CollisionSupport.rect_out?(__frame__.rect, _pos)
+    if Stylet::CollisionSupport.rect_out?(Stylet.context.rect, _pos)
       final
     end
   end
@@ -292,7 +292,7 @@ class Missile
     if @tank.target.life >= 1
       a = @pos.angle_to(@tank.target.pos)
     else
-      a = @pos.angle_to(__frame__.rect.center)
+      a = @pos.angle_to(Stylet.context.rect.center)
     end
     d = a.modulo(1.0) - @dir.modulo(1.0)
     if d < -1.0 / 2
@@ -305,16 +305,16 @@ class Missile
     @speed = Stylet::Etc.clamp(@speed, (1..3))
     @radius += @speed
     _pos = @pos + Stylet::Vector.angle_at(@dir) * @radius
-    __frame__.draw_triangle(_pos, :radius => @size, :angle => @dir)
+    Stylet.context.draw_triangle(_pos, :radius => @size, :angle => @dir)
     rc = Stylet::Rect4.centered_create(@size * 1.5).add_vector(_pos)
-    __frame__.draw_rect(rc) if $DEBUG
+    Stylet.context.draw_rect(rc) if $DEBUG
     if Stylet::CollisionSupport.rect_in?(rc, @tank.target.pos)
       if @tank.target.life >= 1
         @tank.target.damage
         final
       end
     end
-    if Stylet::CollisionSupport.rect_out?(__frame__.rect, _pos)
+    if Stylet::CollisionSupport.rect_out?(Stylet.context.rect, _pos)
       final
     end
   end
@@ -344,7 +344,7 @@ class Dust
     @speed *= @friction
     @radius += @speed
     _pos = @pos + Stylet::Vector.angle_at(@dir) * @radius
-    __frame__.draw_triangle(_pos, :radius => @size, :angle => @dir)
+    Stylet.context.draw_triangle(_pos, :radius => @size, :angle => @dir)
     if @speed.abs <= 0.03
       final
     end
@@ -381,7 +381,7 @@ class App < Stylet::Base
   setup :reset_objects
 
   update do
-    if __frame__.key_down?(SDL::Key::R) || ((joy = joys.first) && joy.button(0) && joy.button(3))
+    if Stylet.context.key_down?(SDL::Key::R) || ((joy = joys.first) && joy.button(0) && joy.button(3))
       reset_objects
     end
     @ships.each(&:update)

@@ -14,11 +14,11 @@ class Ball
   def update
     @speed += @friction
     @p0 += @speed
-    __frame__.draw_triangle(@p0, :radius => 16, :angle => 1.0 / 64 * __frame__.count)
+    Stylet.context.draw_triangle(@p0, :radius => 16, :angle => 1.0 / 64 * Stylet.context.count)
   end
 
   def screen_out?
-    @speed.y > 0 && @p0.y > (__frame__.rect.max_y + @radius)
+    @speed.y > 0 && @p0.y > (Stylet.context.rect.max_y + @radius)
   end
 end
 

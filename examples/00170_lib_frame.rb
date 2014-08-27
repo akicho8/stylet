@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 require "./setup"
-__frame__.run(:title => "(title)") do
-  __frame__.vputs __frame__.count
+Stylet.context.run(:title => "(title)") do
+  Stylet.context.vputs Stylet.context.count
 end

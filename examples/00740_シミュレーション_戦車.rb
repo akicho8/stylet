@@ -13,12 +13,12 @@ class Bullet
   end
 
   def screen_out?
-    Stylet::CollisionSupport.rect_out?(__frame__.rect, @pos) || @radius < 0
+    Stylet::CollisionSupport.rect_out?(Stylet.context.rect, @pos) || @radius < 0
   end
 
   def update
     @radius += @speed
-    __frame__.draw_triangle(@pos + Stylet::Vector.angle_at(@dir) * @radius, :radius => @size, :angle => @dir)
+    Stylet.context.draw_triangle(@pos + Stylet::Vector.angle_at(@dir) * @radius, :radius => @size, :angle => @dir)
   end
 end
 
@@ -104,7 +104,7 @@ class App < Stylet::Base
     end
 
     # if button.btA.count.modulo(8) == 1
-    #   __frame__.objects << Bullet.new(@pos.clone, @pos.angle_to(@target.pos), 4.00)
+    #   Stylet.context.objects << Bullet.new(@pos.clone, @pos.angle_to(@target.pos), 4.00)
     # end
 
     draw_angle_rect(@pos, :angle => @cannon_dir, :radius => 30, :edge => 0.02)

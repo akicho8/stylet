@@ -14,7 +14,7 @@ class Ball
     @radius = 2 + rand(24)
     @arrow = rand(2).zero? ? 1 : -1
 
-    @pos = Stylet::Vector.new(rand(__frame__.rect.w), __frame__.rect.min_y - @radius * 2)
+    @pos = Stylet::Vector.new(rand(Stylet.context.rect.w), Stylet.context.rect.min_y - @radius * 2)
     @speed = Stylet::Vector.angle_at(Stylet::Fee.clock(rand(5.5..6.5))).scale(rand(1.0..1.5))
   end
 
@@ -22,12 +22,12 @@ class Ball
     @pos += @speed
 
     # 落ちたら死ぬ
-    max = __frame__.rect.max_y + @radius * 2
+    max = Stylet.context.rect.max_y + @radius * 2
     if @pos.y > max
-      __frame__.objects.delete(self)
+      Stylet.context.objects.delete(self)
     end
 
-    __frame__.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => 1.0 / 256 * (@speed.magnitude + __frame__.count) * @arrow)
+    Stylet.context.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => 1.0 / 256 * (@speed.magnitude + Stylet.context.count) * @arrow)
   end
 end
 

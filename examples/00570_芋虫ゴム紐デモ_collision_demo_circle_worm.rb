@@ -14,39 +14,39 @@ class Joint
 
   def update
     # 次の位置の間接を取得
-    @target = __frame__.objects[@index.next]
+    @target = Stylet.context.objects[@index.next]
 
     if @target
       distance = @p0.distance_to(@target.p0)
-      gap = distance - __frame__.magnitude
+      gap = distance - Stylet.context.magnitude
       if gap > 0
         # 相手の方から自分の方へ移動する
-        # そのときの移動量を __frame__.hard_level で調整する
+        # そのときの移動量を Stylet.context.hard_level で調整する
         # 1.0 なら相手との間隔をすべて埋めることになるので紐になる
         # 0.1 ならゆっくりと自分に近付いてくる
-        len = gap * __frame__.hard_level
+        len = gap * Stylet.context.hard_level
         dir = @target.p0.angle_to(@p0)
         @target.p0 += Stylet::Vector.angle_at(dir) * len
 
         # 固さ 1.0 のときは次のように p0 の方から相手をひっぱる方法でもよいが前者の方が、ゆっくり移動させるなど応用が効く
         # dir = @p0.angle_to(@target.p0)
-        # @target.p0 += Stylet::Vector.angle_at(dir) * __frame__.magnitude
+        # @target.p0 += Stylet::Vector.angle_at(dir) * Stylet.context.magnitude
       end
     end
 
     # 頭だけカーソルで動かす
     if @index.zero?
-      @p0 = __frame__.cursor.point
+      @p0 = Stylet.context.cursor.point
     end
 
     # 次の間接まで線を引く
     if @target
-      __frame__.draw_line(@p0, @target.p0)
+      Stylet.context.draw_line(@p0, @target.p0)
     end
 
     # 胴体の表示
-    if __frame__.body_display
-      __frame__.draw_circle(@p0, :radius => __frame__.magnitude / 2, :vertex => 16)
+    if Stylet.context.body_display
+      Stylet.context.draw_circle(@p0, :radius => Stylet.context.magnitude / 2, :vertex => 16)
     end
   end
 end

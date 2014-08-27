@@ -14,27 +14,27 @@ class Ball
     @everyone_radius = 80 * 2
     @arrow = rand(2).zero? ? 1 : -1 # どっち向きに回転するか
 
-    @pos = Stylet::Vector.new(rand(__frame__.rect.w), rand(__frame__.rect.h))             # 物体初期位置
+    @pos = Stylet::Vector.new(rand(Stylet.context.rect.w), rand(Stylet.context.rect.h))             # 物体初期位置
 
     @state = "state1"
     @state_counter = 0
   end
 
   def update
-    if __frame__.axis.up.press? || __frame__.axis.down.press? || __frame__.axis.right.press? || __frame__.axis.left.press? || __frame__.button.btA.trigger?
-      @index += __frame__.axis.down.repeat + __frame__.axis.right.repeat
-      @index -= __frame__.axis.up.repeat + __frame__.axis.left.repeat
+    if Stylet.context.axis.up.press? || Stylet.context.axis.down.press? || Stylet.context.axis.right.press? || Stylet.context.axis.left.press? || Stylet.context.button.btA.trigger?
+      @index += Stylet.context.axis.down.repeat + Stylet.context.axis.right.repeat
+      @index -= Stylet.context.axis.up.repeat + Stylet.context.axis.left.repeat
       @state = "state1"
       @state_counter = 0
     end
-    if __frame__.button.btB.trigger?
+    if Stylet.context.button.btB.trigger?
       @state = "state3"
       @state_counter = 0
     end
 
     # 自分の位置に戻る
     if @state == "state1"
-      @target = __frame__.rect.center + Stylet::Vector.angle_at((1.0 / __frame__.objects.size * @index)) * @everyone_radius
+      @target = Stylet.context.rect.center + Stylet::Vector.angle_at((1.0 / Stylet.context.objects.size * @index)) * @everyone_radius
       @pos += (@target - @pos).scale(0.2)
 
       if (@target - @pos).magnitude < 1.0
@@ -48,7 +48,7 @@ class Ball
     if @state == "state2"
       if @state_counter == 0
       end
-      if @state_counter >= 30 * 1 || __frame__.button.btB.trigger?
+      if @state_counter >= 30 * 1 || Stylet.context.button.btB.trigger?
         @state = "state3"
         @state_counter = 0
       end
@@ -64,8 +64,8 @@ class Ball
 
     @state_counter += 1
 
-    __frame__.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => 1.0 / 256 * __frame__.count)
-    __frame__.vputs @name, :vector => @pos
+    Stylet.context.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => 1.0 / 256 * Stylet.context.count)
+    Stylet.context.vputs @name, :vector => @pos
   end
 end
 

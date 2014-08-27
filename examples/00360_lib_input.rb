@@ -10,9 +10,9 @@ class Player
     raise if defined? super
     key_bit_update_all
     key_counter_update_all
-    __frame__.vputs(to_s)
-    __frame__.vputs(axis_angle_index.to_s)
-    __frame__.vputs(axis_angle.to_s)
+    Stylet.context.vputs(to_s)
+    Stylet.context.vputs(axis_angle_index.to_s)
+    Stylet.context.vputs(axis_angle.to_s)
   end
 end
 

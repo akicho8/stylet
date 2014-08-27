@@ -16,7 +16,7 @@ class Ball
     @arrow = rand(2).zero? ? 1 : -1 # どっち向きに回転するか
     @reflect = 0
 
-    @pos = Stylet::Vector.new(__frame__.rect.center.x, __frame__.rect.max_y + @radius * 2)             # 物体初期位置
+    @pos = Stylet::Vector.new(Stylet.context.rect.center.x, Stylet.context.rect.max_y + @radius * 2)             # 物体初期位置
     @speed = Stylet::Vector.new(rand(-2.0..2.0), rand(-15.0..-12)) # 速度ベクトル
     @gravity = Stylet::Vector.new(0, 0.220)                                                        # 重力
   end
@@ -25,25 +25,25 @@ class Ball
     # 操作
     begin
       # Aボタンでスピード反転
-      if __frame__.button.btA.trigger?
+      if Stylet.context.button.btA.trigger?
         @speed = @speed.scale(-1)
       end
 
       # Bボタンでスピード2倍
-      if __frame__.button.btB.trigger?
+      if Stylet.context.button.btB.trigger?
         @speed = @speed.scale(2)
       end
 
       # Cボタンおしっぱなし + マウスで位置移動
-      if __frame__.button.btC.press?
-        @pos = __frame__.cursor.point.clone
+      if Stylet.context.button.btC.press?
+        @pos = Stylet.context.cursor.point.clone
       end
 
       # Dボタンおしっぱなし + マウスで角度変更
-      if __frame__.button.btD.press?
-        if __frame__.cursor.point != @pos
-          # @speed = (__frame__.cursor.point - @pos).normalize * @speed.magnitude
-          @speed = (__frame__.cursor.point - @pos).normalize * @speed.magnitude
+      if Stylet.context.button.btD.press?
+        if Stylet.context.cursor.point != @pos
+          # @speed = (Stylet.context.cursor.point - @pos).normalize * @speed.magnitude
+          @speed = (Stylet.context.cursor.point - @pos).normalize * @speed.magnitude
         end
       end
     end
@@ -53,7 +53,7 @@ class Ball
 
     # 画面下で弾ける
     if @reflect == 0
-      max = (__frame__.rect.max_y - @radius)
+      max = (Stylet.context.rect.max_y - @radius)
       if @pos.y > max && @speed.y >= 1
         @speed.y = -@speed.y
         @speed = @speed.scale(0.5)
@@ -64,12 +64,12 @@ class Ball
     end
 
     # 完全に落ちてしまったら死ぬ
-    max = __frame__.rect.max_y + @radius * 2
+    max = Stylet.context.rect.max_y + @radius * 2
     if @pos.y > max && @speed.y >= 1
-      __frame__.objects.delete(self)
+      Stylet.context.objects.delete(self)
     end
 
-    __frame__.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => 1.0 / 256 * (@speed.magnitude + __frame__.count) * @arrow)
+    Stylet.context.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => 1.0 / 256 * (@speed.magnitude + Stylet.context.count) * @arrow)
   end
 end
 

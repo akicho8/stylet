@@ -18,7 +18,7 @@ class App < Stylet::Base
   end
 
   update do
-    @pos.x += -__frame__.axis.left.count + __frame__.axis.right.count
+    @pos.x += -Stylet.context.axis.left.count + Stylet.context.axis.right.count
     @pos.x = @pos.x.modulo(rect.w)
     v = @pos + Stylet::Vector.new(-@image.w / 2, -@image.h / 2)
     screen.put(@image, *v)

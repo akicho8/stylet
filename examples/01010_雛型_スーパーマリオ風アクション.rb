@@ -65,15 +65,15 @@ class BlockBase < ObjectX
 
   def update
     if @state == :fall_down
-      @speed.y += __frame__.gravity
+      @speed.y += Stylet.context.gravity
       @pos += @speed
-      if @pos.y >= (__frame__.camera.y + __frame__.rect.half_h + @rc.half_h)
-        __frame__.kill_task self
+      if @pos.y >= (Stylet.context.camera.y + Stylet.context.rect.half_h + @rc.half_h)
+        Stylet.context.kill_task self
       end
     end
     if @pos
-      if __frame__.active_x_range.include?(x)
-        screen.put(@image, *(@pos - __frame__.camera_offset - @rc.half_wh))
+      if Stylet.context.active_x_range.include?(x)
+        screen.put(@image, *(@pos - Stylet.context.camera_offset - @rc.half_wh))
       end
     end
     @state_counter += 1
@@ -119,9 +119,9 @@ class Coin < ObjectX
   end
 
   def update
-    return unless __frame__.active_x_range.include?(x)
-    return unless __frame__.active_y_range.include?(y)
-    SDL::Surface.blit(@image, (__frame__.count / 8).modulo(@anim_count) * (@image.w / @anim_count), 0, @rc.w, @rc.h, screen, *(@pos - __frame__.camera_offset - @rc.half_wh))
+    return unless Stylet.context.active_x_range.include?(x)
+    return unless Stylet.context.active_y_range.include?(y)
+    SDL::Surface.blit(@image, (Stylet.context.count / 8).modulo(@anim_count) * (@image.w / @anim_count), 0, @rc.w, @rc.h, screen, *(@pos - Stylet.context.camera_offset - @rc.half_wh))
   end
 end
 
@@ -191,13 +191,13 @@ class PlayerBase < ObjectX
   def update
     super if defined? super
 
-    if __frame__.state != :edit_mode
+    if Stylet.context.state != :edit_mode
       if @ground_collision
         @speed.x *= @ground_friction # ブロックまたは床にいるときは摩擦で徐々に減速する
       end
     end
 
-    if __frame__.state != :edit_mode
+    if Stylet.context.state != :edit_mode
       key_bit_update_all
       bit_update_by_joy(joys[@joystick_index]) if @joystick_index
       key_counter_update_all
@@ -275,8 +275,8 @@ class PlayerBase < ObjectX
 
     # 環境補正
     begin
-      if __frame__.state != :edit_mode
-        @speed.y += __frame__.gravity
+      if Stylet.context.state != :edit_mode
+        @speed.y += Stylet.context.gravity
       end
     end
 
@@ -306,8 +306,8 @@ class PlayerBase < ObjectX
     # ここ以降が当り判定
     @ground_collision = false
 
-    active_x_range = __frame__.active_x_range
-    active_y_range = __frame__.active_y_range
+    active_x_range = Stylet.context.active_x_range
+    active_y_range = Stylet.context.active_y_range
 
     begin
       collistion_blocks = {}
@@ -317,8 +317,8 @@ class PlayerBase < ObjectX
         begin
           @current_block = nil
           if @speed.y > 0           # 落下中(重力があるため静止状態も落下中の状態)のみ判定する。つまりジャンプ中だけ判定が消える。
-            active_x_range = __frame__.active_x_range
-            __frame__.blocks.each do |block|
+            active_x_range = Stylet.context.active_x_range
+            Stylet.context.blocks.each do |block|
               next if block.pos.nil?
               next unless active_x_range.include?(block.pos.x) # 表示画面外なのでスキップ
 
@@ -331,15 +331,15 @@ class PlayerBase < ObjectX
                 diff_y = foot_y - floor_y
 
                 # ここ確認
-                # Utils.draw_hline(bottom_y - __frame__.camera_offset.y)
-                # Utils.draw_hline(head_y - __frame__.camera_offset.y)
+                # Utils.draw_hline(bottom_y - Stylet.context.camera_offset.y)
+                # Utils.draw_hline(head_y - Stylet.context.camera_offset.y)
 
                 if 0 < diff_y && diff_y < @ground_collisiion_diff   # ここの block.block_w はうまく調整しないと擦り抜けてしまう
                   @pos.y = floor_y - @rc.half_h
                   @current_block = block
                   stand_on_block_or_ground_process
                   collistion_blocks[block.object_id] = true
-                  draw_circle(block.pos - __frame__.camera_offset, :radius => block.rc.half_w * 2) unless Stylet.production
+                  draw_circle(block.pos - Stylet.context.camera_offset, :radius => block.rc.half_w * 2) unless Stylet.production
                   break
                 end
               end
@@ -353,7 +353,7 @@ class PlayerBase < ObjectX
         begin
           # @current_block = nil
           if @speed.y < 0           # 落下中(重力があるため静止状態も落下中の状態)のみ判定する。つまりジャンプ中だけ判定が消える。
-            __frame__.blocks.each do |block|
+            Stylet.context.blocks.each do |block|
               next unless active_x_range.include?(block.pos.x) # 表示画面外なのでスキップ
 
               diff_x = (@pos.x - block.pos.x).abs
@@ -363,17 +363,17 @@ class PlayerBase < ObjectX
                 bottom_y = block.pos.y + block.rc.half_h # 床
                 head_y = @pos.y - @rc.half_h    # キャラの頭
                 diff_y = bottom_y - head_y
-                # Utils.draw_hline(bottom_y - __frame__.camera_offset.y)
-                # Utils.draw_hline(head_y - __frame__.camera_offset.y)
+                # Utils.draw_hline(bottom_y - Stylet.context.camera_offset.y)
+                # Utils.draw_hline(head_y - Stylet.context.camera_offset.y)
                 if 0 <= diff_y && diff_y <= @punch_collistion_h   # ここの block.block_w はうまく調整しないと擦り抜けてしまう
-                  # __frame__.objects << FallBlock.new(pos: block.pos.clone, speed: @speed.clone)
-                  # __frame__.blocks.delete(block)
-                  # __frame__.objects.delete(block)
+                  # Stylet.context.objects << FallBlock.new(pos: block.pos.clone, speed: @speed.clone)
+                  # Stylet.context.blocks.delete(block)
+                  # Stylet.context.objects.delete(block)
                   block.player_panch(self)
                   @pos.y = bottom_y + @rc.half_h
                   @speed.y = -@speed.y * @punch_rebound_ratio
                   collistion_blocks[block.object_id] = true
-                  draw_circle(block.pos - __frame__.camera_offset, :radius => block.rc.half_w * 2) unless Stylet.production
+                  draw_circle(block.pos - Stylet.context.camera_offset, :radius => block.rc.half_w * 2) unless Stylet.production
                   break
 
                   # @current_block = block
@@ -387,7 +387,7 @@ class PlayerBase < ObjectX
 
       # ブロックとの左右の当たり判定
       if @block_side_collision
-        __frame__.blocks.each do |block|
+        Stylet.context.blocks.each do |block|
           next unless active_x_range.include?(block.pos.x)
           next unless active_y_range.include?(block.pos.y)
           next if collistion_blocks[block.object_id]
@@ -412,7 +412,7 @@ class PlayerBase < ObjectX
               @speed.x = -@speed.x
               @pos.x += -len_diff
               @speed.x = -@speed.x * @block_side_rebound
-              draw_circle(block.pos - __frame__.camera_offset, :radius => block.rc.half_w * 2) unless Stylet.production
+              draw_circle(block.pos - Stylet.context.camera_offset, :radius => block.rc.half_w * 2) unless Stylet.production
               break
             end
           end
@@ -422,8 +422,8 @@ class PlayerBase < ObjectX
 
     # コインとの当たり判定
     begin
-      active_x_range = __frame__.active_x_range
-      __frame__.coins.each do |coin|
+      active_x_range = Stylet.context.active_x_range
+      Stylet.context.coins.each do |coin|
         next unless active_x_range.include?(coin.pos.x) # 表示画面外なのでスキップ
         next unless active_y_range.include?(coin.pos.y) # 表示画面外なのでスキップ
 
@@ -436,7 +436,7 @@ class PlayerBase < ObjectX
           else
             Stylet::SE["nc26792_coin"].play
           end
-          __frame__.kill_task coin
+          Stylet.context.kill_task coin
         end
       end
     end
@@ -449,8 +449,8 @@ class PlayerBase < ObjectX
       end
 
       # 地面
-      if (@pos.y + @rc.half_h) > __frame__.ground_y
-        @pos.y = __frame__.ground_y - @rc.half_h
+      if (@pos.y + @rc.half_h) > Stylet.context.ground_y
+        @pos.y = Stylet.context.ground_y - @rc.half_h
         stand_on_block_or_ground_process
       end
     end
@@ -462,13 +462,13 @@ class PlayerBase < ObjectX
           if @jump_count >= 1
             if @speed.x.abs >= @wall_kick_speed_x_gteq
               # 左端
-              v = (__frame__.virtual_rect.min_x + @image.w / 2) # 左端から半キャラ右に移動した位置(つまり左手が端に接着している状態)
+              v = (Stylet.context.virtual_rect.min_x + @image.w / 2) # 左端から半キャラ右に移動した位置(つまり左手が端に接着している状態)
               if (v - @pos.x).abs < @kabeeno_tikasa
                 @pos.x = v
                 wall_kick_process
               end
               # 右端
-              v = (__frame__.virtual_rect.max_x - @image.w / 2) # 右端から半キャラ左に移動した位置(つまり右手が端に接着している状態)
+              v = (Stylet.context.virtual_rect.max_x - @image.w / 2) # 右端から半キャラ左に移動した位置(つまり右手が端に接着している状態)
               if (v - @pos.x).abs < @kabeeno_tikasa
                 @pos.x = v
                 wall_kick_process
@@ -480,15 +480,15 @@ class PlayerBase < ObjectX
     end
 
     # 左右の壁
-    if @pos.x < (v = __frame__.virtual_rect.min_x + @image.w / 2) || @pos.x > (v = __frame__.virtual_rect.max_x - @image.w / 2)
+    if @pos.x < (v = Stylet.context.virtual_rect.min_x + @image.w / 2) || @pos.x > (v = Stylet.context.virtual_rect.max_x - @image.w / 2)
       @pos.x = v
       @speed.x = -@speed.x * @wall_rebound
     end
 
     # カメラの壁
     # スト2でお互いが目一杯離れているときテレビ画面の端を越えられないのはこの補正があるから
-    if __frame__.state != :edit_mode
-      if @pos.x < (v = (__frame__.camera.x - __frame__.rect.half_w + rc.half_w)) || @pos.x > (v = (__frame__.camera.x + __frame__.rect.half_w - rc.half_w))
+    if Stylet.context.state != :edit_mode
+      if @pos.x < (v = (Stylet.context.camera.x - Stylet.context.rect.half_w + rc.half_w)) || @pos.x > (v = (Stylet.context.camera.x + Stylet.context.rect.half_w - rc.half_w))
         @pos.x = v
         @speed.x = -@speed.x * @wall_rebound
       end
@@ -505,7 +505,7 @@ class PlayerBase < ObjectX
   end
 
   def draw_texture
-    screen.put(@image, *(@pos - __frame__.camera_offset - @rc.half_wh))
+    screen.put(@image, *(@pos - Stylet.context.camera_offset - @rc.half_wh))
     # screen.put(@image, *(v - vec2.new(rect.w, 0)))
     # screen.put(@image, *(v + vec2.new(rect.w, 0)))
   end
@@ -550,7 +550,7 @@ class Mario < PlayerBase
     if Stylet.production
       @joystick_index = 0
     else
-      if __frame__.ext_button.btL1.press?
+      if Stylet.context.ext_button.btL1.press?
         @joystick_index = 0
       else
         @joystick_index = nil
@@ -578,7 +578,7 @@ class Luigi < PlayerBase
     if Stylet.production
       @joystick_index = 1
     else
-      if __frame__.ext_button.btR1.press?
+      if Stylet.context.ext_button.btR1.press?
         @joystick_index = 0
       else
         @joystick_index = nil
@@ -739,8 +739,8 @@ class App < Stylet::Base
 
       # カーソル移動
       _edit_cursor = @edit_cursor.clone
-      @edit_cursor.x += __frame__.axis.right.repeat - __frame__.axis.left.repeat
-      @edit_cursor.y += __frame__.axis.down.repeat - __frame__.axis.up.repeat
+      @edit_cursor.x += Stylet.context.axis.right.repeat - Stylet.context.axis.left.repeat
+      @edit_cursor.y += Stylet.context.axis.down.repeat - Stylet.context.axis.up.repeat
       @edit_cursor.x = Stylet::Etc.clamp(@edit_cursor.x, @edit_rect.x_range)
       @edit_cursor.y = Stylet::Etc.clamp(@edit_cursor.y, @edit_rect.y_range)
       if @edit_cursor != _edit_cursor
@@ -827,11 +827,11 @@ class App < Stylet::Base
       end
 
       # if @hold_block
-      #   @wall_scroll_distance_x += (__frame__.ext_button.btL2.repeat_0or1 - __frame__.ext_button.btR2.repeat_0or1)
+      #   @wall_scroll_distance_x += (Stylet.context.ext_button.btL2.repeat_0or1 - Stylet.context.ext_button.btR2.repeat_0or1)
       # end
 
-      # @camera.x += (__frame__.ext_button.btL1.repeat_0or1 - __frame__.ext_button.btR1.repeat_0or1)
-      # @camera.y += (__frame__.ext_button.btL1.repeat_0or1 - __frame__.ext_button.btR1.repeat_0or1)
+      # @camera.x += (Stylet.context.ext_button.btL1.repeat_0or1 - Stylet.context.ext_button.btR1.repeat_0or1)
+      # @camera.y += (Stylet.context.ext_button.btL1.repeat_0or1 - Stylet.context.ext_button.btR1.repeat_0or1)
 
       if key_down?(SDL::Key::S)
         edit_func_stage_save
@@ -860,9 +860,9 @@ class App < Stylet::Base
     @state_counter += 1
 
     unless Stylet.production
-      # @camera.x += (__frame__.ext_button.btL1.repeat_0or1 - __frame__.ext_button.btR1.repeat_0or1)
-      # @camera.y += (__frame__.ext_button.btL1.repeat_0or1 - __frame__.ext_button.btR1.repeat_0or1)
-      # @wall_scroll_distance_x += (__frame__.ext_button.btL2.repeat_0or1 - __frame__.ext_button.btR2.repeat_0or1)
+      # @camera.x += (Stylet.context.ext_button.btL1.repeat_0or1 - Stylet.context.ext_button.btR1.repeat_0or1)
+      # @camera.y += (Stylet.context.ext_button.btL1.repeat_0or1 - Stylet.context.ext_button.btR1.repeat_0or1)
+      # @wall_scroll_distance_x += (Stylet.context.ext_button.btL2.repeat_0or1 - Stylet.context.ext_button.btR2.repeat_0or1)
     end
 
     # キャラ同士の反発
@@ -952,7 +952,7 @@ class App < Stylet::Base
     # 中央にキャラクタが来るように自動的にカメラを動かす方法
     if @camera_auto
       d = @camera_target.x - @camera.x # 画面中央とキャラクタの差分
-      @camera.x += d * __frame__.camera_speed          # 少しずつ差分を減らしていく
+      @camera.x += d * Stylet.context.camera_speed          # 少しずつ差分を減らしていく
     end
 
     # 強制スクロールする例(左右に揺らす例)

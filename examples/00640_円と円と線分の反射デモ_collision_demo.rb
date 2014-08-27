@@ -13,7 +13,7 @@ class Ball
   attr_reader :mass             # 質量
 
   def initialize(index)
-    @pos = __frame__.rect.center.clone                                                           # 中心点
+    @pos = Stylet.context.rect.center.clone                                                           # 中心点
     @speed = Stylet::Vector.new(rand(-2.0..2), rand(-8.0..-6)) # 速度ベクトル
     @gravity = Stylet::Vector.new(0, 0.20)                                                  # 重力
     if index < 4
@@ -42,7 +42,7 @@ class Ball
 
     # 法線(正規化済み)
     normal = pA.normal(pB).normalize
-    # __frame__.draw_line(pA, pA + normal.scale(30))
+    # Stylet.context.draw_line(pA, pA + normal.scale(30))
 
     # t と C の取得
     begin
@@ -110,15 +110,15 @@ class Ball
       return true
     end
 
-    # __frame__.vputs "magnitude=#{diff.magnitude}"
-    # __frame__.vputs "rdiff=#{rdiff}"
+    # Stylet.context.vputs "magnitude=#{diff.magnitude}"
+    # Stylet.context.vputs "rdiff=#{rdiff}"
 
     # if diff.magnitude.zero?
     #   return
     # end
 
     # # AとBをお互い離す
-    # if __frame__.reflect_mode == "move"
+    # if Stylet.context.reflect_mode == "move"
     #   if rdiff > 0
     #     pA -= diff.normalize * rdiff / 2
     #     pB += diff.normalize * rdiff / 2
@@ -210,15 +210,15 @@ class Ball
     # 操作
     begin
       # AとBで速度ベクトルの反映
-      @pos += @speed.scale(__frame__.button.btA.repeat_0or1) + @speed.scale(-__frame__.button.btB.repeat_0or1)
+      @pos += @speed.scale(Stylet.context.button.btA.repeat_0or1) + @speed.scale(-Stylet.context.button.btB.repeat_0or1)
       # Cボタンおしっぱなし + マウスで自機位置移動
-      if __frame__.button.btC.press?
-        @pos = __frame__.cursor.point.clone
+      if Stylet.context.button.btC.press?
+        @pos = Stylet.context.cursor.point.clone
       end
       # Dボタンおしっぱなし + マウスで自機角度変更
-      if __frame__.button.btD.press?
-        if __frame__.cursor.point != @pos
-          @speed = (__frame__.cursor.point - @pos).normalize * @speed.magnitude.round
+      if Stylet.context.button.btD.press?
+        if Stylet.context.cursor.point != @pos
+          @speed = (Stylet.context.cursor.point - @pos).normalize * @speed.magnitude.round
         end
       end
     end
@@ -229,7 +229,7 @@ class Ball
     @pos += @speed
 
     # 自機(円)の表示
-    __frame__.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => @speed.angle)
+    Stylet.context.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => @speed.angle)
   end
 end
 
@@ -238,7 +238,7 @@ class App < Stylet::Base
 
   setup do
     @balls = Array.new(5){|i|Ball.new(i)}
-    @center = __frame__.rect.center
+    @center = Stylet.context.rect.center
   end
 
   update do

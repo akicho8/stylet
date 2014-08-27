@@ -20,19 +20,19 @@ class GunShip
     super if defined? super
 
     if @joystick_index
-      bit_update_by_joy(__frame__.joys[@joystick_index])
+      bit_update_by_joy(Stylet.context.joys[@joystick_index])
     end
     key_bit_update_all
     key_counter_update_all
 
     if dir = axis_angle
       next_pos = @pos + Stylet::Vector.angle_at(dir) * @speed
-      if Stylet::CollisionSupport.rect_in?(__frame__.rect, next_pos)
+      if Stylet::CollisionSupport.rect_in?(Stylet.context.rect, next_pos)
         @pos = next_pos
       end
     end
 
-    __frame__.draw_triangle(@pos, :radius => @size, :angle => @pos.angle_to(@target.pos))
+    Stylet.context.draw_triangle(@pos, :radius => @size, :angle => @pos.angle_to(@target.pos))
   end
 end
 
@@ -40,7 +40,7 @@ module BulletTrigger
   def update
     super
     if @button.btA.count.modulo(8) == 1
-      __frame__.objects << Bullet.new(@pos.clone, @pos.angle_to(@target.pos), 4.00)
+      Stylet.context.objects << Bullet.new(@pos.clone, @pos.angle_to(@target.pos), 4.00)
     end
   end
 end
@@ -78,12 +78,12 @@ class Bullet
   end
 
   def screen_out?
-    Stylet::CollisionSupport.rect_out?(__frame__.rect, @pos) || @radius < 0
+    Stylet::CollisionSupport.rect_out?(Stylet.context.rect, @pos) || @radius < 0
   end
 
   def update
     @radius += @speed
-    __frame__.draw_triangle(@pos + Stylet::Vector.angle_at(@dir) * @radius, :radius => @size, :angle => @dir)
+    Stylet.context.draw_triangle(@pos + Stylet::Vector.angle_at(@dir) * @radius, :radius => @size, :angle => @dir)
   end
 end
 

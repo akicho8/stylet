@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# .__frame__ を書かない方法の実験
+# .Stylet.context を書かない方法の実験
 # Stylet::Delegators の中身がこんな感じ
 #
 require_relative "helper"
