@@ -176,7 +176,7 @@ module Stylet
     self.volume_magnification = 1.0
 
     def [](key)
-      se_hash[key.to_sym] || NullEffect.new
+      se_hash.fetch(key.to_sym) { NullEffect.new }
     end
 
     def exist?(key)
