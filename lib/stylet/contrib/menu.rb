@@ -153,21 +153,32 @@ module Stylet
         end
 
         def element_name(element)
-          if element[:name].respond_to?(:call)
-            element[:name].call
-          else
-            element[:name]
+          name = element[:name]
+          if name.respond_to?(:call)
+            name = name.call
           end
+          if element == current
+            if menu_type?
+              name = "#{name}/"
+            end
+            if command_type?
+              name = "#{name} => OK ?"
+            end
+          else
+            name = "#{name}"
+          end
+          name
         end
 
         def element_value(element)
           if element[:value]
             value = element[:value].call
-            if element == current && left_right_changeable?
-              "< #{value} >"
-            else
-              value
+            if element == current
+              if left_right_type?
+                value = "< #{value} >"
+              end
             end
+            value
           end
         end
 
@@ -176,7 +187,7 @@ module Stylet
             @every_command_all.call(self)
           end
           @elements.each do |elem|
-            if command = elem[:danger_every_command_all]
+            if command = elem[:every_call]
               command.call(self)
             end
           end
@@ -184,9 +195,9 @@ module Stylet
 
         def current_run
           return unless current
-          current.assert_valid_keys(:name, :menu, :simple_command, :se_command, :safe_command, :change, :change2, :change_with_se, :value, :danger_every_command_all, :every_command_one, :cursor_in, :cursor_out)
+          current.assert_valid_keys(:name, :menu, :simple_command, :se_command, :safe_command, :change, :change_with_self, :change_with_se, :value, :every_call, :call_if_current, :cursor_in, :cursor_out)
 
-          if command = current[:every_command_one]
+          if command = current[:call_if_current]
             command.call(self)
           end
 
@@ -310,8 +321,8 @@ module Stylet
               if current[:change]
                 current[:change].call(diff_val)
               end
-              if current[:change2]
-                current[:change2].call(self)
+              if current[:change_with_self]
+                current[:change_with_self].call(self)
               end
               if current[:change_with_se]
                 current[:change_with_se].call(diff_val)
@@ -346,10 +357,20 @@ module Stylet
           @state.jump_to :ms_restart
         end
 
-        def left_right_changeable?
-          if current
-            current.keys.any?{|e|e.to_s.start_with?("change")}
-          end
+        def left_right_type?
+          what_type?("change")
+        end
+
+        def menu_type?
+          what_type?("menu")
+        end
+
+        def command_type?
+          what_type?("command")
+        end
+
+        def what_type?(s)
+          current.keys.any?{|e|e.to_s.include?(s)}
         end
       end
     end
