@@ -162,7 +162,12 @@ module Stylet
 
         def element_value(element)
           if element[:value]
-            element[:value].call
+            value = element[:value].call
+            if element == current && left_right_changeable?
+              "< #{value} >"
+            else
+              value
+            end
           end
         end
 
@@ -339,6 +344,12 @@ module Stylet
           # この対策としてメニューをリスタートさせる。
           # リスタートすることで2フレーム間Bキャンセルを回避できる。
           @state.jump_to :ms_restart
+        end
+
+        def left_right_changeable?
+          if current
+            current.keys.any?{|e|e.to_s.start_with?("change")}
+          end
         end
       end
     end
