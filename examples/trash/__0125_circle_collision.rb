@@ -79,8 +79,8 @@ module Helper
       vputs mouse.moved?
 
       vputs @objects.size
-      @objects.each{|e|e.update}
-      @objects.reject!{|e|e.screen_out?}
+      @objects.each(&:update)
+      @objects.reject!(&:screen_out?)
       draw_polygon(@cursor.point, :radius => 16, :vertex => 3, :angle => 1.0 / 64 * @count)
     end
   end

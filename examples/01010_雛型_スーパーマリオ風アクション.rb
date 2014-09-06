@@ -1016,11 +1016,11 @@ class App < Stylet::Base
   end
 
   def active_x_range
-    (@camera.x - rect.half_w - @view_play) ... (@camera.x + rect.half_w + @view_play)
+    (@camera.x - rect.half_w - @view_play)...(@camera.x + rect.half_w + @view_play)
   end
 
   def active_y_range
-    (@camera.y - rect.half_h - @view_play) ... (@camera.y + rect.half_h + @view_play)
+    (@camera.y - rect.half_h - @view_play)...(@camera.y + rect.half_h + @view_play)
   end
 
   # カメラの左上が指すゲーム内X
@@ -1121,7 +1121,7 @@ class App < Stylet::Base
   end
 
   def edit_func_stage_save
-    positions = @objects.group_by{|e|e.class}.inject({}){|hash, (klass, objs)|
+    positions = @objects.group_by(&:class).inject({}){|hash, (klass, objs)|
       hash.merge(klass.name => objs.collect{|e|e.pos.round.to_a})
     }
     attrs = {

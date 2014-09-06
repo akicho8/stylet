@@ -23,7 +23,7 @@ class App < Stylet::Base
     k = 24                      # 瓶の数(片方)
     h = 4                       # 瓶の幅
     r = (-k..k).collect{|i|
-      range = (avg + i * h) ... (avg + i.next * h)
+      range = (avg + i * h)...(avg + i.next * h)
       count = list.count{|v|range.include?(v)}
       bar(i, count)
     }

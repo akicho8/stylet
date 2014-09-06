@@ -3,6 +3,6 @@ inherit_from:
 
 AllCops:
   Exclude:
-    - 'vortex/lib/vortex/simulator/t_spin.rb'
+    - '**/t_spin.rb'
     - 'vortex/web/**/*'
     - '_*.rb'

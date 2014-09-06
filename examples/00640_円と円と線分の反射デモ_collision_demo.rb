@@ -304,7 +304,7 @@ class App < Stylet::Base
     }
 
     # 球の描画
-    @balls.each{|ball|ball.update}
+    @balls.each(&:update)
   end
 
   run

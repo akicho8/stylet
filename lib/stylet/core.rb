@@ -18,7 +18,7 @@ module Stylet
 
       # run_initializers 実行済みの active_frame
       def active_frame
-        @active_frame ||= active_instance.tap {|e| e.run_initializers }
+        @active_frame ||= active_instance.tap(&:run_initializers)
       end
 
       # すでにどこかで実行済みの場合は instance ではなく

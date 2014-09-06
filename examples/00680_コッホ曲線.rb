@@ -19,7 +19,7 @@ class Koch < Stylet::Base
     @vertex_n += button.btC.repeat - button.btD.repeat
 
     @vertex_n.times.each{|i|
-      get_pos = -> i {
+      get_pos = proc {|i|
         a = (1.0 * count / (60 * 60)) + (1.0 / @vertex_n * i)
         Stylet::Vector.angle_at(a * 7, a * 8) * rect.h * 0.4
       }

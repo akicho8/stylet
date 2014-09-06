@@ -386,7 +386,7 @@ class App < Stylet::Base
     end
     @ships.each(&:update)
     @objects.each(&:update)
-    @objects.reject!{|e|e.death}
+    @objects.reject!(&:death)
   end
 
   run

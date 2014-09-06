@@ -41,7 +41,7 @@ module Stylet
       # レバーの更新前のビット状態を取得
       #   更新前であることに注意
       def axis_state_str
-        @axis.values.collect{|e|e.state_to_s}.join
+        @axis.values.collect(&:state_to_s).join
       end
 
       def key_objs_dump

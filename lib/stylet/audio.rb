@@ -397,7 +397,7 @@ if $0 == __FILE__
   require_relative "../stylet"
   require "rspec/autorun"
 
-  RSpec.configure do |config|
+  RSpec.configure do |_config|
   end
 
   sub_test_case do

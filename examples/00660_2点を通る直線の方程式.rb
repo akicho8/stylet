@@ -47,7 +47,7 @@ class App < Stylet::Base
 
     if @x_mode
       # X軸を等速で動かしてYを求める場合
-      x_range = ((rect.center.x - rect.w / 4) .. (rect.center.x + rect.w / 4))
+      x_range = ((rect.center.x - rect.w / 4)..(rect.center.x + rect.w / 4))
       x_range.begin.step(x_range.end, 16) do |x|
         # y = (((@p1.y - @p0.y).to_f / (@p1.x - @p0.x)) * (x - @p0.x)) + @p0.y # ← こっちでもいい
         y = (-c + -a * x).to_f / b
@@ -56,7 +56,7 @@ class App < Stylet::Base
       end
     else
       # Y軸を等速で動かしてXを求める場合
-      y_range = ((rect.center.y - rect.h / 4) .. (rect.center.y + rect.h / 4))
+      y_range = ((rect.center.y - rect.h / 4)..(rect.center.y + rect.h / 4))
       y_range.begin.step(y_range.end, 16) do |y|
         # x = (((y - @p0.y) * (@p1.x - @p0.x)).to_f / (@p1.y - @p0.y)) + @p0.x # ← こっちでもいい
         x = (-c + -b * y).to_f / a
