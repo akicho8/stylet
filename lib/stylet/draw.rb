@@ -96,18 +96,18 @@ module Stylet
     # draw_rect の場合、デフォルトだと幅+1ドット描画されるため -1 してある
     # draw_rect(0, 0, 0, 0) で 1 ドット表示されてしまう
     #
-    def draw_rect4(x, y, w, h, color: :foreground, fill: false, alpha: nil)
+    def draw_rect4(x, y, w, h, color: :foreground, fill: false, alpha: nil, surface: @screen)
       return if w.zero? || h.zero?
       color = Palette.fetch(color)
       # raise "w, h は正を指定するように" if w < 0 || h < 0
       if fill
         if alpha
-          @screen.draw_rect(x, y, w.abs - 1, h.abs - 1, color, true, alpha)
+          surface.draw_rect(x, y, w.abs - 1, h.abs - 1, color, true, alpha)
         else
-          @screen.fill_rect(x, y, w.abs, h.abs, color)
+          surface.fill_rect(x, y, w.abs, h.abs, color)
         end
       else
-        @screen.draw_rect(x, y, w.abs - 1, h.abs - 1, color, false, alpha)
+        surface.draw_rect(x, y, w.abs - 1, h.abs - 1, color, false, alpha)
       end
     end
 
