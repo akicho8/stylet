@@ -121,7 +121,7 @@ class Coin < ObjectX
   def update
     return unless Stylet.context.active_x_range.include?(x)
     return unless Stylet.context.active_y_range.include?(y)
-    SDL::Surface.blit(@image, (Stylet.context.count / 8).modulo(@anim_count) * (@image.w / @anim_count), 0, @rc.w, @rc.h, screen, *(@pos - Stylet.context.camera_offset - @rc.half_wh))
+    SDL::Surface.blit(@image, (Stylet.context.frame_counter / 8).modulo(@anim_count) * (@image.w / @anim_count), 0, @rc.w, @rc.h, screen, *(@pos - Stylet.context.camera_offset - @rc.half_wh))
   end
 end
 
@@ -890,7 +890,7 @@ class App < Stylet::Base
             end
             if false
               # ジャンプボタンをタイミングよく押したらもっと跳ねる
-              if (1..@rebound_up_frames).include?(p.button.btD.count)
+              if (1..@rebound_up_frames).include?(p.button.btD.counter)
                 p.speed += diff.normalize * rdiff * @rebound_up_powner
                 p.jump_process
                 # Stylet::SE["coin"].play
@@ -958,7 +958,7 @@ class App < Stylet::Base
     # 強制スクロールする例(左右に揺らす例)
     if false
       movable_width = virtual_rect.w - rect.w # カメラの移動可能な幅
-      @camera.x = virtual_rect.half_w + Stylet::Fee.rsin(1.0 / 512 * count) * movable_width / 2
+      @camera.x = virtual_rect.half_w + Stylet::Fee.rsin(1.0 / 512 * frame_counter) * movable_width / 2
     end
 
     # キャラに合わせてスクロールする例

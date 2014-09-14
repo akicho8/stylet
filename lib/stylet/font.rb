@@ -1,26 +1,90 @@
 # -*- coding: utf-8 -*-
+require "static_record"
+
 module Stylet
+  class FontList
+    include StaticRecord
+    static_record Stylet.config.font_list
+
+    delegate :line_skip, :text_size, :drawBlendedUTF8, :to => :sdl_ttf_instance
+
+    def initialize(*)
+      super
+      init
+    end
+
+    def init
+      @sdl_ttf_instance = nil
+      @char_width = nil
+    end
+
+    def char_width
+      @char_width ||= sdl_ttf_instance.text_size("A").first
+    end
+
+    def close
+      if @sdl_ttf_instance
+        @sdl_ttf_instance.close
+        init
+      end
+    end
+
+    concerning :BoldMethods do
+      def bold
+        (sdl_ttf_instance.style & SDL::TTF::STYLE_BOLD).nonzero?
+      end
+
+      def bold=(v)
+        if v
+          sdl_ttf_instance.style |= SDL::TTF::STYLE_BOLD
+        else
+          sdl_ttf_instance.style &= ~SDL::TTF::STYLE_BOLD
+        end
+      end
+
+      def bold_block(v)
+        return yield if v.nil?
+
+        bold_save = bold
+        self.bold = v
+        yield
+        self.bold = bold_save
+      end
+    end
+
+    private
+
+    def sdl_ttf_instance
+      unless @sdl_ttf_instance
+        if font_file = font_list.collect{|e|Pathname(e)}.find{|e|e.exist?}
+          @sdl_ttf_instance = SDL::TTF.open(font_file.to_s, @attributes[:font_size])
+          Stylet.logger.debug "load: #{font_file} (#{@sdl_ttf_instance.family_name.inspect} #{@sdl_ttf_instance.style_name.inspect} #{@sdl_ttf_instance.height} #{@sdl_ttf_instance.line_skip} #{@sdl_ttf_instance.fixed_width?})" if Stylet.logger
+          if @attributes[:bold]
+            @sdl_ttf_instance.style |= SDL::TTF::STYLE_BOLD
+          end
+        end
+      end
+      @sdl_ttf_instance
+    end
+
+    def font_list
+      [
+        @attributes[:path],
+        "#{__dir__}/../../assets/fonts/#{@attributes[:path]}",
+      ]
+    end
+  end
+
   module Font
-    attr_reader :font
-    attr_reader :font_width
+    attr_reader :system_font
     attr_reader :console_current_line
 
     def run_initializers
       super
       init_on(:font) do
         SDL::TTF.init
-        if Stylet.config.font_name
-          font_file = Pathname("#{__dir__}/assets/#{Stylet.config.font_name}")
-          if font_file.exist?
-            @font = SDL::TTF.open(font_file.to_s, Stylet.config.font_size)
-            logger.debug "load: #{font_file} (#{@font.family_name.inspect} #{@font.style_name.inspect} #{@font.height} #{@font.line_skip} #{@font.fixed_width?})" if logger
-            if Stylet.config.font_bold
-              @font.style = SDL::TTF::STYLE_BOLD
-            end
-            @font_width = @font.text_size("A").first
-            @console_current_line = nil
-          end
-        end
+        @system_font = FontList[Stylet.config.system_font_key]
+        @console_current_line = nil
       end
     end
 
@@ -31,9 +95,7 @@ module Stylet
 
     def after_run
       super if defined? super
-      if @font
-        @font.close
-      end
+      FontList.each(&:close)
     end
 
     def update
@@ -56,15 +118,14 @@ module Stylet
     #   vputs "Hello", :vector => Vector[x, y], :align => :right  # 座標指定(右寄せ)
     #   vputs "Hello", :vector => Vector[x, y], :align => :center # 座標指定(中央)
     #
-    def vputs(str = "", vector: nil, color: :font, align: :left)
-      return unless @font
+    def vputs(str = "", vector: nil, color: :font, align: :left, font: @system_font, bold: nil)
       str = str.to_s
-
+      font = FontList[font]
       if vector
         begin
           x = vector.x
           if [:center, :right].include?(align)
-            w = @font.text_size(str).first
+            w = font.text_size(str).first
             case align
             when :right
               x -= w
@@ -75,33 +136,35 @@ module Stylet
               raise ArgumentError, align.inspect
             end
           end
-          @font.drawBlendedUTF8(@screen, str, x, vector.y, *Palette.fetch(color))
+          font.bold_block(bold) do
+            font.drawBlendedUTF8(@screen, str, x, vector.y, *Palette.fetch(color))
+          end
         rescue RangeError
         end
       else
-        if @console_current_line
-          vputs(str, :vector => vputs_vector, color: color, align: align)
-          @console_current_line += 1
+        if v = vputs_vector
+          vputs(str, vector: v, color: color, align: align, font: font, bold: bold)
+          @console_current_line += font.line_skip
         end
       end
     end
 
     def vputs_vector
-      if @console_current_line
-        vec2[0, @console_current_line * @font.line_skip]
+      if @console_current_line && @system_font
+        vec2[0, @console_current_line]
       end
     end
   end
 end
 
 if $0 == __FILE__
-  require_relative "../stylet"
-  Stylet.config.font_name = "VeraMono.ttf"
-  Stylet.config.font_size = 20
-  Stylet.run do
-    vputs [*"A".."Z"].join
-    vputs "left",   :vector => rect.center + [0, 20*0], :align => :left
-    vputs "center", :vector => rect.center + [0, 20*1], :align => :center
-    vputs "right",  :vector => rect.center + [0, 20*2], :align => :right
-  end
+  # require_relative "../stylet"
+  # Stylet.config.font_name = "VeraMono.ttf"
+  # Stylet.config.font_size = 20
+  # Stylet.run do
+  #   vputs [*"A".."Z"].join
+  #   vputs "left",   :vector => rect.center + [0, 20*0], :align => :left
+  #   vputs "center", :vector => rect.center + [0, 20*1], :align => :center
+  #   vputs "right",  :vector => rect.center + [0, 20*2], :align => :right
+  # end
 end

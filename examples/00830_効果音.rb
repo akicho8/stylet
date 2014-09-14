@@ -9,7 +9,7 @@ class App < Stylet::Base
   end
 
   update do
-    if button.btA.trigger? || count == 0
+    if button.btA.trigger? || frame_counter == 0
       Stylet::SE[:nc26792_coin].play
     end
   end

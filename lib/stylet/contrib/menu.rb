@@ -24,7 +24,6 @@ module Stylet
           :scroll_margin     => nil,
           :bar               => "─" * 40,
           :display_height    => 20,
-          :joystick_index    => nil,
           :line_format       => " %{cursor}%{name} %{value}",
           :close_hook        => nil,
           :input             => Input::SharedPad.new,
@@ -53,7 +52,7 @@ module Stylet
           @input.key_bit_update_all
           @input.key_counter_update_all
         end
-        @state.loop_in { send @state.state }
+        @state.loop_in { send @state.key }
       end
 
       def root
@@ -105,7 +104,7 @@ module Stylet
 
         def ms_alive
           cursor_update
-          if @state.count > 1 # サブメニューを開いた瞬間や戻ってきたときに最初の項目を押させないため
+          if @state.counter > 1 # サブメニューを開いた瞬間や戻ってきたときに最初の項目を押させないため
             close_check
             all_run
             current_run
@@ -329,14 +328,6 @@ module Stylet
                 notify(:menu_select)
               end
             end
-          end
-        end
-
-        def active_joys
-          if @joystick_index
-            joys[@joystick_index, 1] || []
-          else
-            joys
           end
         end
 

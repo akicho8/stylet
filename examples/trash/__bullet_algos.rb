@@ -27,7 +27,7 @@ module BulletNeraiutidan
   def compute
     super
     if @win.press_button?(SDL::Key::K1) || (joy && joy.button(0))
-      if @count.modulo(60 / 10).zero?
+      if @frame_counter.modulo(60 / 10).zero?
         @win.bullets << Bullet.new(@win, @x, @y, @target_dir, 5.00)
       end
     end
@@ -45,7 +45,7 @@ class Bullet2 < BulletBase
   def compute
     compute_sincos
     unless @win.pause_mode
-      if @count.modulo(1).zero?
+      if @frame_counter.modulo(1).zero?
         d = Fee.angle(@x, @y, @target.x, @target.y)
         gap = (d - @dir) % 1.00
         if gap >= 0.5
@@ -67,7 +67,7 @@ module BulletTuibi
   def compute
     super
     if @win.press_button?(SDL::Key::K2) || (joy && joy.button(1))
-      div, mod = @count.divmod(60 / 10)
+      div, mod = @frame_counter.divmod(60 / 10)
       if mod.zero?
         wide = 2
         @win.bullets << Bullet2.new(@target, @win, @x, @y, @target_dir + rand * 1.0 / wide - 1.0 / (wide * 2), 1.0)
@@ -80,7 +80,7 @@ module Bullet3waydan
   def compute
     super
     if @win.press_button?(SDL::Key::K4) || (joy && joy.button(2))
-      if @count.modulo(60 / 5).zero?
+      if @frame_counter.modulo(60 / 5).zero?
         gap = 1.0 / 64
         n = 3
         n.times{|i|
@@ -96,7 +96,7 @@ module BulletRandom
   def compute
     super
     if @win.press_button?(SDL::Key::K3) || (joy && joy.button(3))
-      if @count.modulo(60 / 20).zero?
+      if @frame_counter.modulo(60 / 20).zero?
         z = 1.0 / 24
         d = @target_dir + (rand * z - z / 2) * 2
         @win.bullets << Bullet.new(@win, @x, @y, d, 7)
@@ -114,7 +114,7 @@ module BulletUzumaki
   def compute
     super
     if @win.press_button?(SDL::Key::K5) || (joy && joy.button(4))
-      div, mod = @count.divmod(60 / 20)
+      div, mod = @frame_counter.divmod(60 / 20)
       if mod.zero?
         n = 4
         n.times{|i|
@@ -130,7 +130,7 @@ module BulletUzumakix2
   def compute
     super
     if @win.press_button?(SDL::Key::K6) || (joy && joy.button(5))
-      div, mod = @count.divmod(60 / 10)
+      div, mod = @frame_counter.divmod(60 / 10)
       if mod.zero?
         uzumaki2(div, +1)
         uzumaki2(div, -1)
@@ -138,11 +138,11 @@ module BulletUzumakix2
     end
   end
 
-  def uzumaki2(count, sign)
+  def uzumaki2(frame_counter, sign)
     n = 5
     gap = 1.0 / n
     n.times{|i|
-      d = (n / 2 * gap) + gap * i + (count * 1.0 / 120 * sign) + (count * 0.001)
+      d = (n / 2 * gap) + gap * i + (frame_counter * 1.0 / 120 * sign) + (frame_counter * 0.001)
       @win.bullets << Bullet.new(@win, @x, @y, d, 2.0)
     }
   end
@@ -152,7 +152,7 @@ module Bullet128waydan
   def compute
     super
     if @win.press_button?(SDL::Key::K7) || (joy && joy.button(6))
-      if @count.modulo(60 / 2).zero?
+      if @frame_counter.modulo(60 / 2).zero?
         n = 64
         gap = 1.0 / n
         n.times{|i|
@@ -167,7 +167,7 @@ module BulletUzumakix2Fast
   def compute
     super
     if @win.press_button?(SDL::Key::K8) || (joy && joy.button(7))
-      div, mod = @count.divmod(60 / 20)
+      div, mod = @frame_counter.divmod(60 / 20)
       if mod.zero?
         uzumaki2fast(div, +1)
         uzumaki2fast(div, -1)
@@ -175,11 +175,11 @@ module BulletUzumakix2Fast
     end
   end
 
-  def uzumaki2fast(count, sign)
+  def uzumaki2fast(frame_counter, sign)
     n = 3
     gap = 1.0 / n
     n.times{|i|
-      d = (n / 2 * gap) + gap * i + (count * 1.0 / 120 * sign) + (count * 0.001)
+      d = (n / 2 * gap) + gap * i + (frame_counter * 1.0 / 120 * sign) + (frame_counter * 0.001)
       @win.bullets << Bullet.new(@win, @x, @y, d, 6.0)
     }
   end

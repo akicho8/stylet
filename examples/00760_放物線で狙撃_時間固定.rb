@@ -53,7 +53,7 @@ class App < Stylet::Base
   update do
     update_movable_points(@points)
     @points.each_with_index{|e, i|vputs("p#{i}", :vector => e)}
-    if count.modulo(30) == 1
+    if frame_counter.modulo(30) == 1
       @objects << Bullet.new(@points[0], cursor.point)
     end
   end

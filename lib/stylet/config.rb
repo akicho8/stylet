@@ -16,14 +16,16 @@ module Stylet
   # config.screen_flags   = SDL::HWSURFACE | SDL::DOUBLEBUF | SDL::HWACCEL | SDL::RESIZABLE | SDL::SRCALPHA
   config.background_image = nil # "background.bmp"
 
+  # Font
+  config.system_font_key = :ipag_mona
+  config.font_list = [
+    {:key => :ipag_mona,            :path => "ipag-mona.ttf",           :bold => false, :font_size => 14},
+    # {:key => :font_large, :path => "LiberationMono-Bold.ttf", :bold => true,  :font_size => 24},
+    # {:key => :coda,       :path => "Coda-Regular.ttf",        :bold => false, :font_size => 14},
+  ]
+
   # Mouse
   config.hide_mouse       = false
-
-  # Font
-  config.font_size        = 14
-  config.font_bold        = false
-  config.font_name        = "ipag-mona.ttf"
-  # config.font_name      = "luxirr.ttf"
 
   # Audio
   config.sound_freq       = 22050 # 44100  # SDLのデフォルトは 22050

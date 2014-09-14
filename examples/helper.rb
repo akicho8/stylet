@@ -32,7 +32,7 @@ module Helper
         end
 
         if @cursor.display
-          draw_circle(@cursor.point, :radius => @cursor.radius, :vertex => @cursor.vertex, :angle => 1.0 / 64 * @count)
+          draw_circle(@cursor.point, :radius => @cursor.radius, :vertex => @cursor.vertex, :angle => 1.0 / 64 * @frame_counter)
         end
       end
     end

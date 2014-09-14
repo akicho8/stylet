@@ -13,9 +13,9 @@ class App < Stylet::Base
   update do
     screen.h.times.each do |y|
       screen.w.times.each do |x|
-        r = 127 * Stylet::Fee.rsin(1.0 / 256 / 2 * count * x)
+        r = 127 * Stylet::Fee.rsin(1.0 / 256 / 2 * frame_counter * x)
         g = 0
-        b = 127 * Stylet::Fee.rsin(1.0 / 256 / 2 * count * y)
+        b = 127 * Stylet::Fee.rsin(1.0 / 256 / 2 * frame_counter * y)
         screen[x, y] = screen.format.map_rgb(r, g, b)
       end
     end

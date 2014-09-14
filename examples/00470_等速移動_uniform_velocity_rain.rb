@@ -27,7 +27,7 @@ class Ball
       Stylet.context.objects.delete(self)
     end
 
-    Stylet.context.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => 1.0 / 256 * (@speed.magnitude + Stylet.context.count) * @arrow)
+    Stylet.context.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => 1.0 / 256 * (@speed.magnitude + Stylet.context.frame_counter) * @arrow)
   end
 end
 
@@ -40,7 +40,7 @@ class App < Stylet::Base
   end
 
   update do
-    if @count.modulo(4).zero?
+    if @frame_counter.modulo(4).zero?
       @objects << Ball.new
     end
   end

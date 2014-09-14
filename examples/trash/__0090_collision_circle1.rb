@@ -26,7 +26,7 @@ class Ball
       end
     end
     @win.draw_polygon(@pos, :radius => @radius, :vertex => 32)
-    if @win.count.modulo(5) == 0
+    if @win.frame_counter.modulo(5) == 0
       @win.draw_line(@pos, @win.cursor.point)
     end
     @win.vputs "radius2=#{radius2}"

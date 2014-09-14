@@ -39,14 +39,14 @@ class App < Stylet::Base
       # 物体をいったりきたりさせる
       if false
         # ○の表示
-        pos = 0.5 + (Stylet::Fee.rsin(count / 256.0) * 0.5)
+        pos = 0.5 + (Stylet::Fee.rsin(frame_counter / 256.0) * 0.5)
         pt = point_of_t(pos)
         draw_circle(pt, :radius => 64, :vertex => 32)
         vputs(pos)
       else
         # △の表示で進んでいる方向を頂点にする
-        t0 = 0.5 + (Stylet::Fee.rsin(1.0 / 256 * count) * 0.5)       # 現在の位置(0.0〜1.0)
-        t1 = 0.5 + (Stylet::Fee.rsin(1.0 / 256 * count.next) * 0.5)  # 未来の位置(0.0〜1.0)
+        t0 = 0.5 + (Stylet::Fee.rsin(1.0 / 256 * frame_counter) * 0.5)       # 現在の位置(0.0〜1.0)
+        t1 = 0.5 + (Stylet::Fee.rsin(1.0 / 256 * frame_counter.next) * 0.5)  # 未来の位置(0.0〜1.0)
         p0 = point_of_t(t0)                                              # 現在の座標
         p1 = point_of_t(t1)                                              # 未来の座標
         draw_triangle(p0, :angle => p0.angle_to(p1), :radius => 64) # 三角の頂点を未来への向きに設定して三角描画

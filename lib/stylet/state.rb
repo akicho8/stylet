@@ -2,46 +2,45 @@
 #
 # 状態遷移管理
 #
-#   object = State.new(:idle)
-#   object.loop_in do
-#     case object.state
+#   state = State.new(:idle)
+#   state.loop_in do
+#     case state.key
 #     when :idle
-#       if object.count_at?(1)
-#         object.jump_to :active
+#       if state.counter_at?(1)
+#         state.jump_to :active
 #       end
 #     when :active
-#       if object.start?
+#       if state.start?
 #       end
-#       if object.count_at?(1)
+#       if state.counter_at?(1)
 #       end
 #     end
 #   end
 #
 class State
+  attr_reader :counter, :key
 
-  attr_reader :count, :state
-
-  def initialize(state = nil)
+  def initialize(key = nil)
     @_loop_break = Object.new
     @_transit_key = Object.new
     @depth = 0
-    jump_to(state)
+    jump_to(key)
   end
 
   def start?
-    @count == 0
+    @counter == 0
   end
 
   def pass
-    @count += 1
+    @counter += 1
   end
 
-  def count_at?(count)
-    @count == count
+  def counter_at?(counter)
+    @counter == counter
   end
 
-  def jump_to(state)
-    soft_jump_to(state)
+  def jump_to(key)
+    soft_jump_to(key)
     if @depth.nonzero?
       throw @_transit_key
     end
@@ -62,13 +61,13 @@ class State
   end
 
   def to_s
-    "#{@state}: #{@count} (#{_transit_key})"
+    "#{@key}: #{@counter} (#{@_transit_key})"
   end
 
   private
 
-  def soft_jump_to(state)
-    @state = state
-    @count = 0
+  def soft_jump_to(key)
+    @key = key
+    @counter = 0
   end
 end

@@ -37,7 +37,7 @@ class App < Stylet::Base
       load_image
       effect_set
     end
-    if button.btA.trigger? || count == 0
+    if button.btA.trigger? || frame_counter == 0
       (screen.h / @cell).times.each do |y|
         (screen.w / @cell).times.each do |x|
           color = Vector[0, 0, 0]

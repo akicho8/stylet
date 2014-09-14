@@ -14,7 +14,7 @@ class Ball
   def update
     @speed += @friction
     @p0 += @speed
-    Stylet.context.draw_triangle(@p0, :radius => 16, :angle => 1.0 / 64 * Stylet.context.count)
+    Stylet.context.draw_triangle(@p0, :radius => 16, :angle => 1.0 / 64 * Stylet.context.frame_counter)
   end
 
   def screen_out?
@@ -26,7 +26,7 @@ class App < Stylet::Base
   include Helper::CursorWithObjectCollection
 
   update do
-    if button.btA.count.modulo(4) == 1
+    if button.btA.counter.modulo(4) == 1
       @objects << Ball.new(cursor.point.clone, Stylet::Vector.new(0, -12), Stylet::Vector.new(0, 0.2))
     end
   end

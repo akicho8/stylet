@@ -11,11 +11,11 @@ module Stylet
 
     cattr_accessor :adapter_assigns do
       {
-        "PLAYSTATION(R)3 Controller"  => :ps3_standard,        # 純正
-        "PS(R) Gamepad"               => :ps3_standard,        # 純正風ぱちもん
-        "USB Gamepad"                 => :elecom_usb_pad,      # ELECOM ゲームパッド JC-U2410TBK http://www.amazon.co.jp/dp/B000FO600A
-        "REAL ARCADE Pro.V3"          => :real_arcade_pro_v3,  # リアルアーケードPro.V3 SA(PS3用) http://www.amazon.co.jp/dp/B002YT9PSI
-        "USB,2-axis 8-button gamepad" => :buffalo_snes,        # iBUFFALO USBゲームパッド 8ボタン スーパーファミコン風 http://www.amazon.co.jp/dp/B002B9XB0E
+        "PLAYSTATION(R)3 Controller"  => :ps3_standard,   # 純正
+        "PS(R) Gamepad"               => :ps3_standard,   # 純正風ぱちもん
+        "USB Gamepad"                 => :elecom_usb_pad, # ELECOM ゲームパッド JC-U2410TBK http://www.amazon.co.jp/dp/B000FO600A
+        "REAL ARCADE Pro.V3"          => :hori_rap_v3_sa, # リアルアーケードPro.V3 SA(PS3用) http://www.amazon.co.jp/dp/B002YT9PSI
+        "USB,2-axis 8-button gamepad" => :buffalo_snes,   # iBUFFALO USBゲームパッド 8ボタン スーパーファミコン風 http://www.amazon.co.jp/dp/B002B9XB0E
       }
     end
 

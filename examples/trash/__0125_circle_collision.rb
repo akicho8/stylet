@@ -81,7 +81,7 @@ module Helper
       vputs @objects.size
       @objects.each(&:update)
       @objects.reject!(&:screen_out?)
-      draw_polygon(@cursor.point, :radius => 16, :vertex => 3, :angle => 1.0 / 64 * @count)
+      draw_polygon(@cursor.point, :radius => 16, :vertex => 3, :angle => 1.0 / 64 * @frame_counter)
     end
   end
 end

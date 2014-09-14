@@ -6,7 +6,7 @@ class App < Stylet::Base
   update do
     one = 360                   # 一周を何度にしてもいい
 
-    angle = count.modulo(one)
+    angle = frame_counter.modulo(one)
     vputs "角度: #{angle}"
 
     rad = angle * Math::PI / (one / 2)

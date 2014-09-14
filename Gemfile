@@ -1,6 +1,12 @@
 source 'https://rubygems.org'
-ruby '2.1.2'
+ruby '2.1.3'
 gemspec
+
+if File.exist? (path = File.expand_path(File.join(File.dirname(__FILE__), "../static_record")))
+  gem "static_record", :path => path
+else
+  gem "static_record", :github => "akicho8/static_record"
+end
 
 if File.exist? (path = File.expand_path(File.join(File.dirname(__FILE__), "stylet_math")))
   gem "stylet_math", :path => path

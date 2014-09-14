@@ -12,7 +12,7 @@ class App < Stylet::Base
   end
 
   update do
-    b = 0.4 + rsin(1.0 / 256 * count * 2) * 0.3
+    b = 0.4 + rsin(1.0 / 256 * frame_counter * 2) * 0.3
     SDL::Screen.set_gamma(0, 0, b)
   end
 

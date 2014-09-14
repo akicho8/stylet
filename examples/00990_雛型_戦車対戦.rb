@@ -140,7 +140,7 @@ class Tank
     # 粉塵
     if true
       if @accel.nonzero? && @speed >= 1.0
-        if count.modulo(3).zero?
+        if frame_counter.modulo(3).zero?
           (@speed * 4).round.times do
             if rand(3).zero?
               Stylet.context.objects << Dust.new(@pos, @body_dir + 0.5 + rand(-0.10..0.10), @speed * rand(6..8), rand(0.7..0.8), rand(15..20))
@@ -178,7 +178,7 @@ module BulletTrigger
   def initialize(*)
     super
     @power = 0
-    @free_count = 0
+    @free_counter = 0
   end
 
   def update
@@ -195,11 +195,11 @@ module BulletTrigger
     # 溜め
     if bt.press?
       @power += 1
-      @free_count = 0
+      @free_counter = 0
     else
-      @free_count += 1
+      @free_counter += 1
     end
-    if @free_count == 1
+    if @free_counter == 1
       if @power >= 60 * 2
         @speed -= 0.3           # 玉を打つと反動で下がる
         1.times { Stylet.context.objects << Missile.new(self, @cannon_dir) }

@@ -64,7 +64,7 @@ class Ball
 
     @state_counter += 1
 
-    Stylet.context.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => 1.0 / 256 * Stylet.context.count)
+    Stylet.context.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => 1.0 / 256 * Stylet.context.frame_counter)
     Stylet.context.vputs @name, :vector => @pos
   end
 end

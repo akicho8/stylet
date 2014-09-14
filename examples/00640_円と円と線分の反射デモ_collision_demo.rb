@@ -254,14 +254,14 @@ class App < Stylet::Base
     @lines = []
     n = 5
     n.times{|i|
-      @lines << @center + Stylet::Vector.angle_at((1.0 / 128 * count) + 1.0 / n * i) * rect.h * 0.45
+      @lines << @center + Stylet::Vector.angle_at((1.0 / 128 * frame_counter) + 1.0 / n * i) * rect.h * 0.45
     }
 
     # 線の準備
     @lines2 = []
     n = 3
     n.times{|i|
-      @lines2 << @center + Stylet::Vector.angle_at((1.0 / 512 * count) + 1.0 / n * i) * rect.h * 0.1
+      @lines2 << @center + Stylet::Vector.angle_at((1.0 / 512 * frame_counter) + 1.0 / n * i) * rect.h * 0.1
     }
 
     # 円と円の当たり判定

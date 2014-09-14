@@ -26,8 +26,8 @@ class SprineApp < Stylet::Base
 
   def ship(a)
     # 区間をN分割なので角に来るとブレーキがかかる感じになる
-    t0 = 0.5 + (Stylet::Fee.rsin(1.0 / 256 / 4 * (count +  0)) * 0.5) # 現在の位置(0.0〜1.0)
-    t1 = 0.5 + (Stylet::Fee.rsin(1.0 / 256 / 4 * (count + 16)) * 0.5) # 現在の位置(0.0〜1.0)
+    t0 = 0.5 + (Stylet::Fee.rsin(1.0 / 256 / 4 * (frame_counter +  0)) * 0.5) # 現在の位置(0.0〜1.0)
+    t1 = 0.5 + (Stylet::Fee.rsin(1.0 / 256 / 4 * (frame_counter + 16)) * 0.5) # 現在の位置(0.0〜1.0)
     p0 = a[((a.size - 1).to_f * t0).to_i]                            # 現在の座標
     p1 = a[((a.size - 1).to_f * t1).to_i]                            # 現在の座標
     draw_triangle(p0, :angle => p0.angle_to(p1), :vertex => 3)
@@ -82,7 +82,7 @@ class SprineApp < Stylet::Base
     end
 
     out = []
-    count = 0
+    frame_counter = 0
     (num - 1).times{|i|
       a = l[i]
       _v00 = points[i].x

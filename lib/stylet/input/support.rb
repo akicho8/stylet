@@ -24,15 +24,15 @@ module Stylet
       #   Input::Support.preference_key(a, b) #=> b
       #
       #   3つ以上のキーで比較する場合の麗
-      #   list.sort_by{|e|(e.count.zero? ? Float::INFINITY : e.count)}.first
+      #   list.sort_by{|e|(e.counter.zero? ? Float::INFINITY : e.counter)}.first
       #
       def preference_key(lhv, rhv, if_collision: lhv)
         case
         when rhv.press? && lhv.press?
           case
-          when rhv.count < lhv.count
+          when rhv.counter < lhv.counter
             rhv
-          when lhv.count < rhv.count
+          when lhv.counter < rhv.counter
             lhv
           else
             if_collision
@@ -48,7 +48,7 @@ module Stylet
 
       # 3つ以上のキーの優先順位を得る
       def preference_keys(list)
-        if v = list.sort_by{|e|(e.count.zero? ? Float::INFINITY : e.count)}.first
+        if v = list.sort_by{|e|(e.counter.zero? ? Float::INFINITY : e.counter)}.first
           if v.press?
             v
           end

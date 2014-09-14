@@ -8,10 +8,10 @@ require 'forwardable'
 
 class Ball
   extend Forwardable
-  def_delegators "Stylet::Base.active_frame", :draw_triangle, :rect, :count
+  def_delegators "Stylet::Base.active_frame", :draw_triangle, :rect, :frame_counter
 
   def update
-    draw_triangle(rect.center, :radius => 128, :angle => 1.0 / 256 * count)
+    draw_triangle(rect.center, :radius => 128, :angle => 1.0 / 256 * frame_counter)
   end
 end
 

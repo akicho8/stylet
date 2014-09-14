@@ -12,7 +12,7 @@ class TestInputKeyOne < Test::Unit::TestCase
     6.times do
       @key_one.counter_update(true)
       rep_ary << @key_one.repeat(3)
-      cnt_ary << @key_one.count
+      cnt_ary << @key_one.counter
     end
     assert_equal [1, 0, 0, 0, 2, 3], rep_ary
     assert_equal [1, 2, 3, 4, 5, 6], cnt_ary
@@ -21,11 +21,11 @@ class TestInputKeyOne < Test::Unit::TestCase
   test "<<" do
     @key_one << true
     @key_one.counter_update
-    assert_equal 1, @key_one.count
+    assert_equal 1, @key_one.counter
 
     @key_one << "A"
     @key_one.counter_update
-    assert_equal 2, @key_one.count
+    assert_equal 2, @key_one.counter
   end
 
   test "キーを離した瞬間がわかる" do

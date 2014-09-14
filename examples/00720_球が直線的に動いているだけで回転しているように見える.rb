@@ -16,7 +16,7 @@ class App < Stylet::Base
     @diff += 0.01 * (button.btA.repeat - button.btB.repeat)
 
     @n.times do |i|
-      r = rsin(0.5 / @n * i + 1.0 / 256 * count * 1) * rect.h * 0.45
+      r = rsin(0.5 / @n * i + 1.0 / 256 * frame_counter * 1) * rect.h * 0.45
       pos = Stylet::Vector.angle_at(0.5 / @n * i * @diff) * r
       draw_circle(rect.center + pos, :radius => @ball_r, :vertex => 8)
     end

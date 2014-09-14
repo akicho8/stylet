@@ -18,7 +18,7 @@ class App < Stylet::Base
   end
 
   update do
-    if button.btA.trigger? || count == 0 || count.modulo(60).zero?
+    if button.btA.trigger? || frame_counter == 0 || frame_counter.modulo(60).zero?
       f = Pathname.glob("assets/bg*.png").to_a.sample
       s = SDL::Surface.load(f.to_s)
       image = s.display_format

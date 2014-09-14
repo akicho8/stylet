@@ -12,7 +12,7 @@ module Stylet
             :vputs_vector,
             :dputs,
             :rect,
-            :count,
+            :frame_counter,
             :joys,
             :draw_dot,
             :draw_line,
@@ -26,7 +26,7 @@ module Stylet
             :draw_arrow,
             :draw_polygon,
             :screen,
-            :font_width,
+            :system_font,
 
             :fps_stat,
             :cpu_stat,

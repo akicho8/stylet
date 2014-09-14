@@ -55,10 +55,10 @@ class LifeGame < Stylet::Base
     @height.times do |y|
       @width.times do |x|
         vec = Stylet::Vector.new(x, y)
-        count = around_vectors.count do |v|
+        frame_counter = around_vectors.count do |v|
           @matrix[(vec + v).to_a.collect(&:to_i)]
         end
-        @next_matrix[vec.to_a] = @matrix[vec.to_a] ? (count == 2 || count == 3) : (count == 3)
+        @next_matrix[vec.to_a] = @matrix[vec.to_a] ? (frame_counter == 2 || frame_counter == 3) : (frame_counter == 3)
       end
     end
 

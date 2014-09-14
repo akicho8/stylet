@@ -15,16 +15,16 @@ module Stylet
         # 3フレーム目に押された場合
         #
         #        2 3 4 5 6 7 (Frames)
-        #  count 0 1 2 3 4 5
+        #  counter 0 1 2 3 4 5
         # repeat 0 1 0 0 2 3
         #            ^ ^  の数(1と2の間がの数)がkey_repeat
         #
-        def repeat(count, key_repeat)
+        def repeat(counter, key_repeat)
           repeat = 0
-          if count == 1
+          if counter == 1
             repeat = 1
-          elsif count > key_repeat + 1
-            repeat = count - key_repeat
+          elsif counter > key_repeat + 1
+            repeat = counter - key_repeat
           else
             repeat = 0
           end
@@ -34,7 +34,7 @@ module Stylet
 
       attr_accessor :name, :match_chars, :store_char, :index
       attr_accessor :state
-      attr_reader :count, :free_count
+      attr_reader :counter, :free_counter
 
       def initialize(name:, match_chars: nil, store_char: nil, index: nil)
         @name        = name
@@ -42,8 +42,8 @@ module Stylet
         @store_char  = store_char
         @index       = index
 
-        @count = 0
-        @free_count = 0
+        @counter = 0
+        @free_counter = 0
         @state = false
       end
 
@@ -75,18 +75,18 @@ module Stylet
         @state ? @store_char : ""
       end
 
-      # @state の状態を @count に反映する
+      # @state の状態を @counter に反映する
       #   引数が指定されていればそれを直近の状態に設定して更新する
       def counter_update(state = nil)
         if state
           self << state
         end
         if @state
-          @count += 1
-          @free_count = 0
+          @counter += 1
+          @free_counter = 0
         else
-          @count = 0
-          @free_count += 1
+          @counter = 0
+          @free_counter += 1
         end
         @state = false
       end
@@ -95,27 +95,27 @@ module Stylet
       # 3フレーム目に押された場合
       #
       #        2 3 4 5 6 7 (Frames)
-      #  count 0 1 2 3 4 5
+      #  counter 0 1 2 3 4 5
       # repeat 0 1 0 0 2 3
       #            ^ ^  の数(1と2の間がの数)がkey_repeat
       #
       def repeat(key_repeat = 12) # FIXME
-        self.class.repeat(@count, key_repeat)
+        self.class.repeat(@counter, key_repeat)
       end
 
       # 押されていない？
       def free?
-        @count == 0
+        @counter == 0
       end
 
       # 押しっぱなし？
       def press?
-        @count >= 1
+        @counter >= 1
       end
 
       # 押した瞬間？
       def trigger?
-        @count == 1
+        @counter == 1
       end
 
       # 押していないとき 0.0 で押している間は 1.0 を返す
@@ -129,11 +129,11 @@ module Stylet
 
       # 離した瞬間？
       def free_trigger?
-        @free_count == 1
+        @free_counter == 1
       end
 
       def inspect
-        "#{self}#{@count}"
+        "#{self}#{@counter}"
       end
 
       def to_s2

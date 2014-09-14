@@ -24,8 +24,8 @@ class App < Stylet::Base
     h = 4                       # 瓶の幅
     r = (-k..k).collect{|i|
       range = (avg + i * h)...(avg + i.next * h)
-      count = list.count{|v|range.include?(v)}
-      bar(i, count)
+      frame_counter = list.count{|v|range.include?(v)}
+      bar(i, frame_counter)
     }
 
     # 実際の標準偏差の位置確認

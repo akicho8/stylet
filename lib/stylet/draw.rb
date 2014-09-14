@@ -5,14 +5,14 @@
 
 module Stylet
   module Draw
-    attr_reader :count, :sdl_event, :rect, :screen, :screen_active
+    attr_reader :frame_counter, :sdl_event, :rect, :screen, :screen_active
     attr_reader :fps_stat, :cpu_stat
     attr_accessor :title
 
     def run_initializers
       super
       init_on(:draw) do
-        @count = 0
+        @frame_counter = 0
         @fps_adjust = FpsAdjust.new
         @fps_stat = FpsStat.new
         @cpu_stat = CpuStat.new
@@ -38,7 +38,7 @@ module Stylet
       @fps_adjust.delay
       @fps_stat.update
       @cpu_stat.benchmark { @screen.flip }
-      @count += 1
+      @frame_counter += 1
     end
 
     def after_run
@@ -135,7 +135,7 @@ module Stylet
 
     def system_infos
       list = [
-        @count,
+        @frame_counter,
         "FPS:#{@fps_stat.fps}",
         "CPU:#{format("%4.2f", @cpu_stat.cpu_ratio)}",
       ]

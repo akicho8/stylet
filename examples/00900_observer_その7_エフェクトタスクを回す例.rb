@@ -22,13 +22,13 @@ class Task
   include Stylet::Delegators
 
   def initialize
-    @count = 0
+    @frame_counter = 0
   end
 
   def call
-    @count += 1
-    vputs "#{self.class.name} #{@count}"
-    if @count >= 60
+    @frame_counter += 1
+    vputs "#{self.class.name} #{@frame_counter}"
+    if @frame_counter >= 60
       Stylet::Base.active_frame.tasks.delete(self)
     end
   end
@@ -41,13 +41,13 @@ class Window < SimpleDelegator
   end
 
   def update(player)            # observer として呼ばれる update
-    if count.modulo(120).zero?
+    if frame_counter.modulo(120).zero?
       tasks << Task.new
     end
     tasks.each(&:call)
 
     next_frame                  # Stylet::Base#update を呼ぶ。干渉しない。
-    vputs "#{self.class.name} #{count}"
+    vputs "#{self.class.name} #{frame_counter}"
   end
 end
 

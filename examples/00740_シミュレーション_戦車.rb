@@ -103,7 +103,7 @@ class App < Stylet::Base
       end
     end
 
-    # if button.btA.count.modulo(8) == 1
+    # if button.btA.counter.modulo(8) == 1
     #   Stylet.context.objects << Bullet.new(@pos.clone, @pos.angle_to(@target.pos), 4.00)
     # end
 

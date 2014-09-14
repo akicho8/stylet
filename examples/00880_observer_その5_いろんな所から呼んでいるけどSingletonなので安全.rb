@@ -17,7 +17,7 @@ class Window < SimpleDelegator
 
   def update(player)
     next_frame
-    vputs [count, player.object_id, self.class.name]
+    vputs [frame_counter, player.object_id, self.class.name]
   end
 end
 
@@ -30,9 +30,9 @@ Window.new(player)
 # Stylet::Base を継承して作ったクラスで update コールバックを使う場合はグローバルなインスタンスに結びついてしまうため
 # 他のところで実行されたオブザーバーが update コールバックもいっしょに呼んでしまう。
 
-Stylet::Base.run do             # これを実行し始めたときにはすでに count は 60 になっている
-  if count == 120               # ので 60 フレームたったときにここにくる
+Stylet::Base.run do             # これを実行し始めたときにはすでに frame_counter は 60 になっている
+  if frame_counter == 120               # ので 60 フレームたったときにここにくる
     60.times { player.render }  # さらにループの中で observer 形式で呼び出しても Singleton なので安全
   end
-  vputs [count, player.object_id, self.class.name]
+  vputs [frame_counter, player.object_id, self.class.name]
 end

@@ -3,7 +3,7 @@ require "./setup"
 
 Stylet.run(:title => "(window_title)") do
   vputs title
-  if @count >= 60
-    self.title = @count.to_s
+  if frame_counter >= 60
+    self.title = frame_counter.to_s
   end
 end

@@ -7,13 +7,17 @@ module Stylet
     # ＋ 0 3 5 4
     #    1 2 7 6  9(START)
     #
-    class RealArcadeProV3Adapter < JoystickAdapter
+    class HoriRapV3SaAdapter < JoystickAdapter
       cattr_accessor :button_assigns do
         {
           :btA => 3,
           :btB => 5,
           :btC => 4,
           :btD => 2,
+
+          :btSelect => 8,
+          :btStart  => 9,
+          :btPS     => 12,
         }
       end
 

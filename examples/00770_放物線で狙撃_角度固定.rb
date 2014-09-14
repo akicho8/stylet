@@ -76,7 +76,7 @@ class App < Stylet::Base
     draw_vector(Stylet::Vector.angle_at(@rot).scale(32), :origin => @points[0])
 
     # 球発射
-    if count.modulo(30) == 1
+    if frame_counter.modulo(30) == 1
       @objects << Bullet.new(@points[0], cursor.point, @rot)
     end
   end

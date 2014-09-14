@@ -10,8 +10,8 @@ class Ball
   end
 
   def update
-    p0 = pos_new(Stylet.context.count)      # 現在の位置を取得
-    p1 = pos_new(Stylet.context.count.next) # 次のフレームの位置を取得
+    p0 = pos_new(Stylet.context.frame_counter)      # 現在の位置を取得
+    p1 = pos_new(Stylet.context.frame_counter.next) # 次のフレームの位置を取得
     dir = p0.angle_to(p1)          # 現在の位置から見て未来の角度を取得
     Stylet.context.draw_circle(p0, :radius => 20, :vertex => 3, :angle => dir) # 次に進む方向に向けて三角を表示
   end
@@ -19,10 +19,10 @@ class Ball
   #
   # countフレーム地点の位置を取得
   #
-  def pos_new(count)
+  def pos_new(frame_counter)
     pos = Stylet::Vector.new
-    pos.x = Stylet::Fee.rcos(1.0 / 512 * (count * Stylet.context.xc + @index * 24)) * Stylet.context.rect.w * 0.4
-    pos.y = Stylet::Fee.rsin(1.0 / 512 * (count * Stylet.context.yc + @index * 24)) * Stylet.context.rect.h * 0.4
+    pos.x = Stylet::Fee.rcos(1.0 / 512 * (frame_counter * Stylet.context.xc + @index * 24)) * Stylet.context.rect.w * 0.4
+    pos.y = Stylet::Fee.rsin(1.0 / 512 * (frame_counter * Stylet.context.yc + @index * 24)) * Stylet.context.rect.h * 0.4
     Stylet.context.rect.center + pos
   end
 end
