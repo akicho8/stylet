@@ -40,7 +40,7 @@ class App < Stylet::Base
   end
 
   update do
-    if @frame_counter.modulo(4).zero?
+    if frame_counter.modulo(4).zero?
       @objects << Ball.new
     end
   end

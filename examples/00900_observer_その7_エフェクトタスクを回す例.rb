@@ -22,13 +22,13 @@ class Task
   include Stylet::Delegators
 
   def initialize
-    @frame_counter = 0
+    @counter = 0
   end
 
   def call
-    @frame_counter += 1
-    vputs "#{self.class.name} #{@frame_counter}"
-    if @frame_counter >= 60
+    @counter += 1
+    vputs "#{self.class.name} #{@counter}"
+    if @counter >= 60
       Stylet::Base.active_frame.tasks.delete(self)
     end
   end
