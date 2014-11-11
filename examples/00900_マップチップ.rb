@@ -67,6 +67,6 @@ class App < Stylet::Base
     end
     SDL.blit_surface(@map_tip, @tip.x * src.x, @tip.y * src.y, @tip.x, @tip.y, screen, x * @tip.x, y * @tip.y)
   end
-  
+
   run
 end

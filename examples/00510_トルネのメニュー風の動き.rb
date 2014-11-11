@@ -5,6 +5,8 @@
 require_relative "helper"
 
 class Ball
+  include Stylet::Delegators
+
   def initialize(index)
     @name = index.to_s
     @index = index
@@ -14,7 +16,7 @@ class Ball
     @everyone_radius = 80 * 2
     @arrow = rand(2).zero? ? 1 : -1 # どっち向きに回転するか
 
-    @pos = Stylet::Vector.new(rand(Stylet.context.rect.w), rand(Stylet.context.rect.h))             # 物体初期位置
+    @pos = vec2[rand(rect.w), rand(rect.h)]             # 物体初期位置
 
     @state = "state1"
     @state_counter = 0
@@ -34,7 +36,7 @@ class Ball
 
     # 自分の位置に戻る
     if @state == "state1"
-      @target = Stylet.context.rect.center + Stylet::Vector.angle_at((1.0 / Stylet.context.objects.size * @index)) * @everyone_radius
+      @target = rect.center + Stylet::Vector.angle_at((1.0 / Stylet.context.objects.size * @index)) * @everyone_radius
       @pos += (@target - @pos).scale(0.2)
 
       if (@target - @pos).magnitude < 1.0
@@ -64,8 +66,8 @@ class Ball
 
     @state_counter += 1
 
-    Stylet.context.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => 1.0 / 256 * Stylet.context.frame_counter)
-    Stylet.context.vputs @name, :vector => @pos
+    draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => 1.0 / 256 * frame_counter)
+    vputs @name, :vector => @pos
   end
 end
 
@@ -75,7 +77,7 @@ class App < Stylet::Base
   setup do
     self.title = "torne風メニュー(PSのシステムにありがちな動き)"
     cursor.display = false
-    @objects = Array.new(8){|i|Ball.new(i)}
+    @objects = Array.new(8) {|i| Ball.new(i) }
   end
 
   run
