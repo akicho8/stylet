@@ -45,7 +45,7 @@ class Bullet
   end
 
   def screen_out?
-    @pos.to_a.any?(&:nan?) || @pos.y > rect.max_y
+    @pos.to_a.any?(&:nan?) || @pos.y > srect.max_y
   end
 end
 
@@ -57,7 +57,7 @@ class App < Stylet::Base
     self.title = "放物線 狙撃【角度固定】"
 
     @points = []
-    @points << rect.center + Stylet::Vector.new(+rect.w / 4, 0)  # 右の点
+    @points << srect.center + Stylet::Vector.new(+srect.w / 4, 0)  # 右の点
 
     @rot = Stylet::Fee.clock(10, 30)
   end
@@ -73,7 +73,7 @@ class App < Stylet::Base
       end
     end
     @rot += (1.0 / 24) * (button.btB.repeat_0or1 - button.btC.repeat_0or1)
-    draw_vector(Stylet::Vector.angle_at(@rot).scale(32), :origin => @points[0])
+    draw_vector(vec2.angle_at(@rot).scale(32), :origin => @points[0])
 
     # 球発射
     if frame_counter.modulo(30) == 1

@@ -21,10 +21,10 @@ class Koch < Stylet::Base
     @vertex_n.times.each{|i|
       get_pos = proc {|i|
         a = (1.0 * frame_counter / (60 * 60)) + (1.0 / @vertex_n * i)
-        Stylet::Vector.angle_at(a * 7, a * 8) * rect.h * 0.4
+        vec2.angle_at(a * 7, a * 8) * srect.h * 0.4
       }
-      # draw_vector get_pos[i], :origin => rect.center
-      koch_draw(rect.center + get_pos[i], rect.center + get_pos[i.next], @power)
+      # draw_vector get_pos[i], :origin => srect.center
+      koch_draw(srect.center + get_pos[i], srect.center + get_pos[i.next], @power)
     }
     vputs "power: #{@power}"
     vputs "vertex_n: #{@vertex_n}"

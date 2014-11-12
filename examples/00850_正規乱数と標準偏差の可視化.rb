@@ -43,7 +43,7 @@ class App < Stylet::Base
   end
 
   def bar(pos, length, color = :white)
-    p0 = rect.center + Stylet::Vector.new(pos * 4, rect.h / 4)
+    p0 = srect.center + Stylet::Vector.new(pos * 4, srect.h / 4)
     p1 = p0 + Stylet::Vector.new(0, -length * 8)
     draw_line(p0, p1, :color => color)
   end

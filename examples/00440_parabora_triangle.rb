@@ -5,20 +5,23 @@
 require_relative "helper"
 
 class Ball
+  include Stylet::Delegators
+
   def initialize(p0, speed, friction)
     @p0 = p0
     @speed = speed
     @friction = friction
+    @radius = 16
   end
 
   def update
     @speed += @friction
     @p0 += @speed
-    Stylet.context.draw_triangle(@p0, :radius => 16, :angle => 1.0 / 64 * Stylet.context.frame_counter)
+    draw_triangle(@p0, :radius => @radius, :angle => 1.0 / 64 * frame_counter)
   end
 
   def screen_out?
-    @speed.y > 0 && @p0.y > (Stylet.context.rect.max_y + @radius)
+    @speed.y > 0 && @p0.y > (srect.max_y + @radius)
   end
 end
 

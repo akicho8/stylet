@@ -6,9 +6,9 @@ module Stylet
   module DrawSupport
     # 多角形の描画
     #   四角形
-    #     win.draw_circle(win.rect.center, :vertex => 4)
+    #     win.draw_circle(win.srect.center, :vertex => 4)
     #   三角形で頂点の向きは時計の6時で半径256ピクセル
-    #     win.draw_circle(win.rect.center, :vertex => 3, :angle => Fee.r90, :radius => 256)
+    #     win.draw_circle(win.srect.center, :vertex => 3, :angle => Fee.r90, :radius => 256)
     def draw_circle(p0, options = {})
       options = {
         :radius => 64,       # 半径
@@ -56,9 +56,9 @@ end
 if $0 == __FILE__
   require_relative "../../stylet"
   Stylet::Base.run do
-    draw_circle(rect.center)
-    draw_triangle(rect.center)
-    draw_square(rect.center)
-    draw_angle_rect(rect.center)
+    draw_circle(srect.center)
+    draw_triangle(srect.center)
+    draw_square(srect.center)
+    draw_angle_rect(srect.center)
   end
 end

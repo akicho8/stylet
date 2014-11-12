@@ -5,10 +5,10 @@ class App
   def collection
     [
       [
-        Stylet::Vector.new(rect.min_x + rect.w / 8, rect.hy),              # 開始
-        Stylet::Vector.new(rect.min_x + rect.w / 4, rect.hy - rect.h / 4), # 制御(右)
-        Stylet::Vector.new(rect.max_x - rect.w / 4, rect.hy - rect.h / 4), # 制御(左)
-        Stylet::Vector.new(rect.max_x - rect.w / 8, rect.hy),              # 終了
+        Stylet::Vector.new(srect.min_x + srect.w / 8, srect.hy),              # 開始
+        Stylet::Vector.new(srect.min_x + srect.w / 4, srect.hy - srect.h / 4), # 制御(右)
+        Stylet::Vector.new(srect.max_x - srect.w / 4, srect.hy - srect.h / 4), # 制御(左)
+        Stylet::Vector.new(srect.max_x - srect.w / 8, srect.hy),              # 終了
       ]
     ]
   end

@@ -12,7 +12,7 @@ class App < Stylet::Base
   end
 
   update do
-    SDL::Surface.blit(@image, (frame_counter / 8).modulo(4) * 16, 0, 16, 16, screen, *rect.center)
+    SDL::Surface.blit(@image, (frame_counter / 8).modulo(4) * 16, 0, 16, 16, screen, *srect.center)
   end
 
   run

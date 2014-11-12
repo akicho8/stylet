@@ -12,7 +12,7 @@ class App < Stylet::Base
 
     @radius = 64                # 円の半径
 
-    @pos = Stylet::Vector.new(rect.center.x, rect.max_y)           # 物体初期位置
+    @pos = Stylet::Vector.new(srect.center.x, srect.max_y)           # 物体初期位置
     @speed = Stylet::Vector.new(rand(-2.0..2.0), rand(-15.0..-12)) # 速度ベクトル
     @gravity = Stylet::Vector.new(0, 0.220)                        # 重力
   end

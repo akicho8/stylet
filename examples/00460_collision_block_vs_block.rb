@@ -11,14 +11,14 @@ class App < Stylet::Base
     self.title = "ブロックとブロックの当たり判定"
 
     # A
-    @pA = rect.center.clone                              # 点
+    @pA = srect.center.clone                              # 点
     @rA = Stylet::Rect4.centered_create(40, 40)                # 大きさ
-    @sA = Stylet::Vector.angle_at(Stylet::Fee.degree(180 + 90)) # 速度
+    @sA = vec2.angle_at(Stylet::Fee.degree(180 + 90)) # 速度
 
     # B
-    @pB = rect.center.clone                        # 点
+    @pB = srect.center.clone                        # 点
     @rB = Stylet::Rect4.centered_create(100, 60)         # 大きさ
-    @sB = Stylet::Vector.angle_at(Stylet::Fee.degree(45)) # 速度
+    @sB = vec2.angle_at(Stylet::Fee.degree(45)) # 速度
 
     @speed = 100    # 速度ベクトル 1.0 を画面上では何ドットで表わすか？
     @max_length = 1 # どれだけめり込んだら当たったとみなすか？

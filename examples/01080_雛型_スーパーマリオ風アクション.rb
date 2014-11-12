@@ -13,11 +13,11 @@ module Utils
   extend self
 
   def draw_vline(x)
-    draw_line(vec2[x, rect.min_y], vec2[x, rect.max_y])
+    draw_line(vec2[x, srect.min_y], vec2[x, srect.max_y])
   end
 
   def draw_hline(y)
-    draw_line(vec2[rect.min_x, y], vec2[rect.max_x, y])
+    draw_line(vec2[srect.min_x, y], vec2[srect.max_x, y])
   end
 end
 
@@ -67,7 +67,7 @@ class BlockBase < ObjectX
     if @state == :fall_down
       @speed.y += Stylet.context.gravity
       @pos += @speed
-      if @pos.y >= (Stylet.context.camera.y + Stylet.context.rect.half_h + @rc.half_h)
+      if @pos.y >= (Stylet.context.camera.y + Stylet.context.srect.half_h + @rc.half_h)
         Stylet.context.kill_task self
       end
     end
@@ -445,7 +445,7 @@ class PlayerBase < ObjectX
     begin
       # マリオブラザーズ風の折り返し
       if false
-        @pos.x = @pos.x.modulo(rect.w)
+        @pos.x = @pos.x.modulo(srect.w)
       end
 
       # 地面
@@ -488,7 +488,7 @@ class PlayerBase < ObjectX
     # カメラの壁
     # スト2でお互いが目一杯離れているときテレビ画面の端を越えられないのはこの補正があるから
     if Stylet.context.state != :edit_mode
-      if @pos.x < (v = (Stylet.context.camera.x - Stylet.context.rect.half_w + rc.half_w)) || @pos.x > (v = (Stylet.context.camera.x + Stylet.context.rect.half_w - rc.half_w))
+      if @pos.x < (v = (Stylet.context.camera.x - Stylet.context.srect.half_w + rc.half_w)) || @pos.x > (v = (Stylet.context.camera.x + Stylet.context.srect.half_w - rc.half_w))
         @pos.x = v
         @speed.x = -@speed.x * @wall_rebound
       end
@@ -506,8 +506,8 @@ class PlayerBase < ObjectX
 
   def draw_texture
     screen.put(@image, *(@pos - Stylet.context.camera_offset - @rc.half_wh))
-    # screen.put(@image, *(v - vec2.new(rect.w, 0)))
-    # screen.put(@image, *(v + vec2.new(rect.w, 0)))
+    # screen.put(@image, *(v - vec2.new(srect.w, 0)))
+    # screen.put(@image, *(v + vec2.new(srect.w, 0)))
   end
 
   # ブロックまたは地面の上にいるときの処理
@@ -601,7 +601,7 @@ class App < Stylet::Base
 
   setup do
     @gravity = 0.4                                  # 重力
-    @virtual_rect = rect2[rect.w * 2, rect.h * 2]   # ゲーム内での広さ
+    @virtual_rect = rect2[srect.w * 2, srect.h * 2]   # ゲーム内での広さ
     @ground_y = @virtual_rect.h - 32                # 地面
 
     @wall_scroll_distance_x = 240  # 壁にどれだけ近づいたらスクロールするか
@@ -612,8 +612,8 @@ class App < Stylet::Base
 
     # カメラの位置
     @camera = vec2.zero
-    @camera.x = rect.center.x
-    @camera.y = @virtual_rect.h - rect.center.y
+    @camera.x = srect.center.x
+    @camera.y = @virtual_rect.h - srect.center.y
     @camera_target = vec2.zero
 
     # キャラとの反発
@@ -623,7 +623,7 @@ class App < Stylet::Base
     @head_jump_mul     = 1.3    # 相手に衝突して跳ねたときのスピードベクトルの倍率(何度も頭上ジャンプすれば高く飛べる)
     @vertical_correction = 0.6  # 垂直補正。キャラと接触したとき12時に方向に補正する割合(1.0なら常に真上にジャンプする)
 
-    # @blocks = [SoftBlock.new(pos: rect.center, rc: Stylet::Rect4.centered_create(16, 16))]
+    # @blocks = [SoftBlock.new(pos: srect.center, rc: Stylet::Rect4.centered_create(16, 16))]
 
     # @blocks = (n = 8).times.collect do |i|
     #   SoftBlock.new(pos: vec2.new(rand(@virtual_rect.w), rand(virtual_rect.h)), rc: Stylet::Rect4.centered_create(32, 32))
@@ -631,7 +631,7 @@ class App < Stylet::Base
 
     # @blocks = 3.times.flat_map{|j|
     #   (n = 14).times.collect do |i|
-    #     SoftBlock.new(pos: vec2.new(@virtual_rect.w / (n - 1) * (i + (j * 0.5)), @virtual_rect.h - rect.center.y - 100 + j * 120))
+    #     SoftBlock.new(pos: vec2.new(@virtual_rect.w / (n - 1) * (i + (j * 0.5)), @virtual_rect.h - srect.center.y - 100 + j * 120))
     #   end
     # }
 
@@ -685,8 +685,8 @@ class App < Stylet::Base
     if @state == :init
       if @state_counter == 0
         # @players.each{|player|kill_task(player)}
-        # task_set Mario.new(pos: vec2[rect.half_w - rect.half_w * 0.1, @ground_y - 32])
-        # task_set Luigi.new(pos: vec2[rect.half_w + rect.half_w * 0.1, @ground_y - 32])
+        # task_set Mario.new(pos: vec2[srect.half_w - srect.half_w * 0.1, @ground_y - 32])
+        # task_set Luigi.new(pos: vec2[srect.half_w + srect.half_w * 0.1, @ground_y - 32])
         @state = :start
         @state_counter = 0
       end
@@ -932,10 +932,10 @@ class App < Stylet::Base
 
   def scroll_line_check
     return if Stylet.production
-    Utils.draw_vline(rect.min_x + @wall_scroll_distance_x)
-    Utils.draw_vline(rect.max_x - @wall_scroll_distance_x)
-    Utils.draw_hline(rect.min_y + @wall_scroll_distance_y)
-    Utils.draw_hline(rect.max_y - @wall_scroll_distance_y)
+    Utils.draw_vline(srect.min_x + @wall_scroll_distance_x)
+    Utils.draw_vline(srect.max_x - @wall_scroll_distance_x)
+    Utils.draw_hline(srect.min_y + @wall_scroll_distance_y)
+    Utils.draw_hline(srect.max_y - @wall_scroll_distance_y)
   end
 
   # スクロールの計算
@@ -957,14 +957,14 @@ class App < Stylet::Base
 
     # 強制スクロールする例(左右に揺らす例)
     if false
-      movable_width = virtual_rect.w - rect.w # カメラの移動可能な幅
+      movable_width = virtual_rect.w - srect.w # カメラの移動可能な幅
       @camera.x = virtual_rect.half_w + Stylet::Fee.rsin(1.0 / 512 * frame_counter) * movable_width / 2
     end
 
     # キャラに合わせてスクロールする例
     if true
       # 左
-      a = @camera.x - rect.half_w      # スクリーン左端→仮想座標変換
+      a = @camera.x - srect.half_w      # スクリーン左端→仮想座標変換
       b = @camera_target.x - a    # 画面左端から距離
       d = @wall_scroll_distance_x - b
       if d > 0
@@ -972,7 +972,7 @@ class App < Stylet::Base
       end
 
       # 右
-      a = @camera.x + rect.half_w      # スクリーン右端の、仮想画面でのX
+      a = @camera.x + srect.half_w      # スクリーン右端の、仮想画面でのX
       b = a - @camera_target.x         # 画面右端との距離
       d = @wall_scroll_distance_x - b # 画面右端
       if d > 0
@@ -980,7 +980,7 @@ class App < Stylet::Base
       end
 
       # 下
-      a = @camera.y + rect.half_h      # スクリーン右端の、仮想画面でのX
+      a = @camera.y + srect.half_h      # スクリーン右端の、仮想画面でのX
       b = a - @camera_target.y         # 画面右端との距離
       d = @wall_scroll_distance_y - b # 画面右端
       if d > 0
@@ -988,7 +988,7 @@ class App < Stylet::Base
       end
 
       # 上
-      a = @camera.y - rect.half_h      # スクリーン左端→仮想座標変換
+      a = @camera.y - srect.half_h      # スクリーン左端→仮想座標変換
       b = @camera_target.y - a    # 画面左端から距離
       d = @wall_scroll_distance_y - b
       if d > 0
@@ -998,17 +998,17 @@ class App < Stylet::Base
 
     # スト2のように画面端ではスクロールを止める
     if true
-      if @camera.x < rect.half_w
-        @camera.x = rect.half_w
+      if @camera.x < srect.half_w
+        @camera.x = srect.half_w
       end
-      if @camera.x > @virtual_rect.w - rect.half_w
-        @camera.x = @virtual_rect.w - rect.half_w
+      if @camera.x > @virtual_rect.w - srect.half_w
+        @camera.x = @virtual_rect.w - srect.half_w
       end
-      if @camera.y < rect.half_h
-        @camera.y = rect.half_h
+      if @camera.y < srect.half_h
+        @camera.y = srect.half_h
       end
-      if @camera.y > @virtual_rect.h - rect.half_h
-        @camera.y = @virtual_rect.h - rect.half_h
+      if @camera.y > @virtual_rect.h - srect.half_h
+        @camera.y = @virtual_rect.h - srect.half_h
       end
     end
 
@@ -1016,28 +1016,28 @@ class App < Stylet::Base
   end
 
   def active_x_range
-    (@camera.x - rect.half_w - @view_play)...(@camera.x + rect.half_w + @view_play)
+    (@camera.x - srect.half_w - @view_play)...(@camera.x + srect.half_w + @view_play)
   end
 
   def active_y_range
-    (@camera.y - rect.half_h - @view_play)...(@camera.y + rect.half_h + @view_play)
+    (@camera.y - srect.half_h - @view_play)...(@camera.y + srect.half_h + @view_play)
   end
 
   # カメラの左上が指すゲーム内X
   def camera_offset
-    @camera - rect.half_wh
+    @camera - srect.half_wh
   end
 
   def background_clear
     # # 多重スクロールする場合は奥にあるものから順に表示していく
     # if @scene_bg2
-    #   ox = (@scene_bg2.w - rect.w).to_f / (virtual_rect.w - rect.w) * camera_offset.x
-    #   oy = (@scene_bg2.h - rect.h).to_f / (virtual_rect.h - rect.h) * camera_offset.y
-    #   SDL::Surface.blit(@scene_bg2, ox, oy, rect.w, rect.h / 2, @screen, 0, 0)
+    #   ox = (@scene_bg2.w - srect.w).to_f / (virtual_rect.w - srect.w) * camera_offset.x
+    #   oy = (@scene_bg2.h - srect.h).to_f / (virtual_rect.h - srect.h) * camera_offset.y
+    #   SDL::Surface.blit(@scene_bg2, ox, oy, srect.w, srect.h / 2, @screen, 0, 0)
     # end
     #
     if @bg_mode == :background
-      draw_rect(rect, :color => :background, :fill => true)
+      draw_rect(srect, :color => :background, :fill => true)
     end
     if @bg_mode == :image
       # カメラと背景画像の関係
@@ -1048,17 +1048,17 @@ class App < Stylet::Base
       # ゲーム内画面幅1280-640 : 画像幅960-640 = カメラ左上座標 : ofs
       # が正しい。640は画面(カメラ)の幅
       # これで右端が画像の右端と一致する
-      ox = (@scene_main_bg.w - rect.w).to_f / (virtual_rect.w - rect.w) * camera_offset.x
-      oy = (@scene_main_bg.h - rect.h).to_f / (virtual_rect.h - rect.h) * camera_offset.y
+      ox = (@scene_main_bg.w - srect.w).to_f / (virtual_rect.w - srect.w) * camera_offset.x
+      oy = (@scene_main_bg.h - srect.h).to_f / (virtual_rect.h - srect.h) * camera_offset.y
       begin
-        SDL::Surface.blit(@scene_main_bg, ox, oy, rect.w, rect.h, @screen, 0, 0)
+        SDL::Surface.blit(@scene_main_bg, ox, oy, srect.w, srect.h, @screen, 0, 0)
       rescue RangeError
       end
     end
     if @bg_mode == :ff_effect
       # FF7で敵に遭遇したときの画面エフェクト
       screen.set_alpha(SDL::SRCALPHA, 128)
-      SDL::Surface.transform_blit(screen, screen, 1, 1.05, 1.05, *rect.center, *rect.center, SDL::Surface::TRANSFORM_AA|SDL::Surface::TRANSFORM_SAFE)
+      SDL::Surface.transform_blit(screen, screen, 1, 1.05, 1.05, *srect.center, *srect.center, SDL::Surface::TRANSFORM_AA|SDL::Surface::TRANSFORM_SAFE)
     end
   end
 
@@ -1210,8 +1210,8 @@ class App < Stylet::Base
         task_set Coin.new(pos: vec2[32 / 2, @ground_y - 32 / 2])
       end
       if @players.empty?
-        task_set Mario.new(pos: vec2[rect.half_w - rect.half_w * 0.1, @ground_y - 32])
-        task_set Luigi.new(pos: vec2[rect.half_w + rect.half_w * 0.1, @ground_y - 32])
+        task_set Mario.new(pos: vec2[srect.half_w - srect.half_w * 0.1, @ground_y - 32])
+        task_set Luigi.new(pos: vec2[srect.half_w + srect.half_w * 0.1, @ground_y - 32])
       end
     end
 

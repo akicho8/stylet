@@ -12,6 +12,6 @@ Stylet.run(:title => "Vector#rotate系の二つのメソッドの確認") do
   vputs(pos1 == pos2)
   vputs "1: #{pos1}"
   vputs "2: #{pos2}"
-  draw_triangle(rect.center + pos1, :radius => 64, :angle => pos1.angle)
-  draw_triangle(rect.center + pos2, :radius => 64, :angle => pos2.angle)
+  draw_triangle(srect.center + pos1, :radius => 64, :angle => pos1.angle)
+  draw_triangle(srect.center + pos2, :radius => 64, :angle => pos2.angle)
 end

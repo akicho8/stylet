@@ -2,20 +2,34 @@
 #
 # 状態遷移管理
 #
-#   state = State.new(:idle)
-#   state.loop_in do
-#     case state.key
+#   @state = State.new(:idle)
+#   @state.loop_in do
+#     case @state.key
 #     when :idle
-#       if state.counter_at?(1)
-#         state.jump_to :active
+#       if @state.start_at?
+#         @state.jump_to :active
 #       end
 #     when :active
-#       if state.start?
-#       end
-#       if state.counter_at?(1)
+#       if @state.start?
 #       end
 #     end
 #   end
+#
+#   状態が多い場合や継承が重要な場合などは Pluggable Selector パターンにする
+#
+#     @state = State.new(:idle)
+#     @state.loop_in { send @state.key }
+#
+#     def idle
+#       if @state.start_at?
+#         @state.jump_to :active
+#       end
+#     end
+#
+#     def active
+#       if @state.start?
+#       end
+#     end
 #
 class State
   attr_reader :counter, :key

@@ -4,7 +4,7 @@ require_relative "helper"
 
 class App < Stylet::Base
   update do
-    vec = mouse.point - rect.center
+    vec = mouse.point - srect.center
     vputs "vec: #{vec}"
     x, y = *vec
 

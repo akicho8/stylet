@@ -17,7 +17,7 @@ class Bullet
   def update
     @speed += @accel
     @radius += @speed
-    @p1 = @point + Stylet::Vector.angle_at(@angle) * @radius
+    @p1 = @point + vec2.angle_at(@angle) * @radius
     draw_line(@p0, @p1)
     @p0 = @p1
   end

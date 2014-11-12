@@ -22,12 +22,12 @@ class App < Stylet::Base
       f = Pathname.glob("assets/bg*.png").to_a.sample
       s = SDL::Surface.load(f.to_s)
       image = s.display_format
-      SDL::Surface.transform_draw(image, screen, 0, 1.00, 1.00, image.w / 2, image.h / 2, *rect.center, SDL::Surface::TRANSFORM_AA)
+      SDL::Surface.transform_draw(image, screen, 0, 1.00, 1.00, image.w / 2, image.h / 2, *srect.center, SDL::Surface::TRANSFORM_AA)
     end
   end
 
   def background_clear
-    SDL::Surface.transform_blit(screen, screen, 2, 1.05, 1.05, *rect.center, *rect.center, SDL::Surface::TRANSFORM_AA|SDL::Surface::TRANSFORM_SAFE)
+    SDL::Surface.transform_blit(screen, screen, 2, 1.05, 1.05, *srect.center, *srect.center, SDL::Surface::TRANSFORM_AA|SDL::Surface::TRANSFORM_SAFE)
   end
 
   run

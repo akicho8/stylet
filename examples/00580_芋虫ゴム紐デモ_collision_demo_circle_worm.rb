@@ -26,11 +26,11 @@ class Joint
         # 0.1 ならゆっくりと自分に近付いてくる
         len = gap * Stylet.context.hard_level
         dir = @target.p0.angle_to(@p0)
-        @target.p0 += Stylet::Vector.angle_at(dir) * len
+        @target.p0 += vec2.angle_at(dir) * len
 
         # 固さ 1.0 のときは次のように p0 の方から相手をひっぱる方法でもよいが前者の方が、ゆっくり移動させるなど応用が効く
         # dir = @p0.angle_to(@target.p0)
-        # @target.p0 += Stylet::Vector.angle_at(dir) * Stylet.context.magnitude
+        # @target.p0 += vec2.angle_at(dir) * Stylet.context.magnitude
       end
     end
 
@@ -59,7 +59,7 @@ class App < Stylet::Base
   attr_reader :hard_level
 
   setup do
-    @objects = Array.new(42){|i|Joint.new(i, rect.center.clone)}
+    @objects = Array.new(42){|i|Joint.new(i, srect.center.clone)}
     @cursor.display = false     # 三角カーソル非表示
 
     @body_display = true # 胴体描画モード

@@ -21,11 +21,11 @@ class App < Stylet::Base
   setup do
     self.title = "振り子"
 
-    @p0 = rect.center + Stylet::Vector.new(0, -rect.h * 0)   # 円の中心
+    @p0 = srect.center + Stylet::Vector.new(0, -srect.h * 0)   # 円の中心
     @dir1 = Stylet::Fee.clock(1) # 角度
     @speed = 0                   # 角速度
     @friction = 0.0              # 摩擦(0.0:なし 1.0:最大)
-    @radius = rect.hy * 0.5 # 糸の長さ
+    @radius = srect.hy * 0.5 # 糸の長さ
     @ball_radius = 32            # 鉄球自体の半径
     @dir2 = nil                  # 振り子の中心(p0)からの重力反映座標(pB)の角度
     @gravity = Stylet::Vector.new(0, 1)   # 重力加速度(整数で指定すること)
@@ -53,7 +53,7 @@ class App < Stylet::Base
     end
 
     # 鉄球の座標(pA)を求める
-    @pA = @p0 + Stylet::Vector.angle_at(@dir1).scale(@radius)
+    @pA = @p0 + vec2.angle_at(@dir1).scale(@radius)
 
     # 鉄球の座標から重力を反映した座標(pB)を求める(pBを経由しなくてもpCは求まる)
     @pB = @pA + @gravity
@@ -137,8 +137,8 @@ class App < Stylet::Base
   def rad90_line
     # draw_line(@pB, @pC)
     # _r = 256
-    # p2 = @pA + Stylet::Vector.angle_at(@dir1 - Stylet::Fee.r90) * _r
-    # p3 = @pA + Stylet::Vector.angle_at(@dir1 + Stylet::Fee.r90) * _r
+    # p2 = @pA + vec2.angle_at(@dir1 - Stylet::Fee.r90) * _r
+    # p3 = @pA + vec2.angle_at(@dir1 + Stylet::Fee.r90) * _r
     # draw_line(p2, p3)
   end
 

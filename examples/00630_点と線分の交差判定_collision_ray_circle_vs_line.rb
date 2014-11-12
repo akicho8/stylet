@@ -17,14 +17,14 @@ class App < Stylet::Base
     @ray_mode = false          # true:ドット false:円
     @reflect_mode = true       # true:反射する
 
-    @p0 = rect.center.clone                # 自機の位置ベクトル
+    @p0 = srect.center.clone                # 自機の位置ベクトル
     @dot_radius = 3                        # 点の大きさ
     @vertex = 32
     @vS = Stylet::Vector.new(0.84, -0.10).normalize  # 速度ベクトル
 
     # 線分AB
-    @pA = rect.center + Stylet::Vector.new(rect.w * 0.3, -rect.h * 0.30)
-    @pB = rect.center + Stylet::Vector.new(rect.w * 0.0, +rect.h * 0.30)
+    @pA = srect.center + Stylet::Vector.new(srect.w * 0.3, -srect.h * 0.30)
+    @pB = srect.center + Stylet::Vector.new(srect.w * 0.0, +srect.h * 0.30)
 
     mode_init
   end
@@ -116,7 +116,7 @@ class App < Stylet::Base
     # t2 と C2 の取得
     begin
       # 自機から面と垂直な線を出して面と交差するか調べる(ここが点の場合と違う)
-      @vP = Stylet::Vector.angle_at(@normal.reverse.angle).scale(@radius) # スケールは半径と同じ長さとする
+      @vP = vec2.angle_at(@normal.reverse.angle).scale(@radius) # スケールは半径と同じ長さとする
       draw_vector(@vP, :origin => @p0)
       vputs "vP", :vector => @vP + @p0
 

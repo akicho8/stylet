@@ -20,7 +20,7 @@ class Tank
 
     @name         = name
     @pos          = pos                        # 車体の位置
-    @body_dir     = @pos.angle_to(rect.center) # 車体の進む方向
+    @body_dir     = @pos.angle_to(srect.center) # 車体の進む方向
     @handle_dir   = 0                          # ハンドル角度
     @accel        = 0                          # 加速度
     @speed        = 0                          # 速度
@@ -98,7 +98,7 @@ class Tank
     # 移動
     begin
       @old_pos = @pos.clone
-      @pos += Stylet::Vector.angle_at(@body_dir) * @speed
+      @pos += vec2.angle_at(@body_dir) * @speed
     end
 
     # 砲台
@@ -249,7 +249,7 @@ class Bullet
 
   def update
     @radius += @speed
-    _pos = @pos + Stylet::Vector.angle_at(@dir) * @radius
+    _pos = @pos + vec2.angle_at(@dir) * @radius
     Stylet.context.draw_triangle(_pos, :radius => @size, :angle => @dir, :vertex => 8)
     rc = Stylet::Rect4.centered_create(@size * 1.5).add_vector(_pos)
     Stylet.context.draw_rect(rc) if $DEBUG
@@ -259,7 +259,7 @@ class Bullet
         final
       end
     end
-    if Stylet::CollisionSupport.rect_out?(Stylet.context.rect, _pos)
+    if Stylet::CollisionSupport.rect_out?(Stylet.context.srect, _pos)
       final
     end
   end
@@ -273,6 +273,8 @@ class Bullet
 end
 
 class Missile
+  include Stylet::Delegators
+
   attr_reader :death
 
   def initialize(tank, dir)
@@ -292,7 +294,7 @@ class Missile
     if @tank.target.life >= 1
       a = @pos.angle_to(@tank.target.pos)
     else
-      a = @pos.angle_to(Stylet.context.rect.center)
+      a = @pos.angle_to(srect.center)
     end
     d = a.modulo(1.0) - @dir.modulo(1.0)
     if d < -1.0 / 2
@@ -304,7 +306,7 @@ class Missile
     # @speed += 0.01
     @speed = Stylet::Etc.clamp(@speed, (1..3))
     @radius += @speed
-    _pos = @pos + Stylet::Vector.angle_at(@dir) * @radius
+    _pos = @pos + vec2.angle_at(@dir) * @radius
     Stylet.context.draw_triangle(_pos, :radius => @size, :angle => @dir)
     rc = Stylet::Rect4.centered_create(@size * 1.5).add_vector(_pos)
     Stylet.context.draw_rect(rc) if $DEBUG
@@ -314,7 +316,7 @@ class Missile
         final
       end
     end
-    if Stylet::CollisionSupport.rect_out?(Stylet.context.rect, _pos)
+    if Stylet::CollisionSupport.rect_out?(Stylet.context.srect, _pos)
       final
     end
   end
@@ -327,6 +329,8 @@ class Missile
 end
 
 class Dust
+  include Stylet::Delegators
+
   attr_reader :death
 
   def initialize(pos, dir, speed, friction, radius)
@@ -343,8 +347,8 @@ class Dust
   def update
     @speed *= @friction
     @radius += @speed
-    _pos = @pos + Stylet::Vector.angle_at(@dir) * @radius
-    Stylet.context.draw_triangle(_pos, :radius => @size, :angle => @dir)
+    _pos = @pos + vec2.angle_at(@dir) * @radius
+    draw_triangle(_pos, :radius => @size, :angle => @dir)
     if @speed.abs <= 0.03
       final
     end
@@ -371,8 +375,8 @@ class App < Stylet::Base
   def reset_objects
     @objects = []
     @ships = []
-    @tank1 = Tank1.new("1P", Stylet::Vector.new(rect.hx - rect.hx * 0.8, rect.hy))
-    @tank2 = Tank2.new("2P", Stylet::Vector.new(rect.hx + rect.hx * 0.8, rect.hy))
+    @tank1 = Tank1.new("1P", Stylet::Vector.new(srect.hx - srect.hx * 0.8, srect.hy))
+    @tank2 = Tank2.new("2P", Stylet::Vector.new(srect.hx + srect.hx * 0.8, srect.hy))
     @tank1.target = @tank2
     @tank2.target = @tank1
     @ships << @tank1

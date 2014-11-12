@@ -7,13 +7,13 @@ class App
   def collection
     [
       [
-        rect.center + Stylet::Vector.new(-rect.w / 4, rect.h / 4),
-        rect.center + Stylet::Vector.new(0, -rect.h / 4),
-        rect.center + Stylet::Vector.new(rect.w / 4, rect.h / 4),
+        srect.center + Stylet::Vector.new(-srect.w / 4, srect.h / 4),
+        srect.center + Stylet::Vector.new(0, -srect.h / 4),
+        srect.center + Stylet::Vector.new(srect.w / 4, srect.h / 4),
       ], [
-        rect.center + Stylet::Vector.new(-100, +100),
-        rect.center + Stylet::Vector.zero,
-        rect.center + Stylet::Vector.new(+100, -100),
+        srect.center + Stylet::Vector.new(-100, +100),
+        srect.center + Stylet::Vector.zero,
+        srect.center + Stylet::Vector.new(+100, -100),
       ],
     ]
   end

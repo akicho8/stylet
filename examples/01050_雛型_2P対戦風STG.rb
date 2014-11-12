@@ -2,6 +2,7 @@
 require "./setup"
 
 class GunShip
+  include Stylet::Delegators
   include Stylet::Input::Base
 
   attr_reader :pos
@@ -26,13 +27,13 @@ class GunShip
     key_counter_update_all
 
     if dir = axis_angle
-      next_pos = @pos + Stylet::Vector.angle_at(dir) * @speed
-      if Stylet::CollisionSupport.rect_in?(Stylet.context.rect, next_pos)
+      next_pos = @pos + vec2.angle_at(dir) * @speed
+      if Stylet::CollisionSupport.rect_in?(Stylet.context.srect, next_pos)
         @pos = next_pos
       end
     end
 
-    Stylet.context.draw_triangle(@pos, :radius => @size, :angle => @pos.angle_to(@target.pos))
+    draw_triangle(@pos, :radius => @size, :angle => @pos.angle_to(@target.pos))
   end
 end
 
@@ -68,6 +69,8 @@ class GunShip2 < GunShip
 end
 
 class Bullet
+  include Stylet::Delegators
+
   def initialize(pos, dir, speed)
     @pos = pos
     @dir = dir
@@ -78,12 +81,12 @@ class Bullet
   end
 
   def screen_out?
-    Stylet::CollisionSupport.rect_out?(Stylet.context.rect, @pos) || @radius < 0
+    Stylet::CollisionSupport.rect_out?(srect, @pos) || @radius < 0
   end
 
   def update
     @radius += @speed
-    Stylet.context.draw_triangle(@pos + Stylet::Vector.angle_at(@dir) * @radius, :radius => @size, :angle => @dir)
+    draw_triangle(@pos + vec2.angle_at(@dir) * @radius, :radius => @size, :angle => @dir)
   end
 end
 
@@ -93,8 +96,8 @@ class App < Stylet::Base
   setup do
     self.title = "二人対戦風シューティング"
     @objects = []
-    ship1 = GunShip1.new(Stylet::Vector.new(rect.hx, rect.hy - rect.hy * 0.8))
-    ship2 = GunShip2.new(Stylet::Vector.new(rect.hx, rect.hy + rect.hy * 0.8))
+    ship1 = GunShip1.new(Stylet::Vector.new(srect.hx, srect.hy - srect.hy * 0.8))
+    ship2 = GunShip2.new(Stylet::Vector.new(srect.hx, srect.hy + srect.hy * 0.8))
     ship1.target = ship2
     ship2.target = ship1
     @objects << ship1

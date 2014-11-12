@@ -11,7 +11,7 @@ module Stylet
             :vputs,
             :vputs_vector,
             :dputs,
-            :rect,
+            :srect,
             :frame_counter,
             :joys,
             :draw_dot,

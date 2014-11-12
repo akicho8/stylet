@@ -92,7 +92,7 @@ class App < Stylet::Base
   attr_reader :radius
 
   setup do
-    @objects << Ball.new(self, rect.center)
+    @objects << Ball.new(self, srect.center)
     @radius = 64
   end
 

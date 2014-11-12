@@ -8,15 +8,6 @@ module Helper
 
     included do
       attr_accessor :dragging_current
-
-      # setup do
-      #   # @dpoints << rect.center + Stylet::Vector.new(-rect.w / 4, rect.h / 4)
-      #   # @dpoints << rect.center + Stylet::Vector.new(0, -rect.h / 4)
-      #   # @dpoints << rect.center + Stylet::Vector.new(rect.w / 4, rect.h / 4)
-      # end
-
-      # update do
-      # end
     end
 
     def update_movable_points(points, options = {})
@@ -62,9 +53,9 @@ if $0 == __FILE__
 
     setup do
       @points = []
-      @points << rect.center + Stylet::Vector.new(-rect.w / 4, rect.h / 4)
-      @points << rect.center + Stylet::Vector.new(0, -rect.h / 4)
-      @points << rect.center + Stylet::Vector.new(rect.w / 4, rect.h / 4)
+      @points << srect.center + Stylet::Vector.new(-srect.w / 4, srect.h / 4)
+      @points << srect.center + Stylet::Vector.new(0, -srect.h / 4)
+      @points << srect.center + Stylet::Vector.new(srect.w / 4, srect.h / 4)
     end
 
     update do

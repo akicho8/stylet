@@ -2,33 +2,13 @@
 # 戦車
 require_relative "helper"
 
-class Bullet
-  def initialize(pos, dir, speed)
-    @pos = pos
-    @dir = dir
-    @speed = speed
-
-    @size = 8
-    @radius = 0
-  end
-
-  def screen_out?
-    Stylet::CollisionSupport.rect_out?(Stylet.context.rect, @pos) || @radius < 0
-  end
-
-  def update
-    @radius += @speed
-    Stylet.context.draw_triangle(@pos + Stylet::Vector.angle_at(@dir) * @radius, :radius => @size, :angle => @dir)
-  end
-end
-
 class App < Stylet::Base
   include Helper::CursorWithObjectCollection
 
   setup do
     self.title = "戦車"
 
-    @pos        = rect.center.clone    # 車体の位置
+    @pos        = srect.center.clone    # 車体の位置
     @body_dir   = Stylet::Fee.clock(0) # 車体の進む方向
     @handle_dir = 0                    # ハンドル角度
     @accel      = 0                    # 加速度
@@ -43,7 +23,7 @@ class App < Stylet::Base
   update do
     # リセット(画面外に行ってしまったとき用)
     if key_down?(SDL::Key::R)
-      @pos = rect.center.clone
+      @pos = srect.center.clone
     end
 
     # ハンドル
@@ -90,7 +70,7 @@ class App < Stylet::Base
     # 移動
     begin
       @old_pos = @pos.clone
-      @pos += Stylet::Vector.angle_at(@body_dir) * @speed
+      @pos += vec2.angle_at(@body_dir) * @speed
     end
 
     # 砲台
@@ -102,10 +82,6 @@ class App < Stylet::Base
         end
       end
     end
-
-    # if button.btA.counter.modulo(8) == 1
-    #   Stylet.context.objects << Bullet.new(@pos.clone, @pos.angle_to(@target.pos), 4.00)
-    # end
 
     draw_angle_rect(@pos, :angle => @cannon_dir, :radius => 30, :edge => 0.02)
     draw_angle_rect(@pos, :angle => @body_dir, :radius => 25, :edge => 0.09)

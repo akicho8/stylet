@@ -19,7 +19,7 @@ class Bullet
     len = (@target - @pos).length
     speed = len * 0.04
     speed = Stylet::Etc.clamp(speed, 3.0..12.0)
-    speed_vec = Stylet::Vector.angle_at(@dir) * speed
+    speed_vec = vec2.angle_at(@dir) * speed
     @pos += speed_vec
     draw_triangle(@pos, :radius => 10, :angle => @pos.angle_to(@target))
     draw_vector(speed_vec * 2, :origin => @pos) # スピードベクトルの可視化
@@ -37,7 +37,7 @@ class App < Stylet::Base
   setup do
     self.title = "俊足ミサイル"
     @points = []
-    @points << rect.center + Stylet::Vector.new(+rect.w / 4, 0)
+    @points << srect.center + Stylet::Vector.new(+srect.w / 4, 0)
   end
 
   update do

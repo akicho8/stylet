@@ -9,7 +9,7 @@ class App < Stylet::Base
   end
 
   update do
-    angle = (cursor.point - rect.center).angle
+    angle = (cursor.point - srect.center).angle
     if button.btA.press?
       @dirs[1] = angle
     end
@@ -18,10 +18,11 @@ class App < Stylet::Base
     end
 
     @dirs.each do |dir|
-      draw_vector(Stylet::Vector.angle_at(dir) * rect.height / 4, :origin => rect.center, :label => dir.round(2))
+      draw_vector(vec2.angle_at(dir) * srect.height / 4, :origin => srect.center, :label => dir.round(2))
       vputs "dir: #{dir.round(2)}"
     end
 
+    # 以下はライブラリでメソッド化してある
     # 0 は 1 に向う
     sub = @dirs[1].modulo(1.0) - @dirs[0].modulo(1.0)
     if sub < -1.0 / 2

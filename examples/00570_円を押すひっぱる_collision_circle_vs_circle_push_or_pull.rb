@@ -14,7 +14,7 @@ class App < Stylet::Base
     cursor.radius = 100
     cursor.vertex = 32
 
-    @pos = rect.center.clone
+    @pos = srect.center.clone
     @radius = 100
   end
 

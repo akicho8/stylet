@@ -28,7 +28,7 @@ module Helper
         end
 
         if angle = axis_angle
-          @cursor.point.replace(@cursor.point + Stylet::Vector.angle_at(angle) * @cursor.speed)
+          @cursor.point.replace(@cursor.point + vec2.angle_at(angle) * @cursor.speed)
         end
 
         if @cursor.display

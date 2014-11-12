@@ -8,7 +8,7 @@ class App < Stylet::Base
   setup do
     self.title = "車"
 
-    @pos        = rect.center.clone    # 車体の位置
+    @pos        = srect.center.clone    # 車体の位置
     @body_dir   = Stylet::Fee.clock(0) # 車体の進む方向
     @handle_dir = 0                    # ハンドル角度
     @accel      = 0                    # 加速度
@@ -21,7 +21,7 @@ class App < Stylet::Base
   update do
     # リセット(画面外に行ってしまったとき用)
     if key_down?(SDL::Key::R)
-      @pos = rect.center.clone
+      @pos = srect.center.clone
     end
 
     # ハンドル
@@ -66,7 +66,7 @@ class App < Stylet::Base
     # 移動
     begin
       @old_pos = @pos.clone
-      @pos += Stylet::Vector.angle_at(@body_dir) * @speed
+      @pos += vec2.angle_at(@body_dir) * @speed
     end
 
     draw_angle_rect(@pos, :angle => @body_dir, :radius => 20, :edge => 0.07)

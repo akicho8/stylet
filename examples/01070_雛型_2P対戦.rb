@@ -19,7 +19,7 @@ class Player
     key_counter_update_all
 
     if angle = axis_angle
-      @pos += Stylet::Vector.angle_at(angle) * 4
+      @pos += vec2.angle_at(angle) * 4
     end
     draw_circle(@pos, :vertex => 16, :radius => 32)
   end
@@ -52,8 +52,8 @@ class App < Stylet::Base
     SDL::Mouse.hide
 
     @players = []
-    @players << Player1.new(Stylet::Vector.new(rect.half_w - rect.half_w * 0.5, rect.half_h))
-    @players << Player2.new(Stylet::Vector.new(rect.half_w + rect.half_w * 0.5, rect.half_h))
+    @players << Player1.new(Stylet::Vector.new(srect.half_w - srect.half_w * 0.5, srect.half_h))
+    @players << Player2.new(Stylet::Vector.new(srect.half_w + srect.half_w * 0.5, srect.half_h))
     @objects += @players
   end
 

@@ -8,7 +8,7 @@
 require_relative "helper"
 require_relative "lifegame_patterns"
 
-class LifeGame < Stylet::Base
+class App < Stylet::Base
   include Helper::CursorWithObjectCollection
 
   setup do
@@ -17,8 +17,8 @@ class LifeGame < Stylet::Base
     @cell_list_index = 0
 
     @size = 12
-    @width  = rect.width / @size
-    @height = rect.height / @size
+    @width  = srect.width / @size
+    @height = srect.height / @size
 
     reset
   end
@@ -70,7 +70,7 @@ class LifeGame < Stylet::Base
       @next_matrix.each do |xy, cell|
         if cell
           v = Stylet::Vector.new(*xy)
-          v = (v * @size) + rect.to_vector + cursor.point
+          v = (v * @size) + srect.to_vector + cursor.point
           draw_rect(Stylet::Rect4.new(*v, @size, @size), :fill => true, :color => :font)
         end
       end

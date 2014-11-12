@@ -5,6 +5,9 @@
 require_relative "helper"
 
 class Ball
+  include Stylet::Delegators
+  delegate :button, :axis, :cursor, :to => "Stylet.context"
+
   REFLECT_RATIO = 1.0 # 反射係数
 
   attr_accessor :pos            # 中心点
@@ -13,7 +16,7 @@ class Ball
   attr_reader :mass             # 質量
 
   def initialize(index)
-    @pos = Stylet.context.rect.center.clone                                                           # 中心点
+    @pos = srect.center.clone                                                           # 中心点
     @speed = Stylet::Vector.new(rand(-2.0..2), rand(-8.0..-6)) # 速度ベクトル
     @gravity = Stylet::Vector.new(0, 0.20)                                                  # 重力
     if index < 4
@@ -47,7 +50,7 @@ class Ball
     # t と C の取得
     begin
       # 自機から面と垂直な線を出して面と交差するか調べる
-      @vP = Stylet::Vector.angle_at(normal.reverse.angle).scale(@radius)
+      @vP = vec2.angle_at(normal.reverse.angle).scale(@radius)
 
       # 自機の原点・速度ベクトル・法線の原点(pAでもpBでもよい)・法線ベクトルを渡すと求まる
       @t = Stylet::Vector.collision_power_scale(@pos, @vP, pA, normal)
@@ -210,15 +213,15 @@ class Ball
     # 操作
     begin
       # AとBで速度ベクトルの反映
-      @pos += @speed.scale(Stylet.context.button.btA.repeat_0or1) + @speed.scale(-Stylet.context.button.btB.repeat_0or1)
+      @pos += @speed.scale(button.btA.repeat_0or1) + @speed.scale(-button.btB.repeat_0or1)
       # Cボタンおしっぱなし + マウスで自機位置移動
-      if Stylet.context.button.btC.press?
-        @pos = Stylet.context.cursor.point.clone
+      if button.btC.press?
+        @pos = cursor.point.clone
       end
       # Dボタンおしっぱなし + マウスで自機角度変更
-      if Stylet.context.button.btD.press?
-        if Stylet.context.cursor.point != @pos
-          @speed = (Stylet.context.cursor.point - @pos).normalize * @speed.magnitude.round
+      if button.btD.press?
+        if cursor.point != @pos
+          @speed = (cursor.point - @pos).normalize * @speed.magnitude.round
         end
       end
     end
@@ -229,7 +232,7 @@ class Ball
     @pos += @speed
 
     # 自機(円)の表示
-    Stylet.context.draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => @speed.angle)
+    draw_circle(@pos, :radius => @radius, :vertex => @vertex, :angle => @speed.angle)
   end
 end
 
@@ -238,7 +241,7 @@ class App < Stylet::Base
 
   setup do
     @balls = Array.new(5){|i|Ball.new(i)}
-    @center = Stylet.context.rect.center
+    @center = srect.center
   end
 
   update do
@@ -254,14 +257,14 @@ class App < Stylet::Base
     @lines = []
     n = 5
     n.times{|i|
-      @lines << @center + Stylet::Vector.angle_at((1.0 / 128 * frame_counter) + 1.0 / n * i) * rect.h * 0.45
+      @lines << @center + vec2.angle_at((1.0 / 128 * frame_counter) + 1.0 / n * i) * srect.h * 0.45
     }
 
     # 線の準備
     @lines2 = []
     n = 3
     n.times{|i|
-      @lines2 << @center + Stylet::Vector.angle_at((1.0 / 512 * frame_counter) + 1.0 / n * i) * rect.h * 0.1
+      @lines2 << @center + vec2.angle_at((1.0 / 512 * frame_counter) + 1.0 / n * i) * srect.h * 0.1
     }
 
     # 円と円の当たり判定

@@ -47,7 +47,7 @@ class App < Stylet::Base
 
   setup do
     4.times do
-      @objects << Ball.new(self, rect.center)
+      @objects << Ball.new(self, srect.center)
     end
   end
 

@@ -28,7 +28,7 @@ class Bullet
     end
     @speed = Stylet::Etc.clamp(@speed, 1.0..8.0) # 速度が下がりすぎたり上がりすぎたりするのを防ぐ
 
-    speed_vec = Stylet::Vector.angle_at(@dir) * @speed
+    speed_vec = vec2.angle_at(@dir) * @speed
     @pos += speed_vec
     draw_triangle(@pos, :radius => 10, :angle => @dir)
     draw_vector(speed_vec * 4, :origin => @pos) # スピードベクトルの可視化
@@ -46,7 +46,7 @@ class App < Stylet::Base
   setup do
     self.title = "角度補正ミサイル"
     @points = []
-    @points << rect.center + Stylet::Vector.new(+rect.w / 4, 0)
+    @points << srect.center + Stylet::Vector.new(+srect.w / 4, 0)
   end
 
   update do

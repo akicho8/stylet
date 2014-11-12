@@ -6,8 +6,8 @@ Stylet.run do
   joys.each do |joy|
     joy.adjusted_analog_levers.each do |key, vector|
       vputs [key, vector]
-      draw_vector(vector * (rect.height / 2), :origin => rect.center, :label => vector.round(2))
+      draw_vector(vector * (srect.height / 2), :origin => srect.center, :label => vector.round(2))
     end
   end
-  draw_circle(rect.center, :vertex => 64, :radius => rect.height / 2)
+  draw_circle(srect.center, :vertex => 64, :radius => srect.height / 2)
 end

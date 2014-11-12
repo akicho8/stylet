@@ -13,7 +13,7 @@ class SprineApp < Stylet::Base
 
   setup do
     self.title = "スプライン曲線"
-    @points = 5.times.collect { rect.center + Stylet::Vector.rand * rect.height * 0.5}
+    @points = 5.times.collect { srect.center + Stylet::Vector.rand * srect.height * 0.5}
   end
 
   update do

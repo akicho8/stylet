@@ -42,7 +42,7 @@ class App < Stylet::Base
   include Helper::CursorWithObjectCollection
 
   setup do
-    @objects << Ball.new(self, rect.center.clone)
+    @objects << Ball.new(self, srect.center.clone)
     @cursor.radius = 64
     @cursor.vertex = 32
   end

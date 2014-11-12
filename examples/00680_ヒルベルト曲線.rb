@@ -23,7 +23,7 @@ class App < Stylet::Base
   update do
     @num += button.btA.repeat - button.btB.repeat
     @delta += (button.btC.repeat - button.btD.repeat)
-    @current = Stylet::Vector.new(rect.max_x - @delta, rect.min_y + @delta)
+    @current = Stylet::Vector.new(srect.max_x - @delta, srect.min_y + @delta)
     @before_point = @current.clone
     ldr(@num)
 

@@ -10,14 +10,14 @@ class App < Stylet::Base
 
   setup do
     @points = []
-    @points << Stylet::Vector.angle_at(Stylet::Fee.clock(3)).scale(100)
-    @points << Stylet::Vector.angle_at(Stylet::Fee.clock(0)).scale(100)
+    @points << vec2.angle_at(Stylet::Fee.clock(3)).scale(100)
+    @points << vec2.angle_at(Stylet::Fee.clock(0)).scale(100)
     self.title = "内積と外積"
   end
 
   update do
-    update_movable_points(@points, :origin => rect.center)
-    @points.each.with_index{|e, i| draw_vector(e, :origin => rect.center, :label => "P#{i} #{e.round(2)}") }
+    update_movable_points(@points, :origin => srect.center)
+    @points.each.with_index{|e, i| draw_vector(e, :origin => srect.center, :label => "P#{i} #{e.round(2)}") }
 
     a, b = @points
     # Bを動かしているときにはAをnormalizeした方がわかりやすい
@@ -29,8 +29,8 @@ class App < Stylet::Base
 
     vC = a.normalize * dot_product
     vD = a.normalize.rotate(Stylet::Fee.r90) * cross_product
-    draw_vector(vC, :origin => rect.center, :color => :orange)
-    draw_vector(vD, :origin => vC + rect.center, :color => :orange)
+    draw_vector(vC, :origin => srect.center, :color => :orange)
+    draw_vector(vD, :origin => vC + srect.center, :color => :orange)
   end
 
   run

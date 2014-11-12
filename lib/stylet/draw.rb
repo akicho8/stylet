@@ -5,7 +5,7 @@
 
 module Stylet
   module Draw
-    attr_reader :frame_counter, :sdl_event, :rect, :screen, :screen_active
+    attr_reader :frame_counter, :sdl_event, :srect, :screen, :screen_active
     attr_reader :fps_stat, :cpu_stat
     attr_accessor :title
 
@@ -144,7 +144,7 @@ module Stylet
         list += [
           "SE:#{SDL::Mixer.playing_channels}/#{SE.allocated_channels}",
           "M#{SDL::Mixer.play_music? ? 1 : 0}",
-          "#{@rect.w}x#{@rect.h}",
+          "#{@srect.w}x#{@srect.h}",
           app_state,
         ]
       end
@@ -172,7 +172,7 @@ module Stylet
     def screen_open
       screen_destroy            # 既存サーフェスを破棄しないとGCの際に落ちる
       @screen = SDL::Screen.open(*Stylet.config.screen_size, Stylet.config.color_depth, screen_flags)
-      @rect = Rect2.new(@screen.w, @screen.h)
+      @srect = Rect2.new(@screen.w, @screen.h)
     end
 
     def screen_destroy
@@ -213,7 +213,7 @@ module Stylet
 
     # オーバーライド推奨
     def background_clear
-      draw_rect(@rect, :color => :background, :fill => true)
+      draw_rect(@srect, :color => :background, :fill => true)
     end
   end
 
@@ -226,7 +226,7 @@ module Stylet
 
     def background_clear
       if @backgroud_image
-        SDL::Surface.blit(@backgroud_image, @rect.x, @rect.y, @rect.w, @rect.h, @screen, 0, 0)
+        SDL::Surface.blit(@backgroud_image, @srect.x, @srect.y, @srect.w, @srect.h, @screen, 0, 0)
       else
         super
       end

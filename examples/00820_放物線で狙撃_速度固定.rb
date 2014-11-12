@@ -41,7 +41,7 @@ class Bullet
   end
 
   def screen_out?
-    @pos.to_a.any?(&:nan?) || @pos.y > rect.max_y
+    @pos.to_a.any?(&:nan?) || @pos.y > srect.max_y
   end
 end
 
@@ -52,7 +52,7 @@ class App < Stylet::Base
   setup do
     self.title = "放物線 狙撃【横方向の速度固定】"
     @points = []
-    @points << rect.center + Stylet::Vector.new(+rect.w / 4, 0)
+    @points << srect.center + Stylet::Vector.new(+srect.w / 4, 0)
   end
 
   update do

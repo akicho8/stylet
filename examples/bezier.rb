@@ -116,11 +116,11 @@ class App
     def lpoints_switch
       @line_ab = []
       if @lpoints_count.modulo(2).zero?
-        @line_ab << rect.center + Stylet::Vector.new(-rect.w / 8, +rect.h / 3)
-        @line_ab << rect.center + Stylet::Vector.new(-rect.w / 8, -rect.h / 3)
+        @line_ab << srect.center + Stylet::Vector.new(-srect.w / 8, +srect.h / 3)
+        @line_ab << srect.center + Stylet::Vector.new(-srect.w / 8, -srect.h / 3)
       else
-        @line_ab << rect.center + Stylet::Vector.new(-rect.w / 8, 0)
-        @line_ab << rect.center + Stylet::Vector.new(+rect.w / 8, 0)
+        @line_ab << srect.center + Stylet::Vector.new(-srect.w / 8, 0)
+        @line_ab << srect.center + Stylet::Vector.new(+srect.w / 8, 0)
       end
       @dragging_current = nil
       @lpoints_count += 1

@@ -15,7 +15,7 @@ Stylet.run do
       # たんなる方向を示したいときはこれで問題ない
       m = v.magnitude
       rate = m.to_f / ANALOG_LEVER_MAGNITUDE_MAX
-      draw_vector(v.normalize * (rate * (rect.height / 2)), :origin => rect.center, :label => m.round)
+      draw_vector(v.normalize * (rate * (srect.height / 2)), :origin => srect.center, :label => m.round)
 
       # 斜めのベクトルが強くなりすぎないように制限を加えた例
       m = v.magnitude
@@ -23,9 +23,9 @@ Stylet.run do
         m = ANALOG_LEVER_MAX
       end
       rate = m.to_f / ANALOG_LEVER_MAX
-      draw_vector(v.normalize * (rate * (rect.height / 2)), :origin => rect.center, :label => m.round)
+      draw_vector(v.normalize * (rate * (srect.height / 2)), :origin => srect.center, :label => m.round)
     end
   end
 
-  draw_circle(rect.center, :vertex => 64, :radius => rect.height / 2)
+  draw_circle(srect.center, :vertex => 64, :radius => srect.height / 2)
 end

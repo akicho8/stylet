@@ -26,10 +26,10 @@ class GunShip
     if dir = axis_angle
       x = @pos.x + Stylet::Fee.rcos(dir) * @speed
       y = @pos.y + Stylet::Fee.rsin(dir) * @speed
-      if (@win.rect.min_x..@win.rect.max_x).include?(x)
+      if (@win.srect.min_x..@win.srect.max_x).include?(x)
         @pos.x = x
       end
-      if (@win.rect.min_y..@win.rect.max_y).include?(y)
+      if (@win.srect.min_y..@win.srect.max_y).include?(y)
         @pos.y = y
       end
     end

@@ -19,7 +19,7 @@ class IceHockey < Stylet::Base
   setup do
     cursor.display = false
 
-    @p0 = rect.center.clone # 物体の中心点
+    @p0 = srect.center.clone # 物体の中心点
     @pos = @p0.clone        # 物体の位置
     @speed = 0              # 速度
     @radius = 0             # 中心からの移動量
@@ -70,10 +70,10 @@ class IceHockey < Stylet::Base
     @radius += @speed
 
     # 進んだ位置を計算
-    _p = @p0 + Stylet::Vector.angle_at(@dir) * @radius
+    _p = @p0 + vec2.angle_at(@dir) * @radius
 
     # 画面内なら更新
-    if Stylet::CollisionSupport.rect_in?(rect, _p)
+    if Stylet::CollisionSupport.rect_in?(srect, _p)
       @pos = _p
     end
 

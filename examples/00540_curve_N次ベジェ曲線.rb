@@ -9,18 +9,18 @@ class App
     n = 2
     a = []
     a += Array.new(n + 1){|i|
-      x = (rect.width * 0.1) + ((rect.width * 0.8) / n * i)
-      y = rect.hy
+      x = (srect.width * 0.1) + ((srect.width * 0.8) / n * i)
+      y = srect.hy
       Stylet::Vector.new(x, y)
     }
     list << a
 
     # 円状に配置
     n = 5
-    r = rect.hy * 0.9
+    r = srect.hy * 0.9
     a = []
     a += Array.new(n){|i|
-      rect.center + Stylet::Vector.angle_at(1.0 / n * i).scale(r)
+      srect.center + vec2.angle_at(1.0 / n * i).scale(r)
     }
 
     list << a

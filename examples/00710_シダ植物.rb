@@ -28,8 +28,8 @@ class App < Stylet::Base
         f.(k - 1, @w3x.(x, y), @w3y.(x, y)) if rand < 0.3
         f.(k - 1, @w4x.(x, y), @w4y.(x, y)) if rand < 0.3
       else
-        xx = (x * 490 + rect.w * 0.5).to_i
-        yy = (rect.h - y * 490).to_i
+        xx = (x * 490 + srect.w * 0.5).to_i
+        yy = (srect.h - y * 490).to_i
         draw_dot(vec2[xx, yy], :color => :green)
       end
     end

@@ -14,7 +14,7 @@ module Stylet
     #
     def draw_vector(vec, options = {})
       options = {
-        :origin => rect.center, # 原点を画面の真中にしておく
+        :origin => srect.center, # 原点を画面の真中にしておく
       }.merge(options)
 
       p1 = options[:origin] + vec
@@ -50,8 +50,8 @@ end
 if $0 == __FILE__
   require_relative "../../stylet"
   Stylet::Base.run do
-    draw_arrow(rect.center, rect.center + [50, 50])
-    draw_vector(vec2[100, -100], :origin => rect.center, :label => "ok")
+    draw_arrow(srect.center, srect.center + [50, 50])
+    draw_vector(vec2[100, -100], :origin => srect.center, :label => "ok")
     draw_vector(vec2[100, 0], :origin => vec2[50, 50], :label => "ok")
   end
 end
