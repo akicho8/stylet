@@ -8,8 +8,8 @@ class App < Stylet::Base
   setup do
     @speed = (2 * Math::PI / (60 * 8))       # 角速度 (一周2πを120分割 = 8秒で一周想定)
     @r = srect.height / 4                     # 半径
-    @p = Stylet::Vector.new(@r, 0)           # 座標 (0度の状態では)
-    @v = Stylet::Vector.new(0, @r * @speed)  # 速度 (右端にいるのでy方向のベクトルだけが生きている)
+    @p = vec2.new(@r, 0)           # 座標 (0度の状態では)
+    @v = vec2.new(0, @r * @speed)  # 速度 (右端にいるのでy方向のベクトルだけが生きている)
   end
 
   update do

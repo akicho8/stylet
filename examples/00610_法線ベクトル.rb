@@ -9,7 +9,7 @@ class App < Stylet::Base
   include Helper::MovablePoint
 
   setup do
-    @point = Stylet::Vector.rand.normalize * 100
+    @point = vec2.rand.normalize * 100
     self.title = "法線ベクトル"
   end
 

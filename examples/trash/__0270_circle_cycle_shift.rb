@@ -10,7 +10,7 @@ class Ball
   end
 
   def update
-    pos = Stylet::Vector.zero
+    pos = vec2.zero
     pos.x = Stylet::Fee.rcos(1.0 / 512 * (@win.frame_counter * 3)) * @win.srect.w / 2
     pos.y = Stylet::Fee.rsin(1.0 / 512 * (@win.frame_counter * 4)) * @win.srect.h / 2
     pos += @win.srect.center

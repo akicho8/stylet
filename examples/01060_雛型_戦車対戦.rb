@@ -375,8 +375,8 @@ class App < Stylet::Base
   def reset_objects
     @objects = []
     @ships = []
-    @tank1 = Tank1.new("1P", Stylet::Vector.new(srect.hx - srect.hx * 0.8, srect.hy))
-    @tank2 = Tank2.new("2P", Stylet::Vector.new(srect.hx + srect.hx * 0.8, srect.hy))
+    @tank1 = Tank1.new("1P", vec2.new(srect.hx - srect.hx * 0.8, srect.hy))
+    @tank2 = Tank2.new("2P", vec2.new(srect.hx + srect.hx * 0.8, srect.hy))
     @tank1.target = @tank2
     @tank2.target = @tank1
     @ships << @tank1

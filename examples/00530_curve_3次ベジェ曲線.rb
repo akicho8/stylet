@@ -5,10 +5,10 @@ class App
   def collection
     [
       [
-        Stylet::Vector.new(srect.min_x + srect.w / 8, srect.hy),              # 開始
-        Stylet::Vector.new(srect.min_x + srect.w / 4, srect.hy - srect.h / 4), # 制御(右)
-        Stylet::Vector.new(srect.max_x - srect.w / 4, srect.hy - srect.h / 4), # 制御(左)
-        Stylet::Vector.new(srect.max_x - srect.w / 8, srect.hy),              # 終了
+        vec2.new(srect.min_x + srect.w / 8, srect.hy),              # 開始
+        vec2.new(srect.min_x + srect.w / 4, srect.hy - srect.h / 4), # 制御(右)
+        vec2.new(srect.max_x - srect.w / 4, srect.hy - srect.h / 4), # 制御(左)
+        vec2.new(srect.max_x - srect.w / 8, srect.hy),              # 終了
       ]
     ]
   end
@@ -30,7 +30,7 @@ class App
   #   ・クロスさせたい
   #
   def bezier_curve(p0, p1, p2, p3, d)
-    o = Stylet::Vector.zero
+    o = vec2.zero
     o += p0.scale((1 - d) * (1 - d) * (1 - d))
     o += p1.scale(3 * d * (1 - d) * (1 - d))
     o += p2.scale(3 * d * d * (1 - d))

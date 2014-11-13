@@ -37,7 +37,7 @@ class App < Stylet::Base
   setup do
     self.title = "俊足ミサイル"
     @points = []
-    @points << srect.center + Stylet::Vector.new(+srect.w / 4, 0)
+    @points << srect.center + vec2.new(+srect.w / 4, 0)
   end
 
   update do

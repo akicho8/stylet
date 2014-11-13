@@ -23,7 +23,7 @@ class App < Stylet::Base
   update do
     @num += button.btA.repeat - button.btB.repeat
     @delta += (button.btC.repeat - button.btD.repeat)
-    @current = Stylet::Vector.new(srect.max_x - @delta, srect.min_y + @delta)
+    @current = vec2.new(srect.max_x - @delta, srect.min_y + @delta)
     @before_point = @current.clone
     ldr(@num)
 
@@ -32,7 +32,7 @@ class App < Stylet::Base
   end
 
   def line_to(x, y)
-    dir = Stylet::Vector.new(x * @delta, y * @delta)
+    dir = vec2.new(x * @delta, y * @delta)
     @current += dir
     draw_line(@before_point, @current)
     @before_point = @current.clone

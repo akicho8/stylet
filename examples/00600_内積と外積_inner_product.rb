@@ -21,8 +21,8 @@ class App < Stylet::Base
 
     a, b = @points
     # Bを動かしているときにはAをnormalizeした方がわかりやすい
-    dot_product = Stylet::Vector.dot_product(a.normalize, b)
-    cross_product = Stylet::Vector.cross_product(a.normalize, b)
+    dot_product = vec2.dot_product(a.normalize, b)
+    cross_product = vec2.cross_product(a.normalize, b)
 
     vputs "内積(横): #{dot_product.round(2)}"
     vputs "外積(縦): #{cross_product.round(2)}"

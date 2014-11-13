@@ -11,7 +11,7 @@ class App
     a += Array.new(n + 1){|i|
       x = (srect.width * 0.1) + ((srect.width * 0.8) / n * i)
       y = srect.hy
-      Stylet::Vector.new(x, y)
+      vec2.new(x, y)
     }
     list << a
 
@@ -34,7 +34,7 @@ class App
         # 最後に制御点の追加
         @points = [
           @points.first(@points.size - 1),
-          @points.last + Stylet::Vector.new(-30, 0),
+          @points.last + vec2.new(-30, 0),
           @points.last,
         ].flatten
       end
@@ -61,7 +61,7 @@ class App
   #   ・クロスしまくりたい
   #
   def bezier_curve(*points, d)
-    o = Stylet::Vector.zero
+    o = vec2.zero
 
     points.size.times{|i|
       p = points[i]

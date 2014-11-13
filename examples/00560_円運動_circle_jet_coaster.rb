@@ -24,7 +24,7 @@ class Ball
   # countフレーム地点の位置を取得
   #
   def pos_new(frame_counter)
-    pos = Stylet::Vector.new
+    pos = vec2.new
     pos.x = Stylet::Fee.rcos(1.0 / 512 * (frame_counter * xc + @index * 24)) * srect.w * 0.4
     pos.y = Stylet::Fee.rsin(1.0 / 512 * (frame_counter * yc + @index * 24)) * srect.h * 0.4
     srect.center + pos

@@ -54,7 +54,7 @@ class Ball
       when :state3
         # 勝手に動きだす
         if @state.start?
-          @speed = Stylet::Vector.new(rand(-1.5..1.5), rand(-1.0..1.0))
+          @speed = vec2.new(rand(-1.5..1.5), rand(-1.0..1.0))
         end
         @pos += @speed
       end

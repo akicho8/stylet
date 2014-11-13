@@ -20,11 +20,11 @@ class App < Stylet::Base
     @p0 = srect.center.clone                # 自機の位置ベクトル
     @dot_radius = 3                        # 点の大きさ
     @vertex = 32
-    @vS = Stylet::Vector.new(0.84, -0.10).normalize  # 速度ベクトル
+    @vS = vec2.new(0.84, -0.10).normalize  # 速度ベクトル
 
     # 線分AB
-    @pA = srect.center + Stylet::Vector.new(srect.w * 0.3, -srect.h * 0.30)
-    @pB = srect.center + Stylet::Vector.new(srect.w * 0.0, +srect.h * 0.30)
+    @pA = srect.center + vec2.new(srect.w * 0.3, -srect.h * 0.30)
+    @pB = srect.center + vec2.new(srect.w * 0.0, +srect.h * 0.30)
 
     mode_init
   end
@@ -76,7 +76,7 @@ class App < Stylet::Base
 
       # 線分ABの法線を見える化(長さに意味はない)
       vN = @normal.normalize.scale(64)
-      origin = Stylet::Vector.pos_vector_ratio(@pA, @pB, 0.5)
+      origin = vec2.pos_vector_ratio(@pA, @pB, 0.5)
       draw_vector(vN, :origin => origin, :arrow_size => 8)
       vputs "vN", :vector => origin + vN
     end
@@ -85,7 +85,7 @@ class App < Stylet::Base
     begin
       # スピードベクトルをt倍したら線に衝突するかを求める
       # 自機の原点・速度ベクトル・法線の原点(pAでもpBでもよい)・法線ベクトルを渡すと求まる
-      @t1 = Stylet::Vector.collision_power_scale(@p0, @vS, @pA, @normal)
+      @t1 = vec2.collision_power_scale(@p0, @vS, @pA, @normal)
 
       # 裏面(通りすぎている) <= 0.0 < 衝突 <= 1.0 < 表面(まだあたっていない)
       vputs "C1 t1: #{@t1} (#{ps_state(@t1)})"
@@ -105,7 +105,7 @@ class App < Stylet::Base
       @ac1 = @pC1 - @pA
       @bc1 = @pC1 - @pB
       if @ac1.nonzero? && @bc1.nonzero?
-        @ip1 = Stylet::Vector.dot_product(@ac1, @bc1)
+        @ip1 = vec2.dot_product(@ac1, @bc1)
         vputs "C1 dot_product(AC1, BC1): #{@ip1} (#{dot_product_state(@ip1)})"
 
         draw_vector(@ac1.normalize.scale(20), :origin => @pA + @normal.scale(-20*1), :arrow_size => 8)
@@ -121,8 +121,8 @@ class App < Stylet::Base
       vputs "vP", :vector => @vP + @p0
 
       # 自機の原点・逆法線ベクトル・法線の原点(pAでもpBでもよい)・法線ベクトルを渡すと求まる
-      # @t2 = Stylet::Vector.collision_power_scale(@p0, @vP, @pA, @normal)
-      @t2 = Stylet::Vector.collision_power_scale(@p0, @vP, @pA, @normal)
+      # @t2 = vec2.collision_power_scale(@p0, @vP, @pA, @normal)
+      @t2 = vec2.collision_power_scale(@p0, @vP, @pA, @normal)
       vputs "C2 t2: #{@t2} (#{ps_state(@t2)})"
 
       # 交差点の取得
@@ -136,7 +136,7 @@ class App < Stylet::Base
       @ac2 = @pC2 - @pA
       @bc2 = @pC2 - @pB
       if @ac2.nonzero? && @bc2.nonzero?
-        @ip2 = Stylet::Vector.dot_product(@ac2, @bc2)
+        @ip2 = vec2.dot_product(@ac2, @bc2)
         vputs "C2 dot_product(AC2, BC2): #{@ip2} (#{dot_product_state(@ip2)})"
 
         # 二つのベクトルがどちらを向いているか視覚化(お互いが衝突していたら線の中にいることがわかる)

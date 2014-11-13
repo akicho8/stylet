@@ -96,8 +96,8 @@ class App < Stylet::Base
   setup do
     self.title = "二人対戦風シューティング"
     @objects = []
-    ship1 = GunShip1.new(Stylet::Vector.new(srect.hx, srect.hy - srect.hy * 0.8))
-    ship2 = GunShip2.new(Stylet::Vector.new(srect.hx, srect.hy + srect.hy * 0.8))
+    ship1 = GunShip1.new(vec2.new(srect.hx, srect.hy - srect.hy * 0.8))
+    ship2 = GunShip2.new(vec2.new(srect.hx, srect.hy + srect.hy * 0.8))
     ship1.target = ship2
     ship2.target = ship1
     @objects << ship1

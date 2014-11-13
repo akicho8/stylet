@@ -9,8 +9,8 @@ class App < Stylet::Base
   include Helper::MovablePoint
 
   setup do
-    @p0 = srect.center + Stylet::Vector.new(-srect.w / 4, rand(srect.h / 4)) # 左の点
-    @p1 = srect.center + Stylet::Vector.new(+srect.w / 4, rand(srect.h / 4)) # 右の点
+    @p0 = srect.center + vec2.new(-srect.w / 4, rand(srect.h / 4)) # 左の点
+    @p1 = srect.center + vec2.new(+srect.w / 4, rand(srect.h / 4)) # 右の点
     self.title = "2点を通る直線の方程式"
     @x_mode = true
   end
@@ -51,7 +51,7 @@ class App < Stylet::Base
       x_range.begin.step(x_range.end, 16) do |x|
         # y = (((@p1.y - @p0.y).to_f / (@p1.x - @p0.x)) * (x - @p0.x)) + @p0.y # ← こっちでもいい
         y = (-c + -a * x).to_f / b
-        v = Stylet::Vector.new(x, y)
+        v = vec2.new(x, y)
         draw_triangle(v, :radius => 4, :vertex => 4)
       end
     else
@@ -60,7 +60,7 @@ class App < Stylet::Base
       y_range.begin.step(y_range.end, 16) do |y|
         # x = (((y - @p0.y) * (@p1.x - @p0.x)).to_f / (@p1.y - @p0.y)) + @p0.x # ← こっちでもいい
         x = (-c + -b * y).to_f / a
-        v = Stylet::Vector.new(x, y)
+        v = vec2.new(x, y)
         draw_triangle(v, :radius => 4, :vertex => 4)
       end
     end

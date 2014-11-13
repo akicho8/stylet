@@ -6,13 +6,11 @@ module Helper
   module MovablePoint
     extend ActiveSupport::Concern
 
-    included do
-      attr_accessor :dragging_current
-    end
+    attr_accessor :dragging_current
 
     def update_movable_points(points, options = {})
       options = {
-        :origin => Stylet::Vector.zero,
+        :origin => vec2.zero,
         :radius => 2,           # ドットの大きさ
         :collision_radius => 8, # 当り判定の広さ
       }.merge(options)
@@ -53,9 +51,9 @@ if $0 == __FILE__
 
     setup do
       @points = []
-      @points << srect.center + Stylet::Vector.new(-srect.w / 4, srect.h / 4)
-      @points << srect.center + Stylet::Vector.new(0, -srect.h / 4)
-      @points << srect.center + Stylet::Vector.new(srect.w / 4, srect.h / 4)
+      @points << srect.center + vec2.new(-srect.w / 4, srect.h / 4)
+      @points << srect.center + vec2.new(0, -srect.h / 4)
+      @points << srect.center + vec2.new(srect.w / 4, srect.h / 4)
     end
 
     update do

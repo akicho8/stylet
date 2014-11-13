@@ -20,9 +20,9 @@ class Ball
     @arrow = rand(2).zero? ? 1 : -1 # どっち向きに回転するか
     @reflect = 0
 
-    @pos = Stylet::Vector.new(srect.center.x, srect.max_y + @radius * 2)             # 物体初期位置
-    @speed = Stylet::Vector.new(rand(-2.0..2.0), rand(-15.0..-12)) # 速度ベクトル
-    @gravity = Stylet::Vector.new(0, 0.220)                                                        # 重力
+    @pos = vec2.new(srect.center.x, srect.max_y + @radius * 2)             # 物体初期位置
+    @speed = vec2.new(rand(-2.0..2.0), rand(-15.0..-12)) # 速度ベクトル
+    @gravity = vec2.new(0, 0.220)                                                        # 重力
   end
 
   def update

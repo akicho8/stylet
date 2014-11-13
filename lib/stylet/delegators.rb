@@ -32,6 +32,7 @@ module Stylet
             :cpu_stat,
 
             :vec2,
+            :vec3,
             :rect2,
             :rect4,
           ], :to => "Stylet::Base.active_frame")

@@ -30,7 +30,7 @@ class App < Stylet::Base
 
   update do
     if button.btA.counter.modulo(4) == 1
-      @objects << Ball.new(cursor.point.clone, Stylet::Vector.new(0, -12), Stylet::Vector.new(0, 0.2))
+      @objects << Ball.new(cursor.point.clone, vec2[0, -12], vec2[0, 0.2])
     end
   end
 

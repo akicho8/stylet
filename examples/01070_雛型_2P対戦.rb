@@ -52,8 +52,8 @@ class App < Stylet::Base
     SDL::Mouse.hide
 
     @players = []
-    @players << Player1.new(Stylet::Vector.new(srect.half_w - srect.half_w * 0.5, srect.half_h))
-    @players << Player2.new(Stylet::Vector.new(srect.half_w + srect.half_w * 0.5, srect.half_h))
+    @players << Player1.new(vec2.new(srect.half_w - srect.half_w * 0.5, srect.half_h))
+    @players << Player2.new(vec2.new(srect.half_w + srect.half_w * 0.5, srect.half_h))
     @objects += @players
   end
 

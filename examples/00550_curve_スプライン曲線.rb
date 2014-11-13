@@ -13,7 +13,7 @@ class SprineApp < Stylet::Base
 
   setup do
     self.title = "スプライン曲線"
-    @points = 5.times.collect { srect.center + Stylet::Vector.rand * srect.height * 0.5}
+    @points = 5.times.collect { srect.center + vec2.rand * srect.height * 0.5}
   end
 
   update do
@@ -75,7 +75,7 @@ class SprineApp < Stylet::Base
     j = num - 1
     while j > 0
       # ベクトル同士のかけ算のメソッドを用意してないためこれでいい
-      _c[j-1] = Stylet::Vector.new(
+      _c[j-1] = vec2.new(
         _b[j - 1].x - _a[j - 1][2] * _c[j].x,
         _b[j - 1].y - _a[j - 1][2] * _c[j].y)
       j -= 1
@@ -96,7 +96,7 @@ class SprineApp < Stylet::Base
 
       t = 0.0
       interpolate.times {
-        out << Stylet::Vector.new(
+        out << vec2.new(
           ((_v03 * t + _v02) * t + _v01) * t + _v00,
           ((_v13 * t + _v12) * t + _v11) * t + _v10)
         t += a / interpolate

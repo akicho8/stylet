@@ -245,66 +245,58 @@ class App < Stylet::Base
   end
 
   update do
-    # # Aボタンおしっぱなし + マウスで自機角度変更
-    # if button.btA.press?
-    #   @center = cursor.point.clone
-    #   # if cursor.point != @center
-    #   #   @speed = (cursor.point - @pos).normalize * @speed.magnitude
-    #   # end
-    # end
-
     # 線の準備
     @lines = []
     n = 5
-    n.times{|i|
+    n.times do |i|
       @lines << @center + vec2.angle_at((1.0 / 128 * frame_counter) + 1.0 / n * i) * srect.h * 0.45
-    }
+    end
 
     # 線の準備
     @lines2 = []
     n = 3
-    n.times{|i|
+    n.times do |i|
       @lines2 << @center + vec2.angle_at((1.0 / 512 * frame_counter) + 1.0 / n * i) * srect.h * 0.1
-    }
+    end
 
     # 円と円の当たり判定
-    @balls.each{|ball1|
+    @balls.each do |ball1|
       (@balls - [ball1]).each{|ball2|
         Ball.collide_circle_vs_circle(ball1, ball2)
       }
-    }
+    end
 
     # 円と線の当たり判定
-    @lines.each_index{|i|
+    @lines.each_index do |i|
       a = @lines[i]
       b = @lines[i.next.modulo(@lines.size)]
       @balls.each{|ball|
         ball.collide_circle_vs_line(a, b, :ground => true)
       }
-    }
+    end
 
     # 円と線の当たり判定(中央の物体)
-    @lines2.each_index{|i|
+    @lines2.each_index do |i|
       a = @lines2[i]
       b = @lines2[i.next.modulo(@lines2.size)]
       @balls.each{|ball|
         ball.collide_circle_vs_line(b, a)
       }
-    }
+    end
 
     # 線の描画
-    @lines.each_index{|i|
+    @lines.each_index do |i|
       a = @lines[i]
       b = @lines[i.next.modulo(@lines.size)]
       draw_line(a, b)
-    }
+    end
 
     # 線の描画
-    @lines2.each_index{|i|
+    @lines2.each_index do |i|
       a = @lines2[i]
       b = @lines2[i.next.modulo(@lines2.size)]
       draw_line(a, b)
-    }
+    end
 
     # 球の描画
     @balls.each(&:update)

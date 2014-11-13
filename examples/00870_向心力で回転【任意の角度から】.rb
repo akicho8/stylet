@@ -15,7 +15,7 @@ class App < Stylet::Base
     # vx = -rω * sin(ωt)
     # vy = rω * cos(ωt)
     t = Math.atan2(@p.y, @p.x) / @speed     # tフレーム目
-    @v = Stylet::Vector.new
+    @v = vec2.new
     @v.x = -@r * @speed * Math.sin(@speed * t)
     @v.y =  @r * @speed * Math.cos(@speed * t)
     # ※ 0, 90, 180, 270 度から始まるなら sin cos は不要になる

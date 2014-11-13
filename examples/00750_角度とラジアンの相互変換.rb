@@ -13,7 +13,7 @@ class App < Stylet::Base
     vputs "角度→ラジアン: #{rad}"
     x = Math.cos(rad)
     y = Math.sin(rad)
-    draw_line(srect.center, srect.center + Stylet::Vector.new(x, y) * srect.height / 2)
+    draw_line(srect.center, srect.center + vec2.new(x, y) * srect.height / 2)
 
     rad_to_angle = rad * (one / 2) / Math::PI
     vputs "ラジアン→角度: #{rad_to_angle}"

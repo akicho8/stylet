@@ -11,13 +11,13 @@ class Ball
   delegate :objects, :to => "Stylet.context"
 
   def initialize
-    @gravity = Stylet::Vector.new(0, 0.05)
+    @gravity = vec2.new(0, 0.05)
 
     @vertex = 3 + rand(3)
     @radius = 2 + rand(24)
     @arrow = rand(2).zero? ? 1 : -1
 
-    @pos = Stylet::Vector.new(rand(srect.w), srect.min_y - @radius * 2)
+    @pos = vec2.new(rand(srect.w), srect.min_y - @radius * 2)
     @speed = vec2.angle_at(Stylet::Fee.clock(rand(5.5..6.5))).scale(rand(1.0..1.5))
   end
 
