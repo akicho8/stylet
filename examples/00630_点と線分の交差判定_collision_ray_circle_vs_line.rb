@@ -20,11 +20,11 @@ class App < Stylet::Base
     @p0 = srect.center.clone                # 自機の位置ベクトル
     @dot_radius = 3                        # 点の大きさ
     @vertex = 32
-    @vS = vec2.new(0.84, -0.10).normalize  # 速度ベクトル
+    @vS = vec2[0.84, -0.10].normalize  # 速度ベクトル
 
     # 線分AB
-    @pA = srect.center + vec2.new(srect.w * 0.3, -srect.h * 0.30)
-    @pB = srect.center + vec2.new(srect.w * 0.0, +srect.h * 0.30)
+    @pA = srect.center + vec2[srect.w * 0.3, -srect.h * 0.30]
+    @pB = srect.center + vec2[srect.w * 0.0, +srect.h * 0.30]
 
     mode_init
   end

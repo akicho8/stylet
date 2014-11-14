@@ -47,7 +47,7 @@ class App < Stylet::Base
   setup do
     self.title = "放物線 狙撃【時間固定】"
     @points = []
-    @points << srect.center + vec2.new(+srect.w / 4, 0)
+    @points << srect.center + vec2[+srect.w / 4, 0]
   end
 
   update do

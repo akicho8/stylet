@@ -51,9 +51,9 @@ if $0 == __FILE__
 
     setup do
       @points = []
-      @points << srect.center + vec2.new(-srect.w / 4, srect.h / 4)
-      @points << srect.center + vec2.new(0, -srect.h / 4)
-      @points << srect.center + vec2.new(srect.w / 4, srect.h / 4)
+      @points << srect.center + vec2[-srect.w / 4, srect.h / 4]
+      @points << srect.center + vec2[0, -srect.h / 4]
+      @points << srect.center + vec2[srect.w / 4, srect.h / 4]
     end
 
     update do

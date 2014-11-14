@@ -7,13 +7,13 @@ class App
   def collection
     [
       [
-        srect.center + vec2.new(-srect.w / 4, srect.h / 4),
-        srect.center + vec2.new(0, -srect.h / 4),
-        srect.center + vec2.new(srect.w / 4, srect.h / 4),
+        srect.center + vec2[-srect.w / 4, srect.h / 4],
+        srect.center + vec2[0, -srect.h / 4],
+        srect.center + vec2[srect.w / 4, srect.h / 4],
       ], [
-        srect.center + vec2.new(-100, +100),
+        srect.center + vec2[-100, +100],
         srect.center + vec2.zero,
-        srect.center + vec2.new(+100, -100),
+        srect.center + vec2[+100, -100],
       ],
     ]
   end

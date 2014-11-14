@@ -11,7 +11,7 @@ class App
     a += Array.new(n + 1){|i|
       x = (srect.width * 0.1) + ((srect.width * 0.8) / n * i)
       y = srect.hy
-      vec2.new(x, y)
+      vec2[x, y]
     }
     list << a
 
@@ -34,7 +34,7 @@ class App
         # 最後に制御点の追加
         @points = [
           @points.first(@points.size - 1),
-          @points.last + vec2.new(-30, 0),
+          @points.last + vec2[-30, 0],
           @points.last,
         ].flatten
       end

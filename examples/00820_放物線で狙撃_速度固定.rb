@@ -27,7 +27,7 @@ class Bullet
     end
     t = diff.x / dx             # t = 到達までのフレーム数
     dy = (diff.y - t**2 * (@g * @dt) / 2) / t
-    @speed = vec2.new(dx, dy)
+    @speed = vec2[dx, dy]
   end
 
   def update
@@ -52,7 +52,7 @@ class App < Stylet::Base
   setup do
     self.title = "放物線 狙撃【横方向の速度固定】"
     @points = []
-    @points << srect.center + vec2.new(+srect.w / 4, 0)
+    @points << srect.center + vec2[+srect.w / 4, 0]
   end
 
   update do

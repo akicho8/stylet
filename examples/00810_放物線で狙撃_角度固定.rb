@@ -57,7 +57,7 @@ class App < Stylet::Base
     self.title = "放物線 狙撃【角度固定】"
 
     @points = []
-    @points << srect.center + vec2.new(+srect.w / 4, 0)  # 右の点
+    @points << srect.center + vec2[+srect.w / 4, 0]  # 右の点
 
     @rot = Stylet::Fee.clock(10, 30)
   end

@@ -9,8 +9,8 @@ class App < Stylet::Base
 
   setup do
     @points = []
-    @points << srect.center + vec2.new(-srect.w * 0.4, srect.h * 0.4)
-    @points << srect.center + vec2.new( srect.w * 0.4, -srect.h * 0.4)
+    @points << srect.center + vec2[-srect.w * 0.4, srect.h * 0.4]
+    @points << srect.center + vec2[ srect.w * 0.4, -srect.h * 0.4]
     @gain = 8                   # 0で水平、8ぐらいでS時、マイナスなら反転
   end
 

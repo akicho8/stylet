@@ -54,7 +54,7 @@ class App < Stylet::Base
 
     @height.times do |y|
       @width.times do |x|
-        vec = vec2.new(x, y)
+        vec = vec2[x, y]
         frame_counter = around_vectors.count do |v|
           @matrix[(vec + v).to_a.collect(&:to_i)]
         end
@@ -69,9 +69,9 @@ class App < Stylet::Base
     if @next_matrix
       @next_matrix.each do |xy, cell|
         if cell
-          v = vec2.new(*xy)
+          v = vec2[*xy]
           v = (v * @size) + srect.to_vector + cursor.point
-          draw_rect(Stylet::Rect4.new(*v, @size, @size), :fill => true, :color => :font)
+          draw_rect(rect4.new(*v, @size, @size), :fill => true, :color => :font)
         end
       end
     end
@@ -79,7 +79,7 @@ class App < Stylet::Base
 
   def around_vectors
     @around_vectors ||= [[-1, -1], [0, -1], [1, -1], [-1,  0], [1,  0], [-1, 1], [0, 1], [1, 1]].collect do |e|
-      vec2.new(*e)
+      vec2[*e]
     end
   end
 

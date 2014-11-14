@@ -21,14 +21,14 @@ class App < Stylet::Base
   setup do
     self.title = "振り子"
 
-    @p0 = srect.center + vec2.new(0, -srect.h * 0)   # 円の中心
+    @p0 = srect.center + vec2[0, -srect.h * 0]   # 円の中心
     @dir1 = Stylet::Fee.clock(1) # 角度
     @speed = 0                   # 角速度
     @friction = 0.0              # 摩擦(0.0:なし 1.0:最大)
     @radius = srect.hy * 0.5 # 糸の長さ
     @ball_radius = 32            # 鉄球自体の半径
     @dir2 = nil                  # 振り子の中心(p0)からの重力反映座標(pB)の角度
-    @gravity = vec2.new(0, 1)   # 重力加速度(整数で指定すること)
+    @gravity = vec2[0, 1]   # 重力加速度(整数で指定すること)
     @debug_mode = false
   end
 

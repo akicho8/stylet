@@ -46,7 +46,7 @@ class App < Stylet::Base
   setup do
     self.title = "角度補正ミサイル"
     @points = []
-    @points << srect.center + vec2.new(+srect.w / 4, 0)
+    @points << srect.center + vec2[+srect.w / 4, 0]
   end
 
   update do

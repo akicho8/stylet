@@ -31,14 +31,14 @@ class Koch < Stylet::Base
   end
 
   def koch_draw(a, b, n)
-    c = vec2.new
-    d = vec2.new
-    e = vec2.new
-
-    c.x = (2 * a.x + b.x) / 3
-    c.y = (2 * a.y + b.y) / 3
-    d.x = (a.x + 2 * b.x) / 3
-    d.y = (a.y + 2 * b.y) / 3
+    c = vec2[
+      (2 * a.x + b.x) / 3,
+      (2 * a.y + b.y) / 3,
+    ]
+    d = vec2[
+      (a.x + 2 * b.x) / 3,
+      (a.y + 2 * b.y) / 3,
+    ]
     xx = b.x - a.x
     yy = -(b.y - a.y)
 
@@ -51,12 +51,16 @@ class Koch < Stylet::Base
     if xx >= 0
       # 右上がり
       angle = Math.atan(yy / xx) + Math::PI / 6
-      e.x = a.x + distance * Math.cos(angle)
-      e.y = a.y - distance * Math.sin(angle)
+      e = vec2[
+        a.x + distance * Math.cos(angle),
+        a.y - distance * Math.sin(angle),
+      ]
     else
       angle = Math.atan(yy / xx) - Math::PI / 6
-      e.x = b.x + distance * Math.cos(angle)
-      e.y = b.y - distance * Math.sin(angle)
+      e = vec2[
+        b.x + distance * Math.cos(angle),
+        b.y - distance * Math.sin(angle),
+      ]
     end
 
     if n <= 0

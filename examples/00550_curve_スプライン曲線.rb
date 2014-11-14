@@ -75,9 +75,10 @@ class SprineApp < Stylet::Base
     j = num - 1
     while j > 0
       # ベクトル同士のかけ算のメソッドを用意してないためこれでいい
-      _c[j-1] = vec2.new(
+      _c[j-1] = vec2[
         _b[j - 1].x - _a[j - 1][2] * _c[j].x,
-        _b[j - 1].y - _a[j - 1][2] * _c[j].y)
+        _b[j - 1].y - _a[j - 1][2] * _c[j].y,
+      ]
       j -= 1
     end
 
@@ -96,9 +97,10 @@ class SprineApp < Stylet::Base
 
       t = 0.0
       interpolate.times {
-        out << vec2.new(
+        out << vec2[
           ((_v03 * t + _v02) * t + _v01) * t + _v00,
-          ((_v13 * t + _v12) * t + _v11) * t + _v10)
+          ((_v13 * t + _v12) * t + _v11) * t + _v10,
+        ]
         t += a / interpolate
       }
     }

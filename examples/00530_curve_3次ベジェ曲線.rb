@@ -5,10 +5,10 @@ class App
   def collection
     [
       [
-        vec2.new(srect.min_x + srect.w / 8, srect.hy),              # 開始
-        vec2.new(srect.min_x + srect.w / 4, srect.hy - srect.h / 4), # 制御(右)
-        vec2.new(srect.max_x - srect.w / 4, srect.hy - srect.h / 4), # 制御(左)
-        vec2.new(srect.max_x - srect.w / 8, srect.hy),              # 終了
+        vec2[srect.min_x + srect.w / 8, srect.hy],               # 開始
+        vec2[srect.min_x + srect.w / 4, srect.hy - srect.h / 4], # 制御(右)
+        vec2[srect.max_x - srect.w / 4, srect.hy - srect.h / 4], # 制御(左)
+        vec2[srect.max_x - srect.w / 8, srect.hy],               # 終了
       ]
     ]
   end

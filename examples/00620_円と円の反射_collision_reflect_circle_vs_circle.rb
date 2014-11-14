@@ -29,12 +29,12 @@ class App < Stylet::Base
     @modes = ["reflect", "move", "none"]
     @reflect_mode = @modes.first
 
-    @pA = srect.center.clone + vec2.new(80, -70)
+    @pA = srect.center.clone + vec2[80, -70]
     @sA = vec2.angle_at(Stylet::Fee.clock(6, 15)).scale(1.0)
     @a_radius = 100
     @am = @a_radius ** 2
 
-    @pB = srect.center.clone + vec2.new(-120, -80)
+    @pB = srect.center.clone + vec2[-120, -80]
     @sB = vec2.angle_at(Stylet::Fee.clock(4)).scale(1.0)
     @b_radius = 60
     @bm = @b_radius ** 2            # 質量
@@ -109,9 +109,10 @@ class App < Stylet::Base
 
           # A→B 移動運動
           t = -(-@diff.y * @sA.x + @diff.x * @sA.y) / _denominator
-          am = vec2.new
-          am.x = @sA.x - @diff.y * t
-          am.y = @sA.y + @diff.x * t
+          am = vec2[
+            @sA.x - @diff.y * t,
+            @sA.y + @diff.x * t,
+          ]
 
           # B
           # B→A 回転運動
@@ -120,17 +121,20 @@ class App < Stylet::Base
 
           # B→A 移動運動
           t = -(-@diff.y * @sB.x + @diff.x * @sB.y) / _denominator
-          bm = vec2.new
-          bm.x = @sB.x - @diff.y * t
-          bm.y = @sB.y + @diff.x * t
+          bm = vec2[
+            @sB.x - @diff.y * t,
+            @sB.y + @diff.x * t,
+          ]
 
           # x 方向と y 方向それぞれの衝突後の速度を計算する
-          ad = vec2.new
-          bd = vec2.new
-          ad.x = (@am * am.x + @bm * bm.x + bm.x * @reflect_ratio * @bm - am.x * @reflect_ratio * @bm) / (@am + @bm)
-          bd.x = - @reflect_ratio * (bm.x - am.x) + ad.x
-          ad.y = (@am * am.y + @bm * bm.y + bm.y * @reflect_ratio * @bm - am.y * @reflect_ratio * @bm) / (@am + @bm)
-          bd.y = - @reflect_ratio * (bm.y - am.y) + ad.y
+          ad = vec2[
+            (@am * am.x + @bm * bm.x + bm.x * @reflect_ratio * @bm - am.x * @reflect_ratio * @bm) / (@am + @bm),
+            (@am * am.y + @bm * bm.y + bm.y * @reflect_ratio * @bm - am.y * @reflect_ratio * @bm) / (@am + @bm),
+          ]
+          bd = vec2[
+            -@reflect_ratio * (bm.x - am.x) + ad.x,
+            -@reflect_ratio * (bm.y - am.y) + ad.y,
+          ]
 
           # 回転運動を発生させるベクトルを加算して衝突後の速度を計算
           @sA.x = ad.x + ar.x

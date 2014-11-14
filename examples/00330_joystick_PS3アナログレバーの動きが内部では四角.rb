@@ -8,7 +8,7 @@ ANALOG_LEVER_MAGNITUDE_MAX = Math.sqrt(ANALOG_LEVER_MAX**2 + ANALOG_LEVER_MAX**2
 Stylet.run do
   joys.each do |joy|
     joy.available_analog_levers.each do |key, state|
-      v = vec2.new(*state)
+      v = vec2[*state]
       vputs [joy.name, key, v.magnitude]
 
       # 取得した値をそのまま使うと斜めのベクトルが強くなりすぎる

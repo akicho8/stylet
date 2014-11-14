@@ -506,8 +506,8 @@ class PlayerBase < ObjectX
 
   def draw_texture
     screen.put(@image, *(@pos - Stylet.context.camera_offset - @rc.half_wh))
-    # screen.put(@image, *(v - vec2.new(srect.w, 0)))
-    # screen.put(@image, *(v + vec2.new(srect.w, 0)))
+    # screen.put(@image, *(v - vec2[srect.w, 0]))
+    # screen.put(@image, *(v + vec2[srect.w, 0]))
   end
 
   # ブロックまたは地面の上にいるときの処理
@@ -626,18 +626,18 @@ class App < Stylet::Base
     # @blocks = [SoftBlock.new(pos: srect.center, rc: Stylet::Rect4.centered_create(16, 16))]
 
     # @blocks = (n = 8).times.collect do |i|
-    #   SoftBlock.new(pos: vec2.new(rand(@virtual_rect.w), rand(virtual_rect.h)), rc: Stylet::Rect4.centered_create(32, 32))
+    #   SoftBlock.new(pos: vec2[rand(@virtual_rect.w), rand(virtual_rect.h)], rc: Stylet::Rect4.centered_create(32, 32))
     # end
 
     # @blocks = 3.times.flat_map{|j|
     #   (n = 14).times.collect do |i|
-    #     SoftBlock.new(pos: vec2.new(@virtual_rect.w / (n - 1) * (i + (j * 0.5)), @virtual_rect.h - srect.center.y - 100 + j * 120))
+    #     SoftBlock.new(pos: vec2[@virtual_rect.w / (n - 1) * (i + (j * 0.5)), @virtual_rect.h - srect.center.y - 100 + j * 120])
     #   end
     # }
 
     # @blocks = (m = 8).times.flat_map do |j|
     #   (n = 8).times.collect do |i|
-    #     SoftBlock.new(pos: vec2.new(@virtual_rect.w / (n - 1) * (i + (j.modulo(2) * 0.5)), @ground_y - j * 64))
+    #     SoftBlock.new(pos: vec2[@virtual_rect.w / (n - 1) * (i + (j.modulo(2) * 0.5)), @ground_y - j * 64])
     #   end
     # end
 
