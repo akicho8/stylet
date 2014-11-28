@@ -25,7 +25,7 @@ module Stylet
     def before_update
       super
       return if Stylet.production
-      @joys.each{|joy|vputs(joy.inspect)}
+      @joys.each {|joy| vputs(joy.inspect) }
     end
   end
 end

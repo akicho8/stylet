@@ -45,11 +45,11 @@ module Stylet
       end
 
       def key_objs_dump
-        key_objects.inject(0){|a, e|a + e.press_bit_value}
+        key_objects.inject(0) {|a, e| a + e.press_bit_value }
       end
 
       def key_objs_load(obj)
-        key_objects.each{|v|v << obj}
+        key_objects.each {|v| v << obj }
       end
 
       # def to_s

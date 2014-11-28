@@ -18,8 +18,6 @@ class GunShip
   end
 
   def update
-    super if defined? super
-
     if @joystick_index
       bit_update_by_joy(Stylet.context.joys[@joystick_index])
     end
