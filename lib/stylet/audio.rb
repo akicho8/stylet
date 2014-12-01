@@ -23,7 +23,6 @@
 #
 require 'pathname'
 require 'singleton'
-require 'forwardable'
 require 'active_support/core_ext/module/delegation' # Defines Module#delegate.
 require 'active_support/core_ext/module/attribute_accessors' # Defines Module#mattr_accessor
 
