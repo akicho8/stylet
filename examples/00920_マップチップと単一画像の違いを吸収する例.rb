@@ -18,6 +18,7 @@ if true
     {:key => :hana,   :filename => :castle2, :rect => [16 * 28, 16 * 1, 16, 16], :transform => {:wh => [32, 32], :angle => 45, :mask => true}},
     {:key => :mario,  :filename => "assets/mario.png", :mask => true},
     {:key => :mario2, :filename => "assets/mario.png", :transform => {:wh => [64, 64], :angle => 45, :mask => true}},
+    {:key => :mario3, :filename => "assets/mario.png", :transform => {:mix => {:rgb => [0, 0, 255], :alpha => 128}}},
   ]
 end
 

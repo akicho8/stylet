@@ -6,22 +6,16 @@
 require_relative "helper"
 require "matrix"
 
-Stylet.configure do |config|
-  config.screen_size = [640, 480]
-  config.production = true
-end
-
 class App < Stylet::Base
   include Helper::Cursor
 
   setup do
     SDL::Mouse.hide
-    # cursor.display = false
 
     @around = [
-      [-1,-1],[0,-1],[1,-1],
-      [-1,0],[0,0],[1,0],
-      [-1,1],[0,1],[1,1],
+      [-1, -1], [0, -1], [1, -1],
+      [-1,  0], [0,  0], [1,  0],
+      [-1,  1], [0,  1], [1,  1],
     ]
 
     @cell = 8
@@ -118,14 +112,6 @@ class App < Stylet::Base
     image = s.display_format
     screen.put(image, 0, 0)
   end
-
-  # def screen_reset
-  #   screen.h.times.each{|y|
-  #     screen.w.times.each{|x|
-  #       screen[x, y] = screen.format.map_rgb(*3.times.collect{rand(256)})
-  #     }
-  #   }
-  # end
 
   run
 end

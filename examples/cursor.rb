@@ -17,7 +17,7 @@ module Helper
       end
 
       update do
-        joys.each{|joy|bit_update_by_joy(joy)}
+        joys.each {|joy| bit_update_by_joy(joy) }
         key_bit_update_all
         key_counter_update_all
 

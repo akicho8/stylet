@@ -18,15 +18,15 @@ class App < Stylet::Base
 
     # 配列から標準偏差を求める
     avg = list.inject(&:+).to_f / list.size
-    _sd = Math.sqrt(list.collect{|v|(v - avg) ** 2}.reduce(:+).to_f / list.size)
+    _sd = Math.sqrt(list.collect { |v| (v - avg) ** 2 }.reduce(:+).to_f / list.size)
 
     k = 24                      # 瓶の数(片方)
     h = 4                       # 瓶の幅
-    r = (-k..k).collect{|i|
+    r = (-k..k).collect do |i|
       range = (avg + i * h)...(avg + i.next * h)
       count = list.count{|v|range.include?(v)}
       bar(i, count)
-    }
+    end
 
     # 実際の標準偏差の位置確認
     pos = _sd / h

@@ -1122,7 +1122,7 @@ class App < Stylet::Base
 
   def edit_func_stage_save
     positions = @objects.group_by(&:class).inject({}){|hash, (klass, objs)|
-      hash.merge(klass.name => objs.collect{|e|e.pos.round.to_a})
+      hash.merge(klass.name => objs.collect {|e| e.pos.round.to_a })
     }
     attrs = {
       :world_wh => @virtual_rect.wh.to_a,

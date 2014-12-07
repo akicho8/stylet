@@ -8,7 +8,7 @@ class App
     # 横に配置
     n = 2
     a = []
-    a += Array.new(n + 1){|i|
+    a += Array.new(n + 1) {|i|
       x = (srect.width * 0.1) + ((srect.width * 0.8) / n * i)
       y = srect.hy
       vec2[x, y]
@@ -19,9 +19,7 @@ class App
     n = 5
     r = srect.hy * 0.9
     a = []
-    a += Array.new(n){|i|
-      srect.center + vec2.angle_at(1.0 / n * i).scale(r)
-    }
+    a += Array.new(n) {|i| srect.center + vec2.angle_at(1.0 / n * i).scale(r) }
 
     list << a
 

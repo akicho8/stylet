@@ -66,7 +66,7 @@ class App < Stylet::Base
   end
 
   def point_of_t(t)
-    bezier_curve(*@points.collect{|e|e}, t)
+    bezier_curve(*@points, t)
   end
 
   def bezier_curve(*args)

@@ -53,13 +53,13 @@ class SprineApp < Stylet::Base
     _a[num-1] = [1, 2, 0]
     _b[num-1] = (points[num - 1] - points[num - 2]) * (3.0 / l[num - 2])
 
-    (1...(num-1)).each{|i|
+    (1...(num-1)).each do |i|
       a = l[i-1]
       b = l[i]
       _a[i] = [b, 2.0 * (b + a), a]
       _b[i] = (((points[i+1] - points[i]) * 3.0 * a * a) + ((points[i] - points[i-1]) * 3.0 * b * b)) / (b * a)
-    }
-    (1...num).each{|i|
+    end
+    (1...num).each do |i|
       d = _a[i-1][1] / _a[i][0]
 
       _a[i] = [0, _a[i][1]*d-_a[i-1][2], _a[i][2]*d]
@@ -69,7 +69,7 @@ class SprineApp < Stylet::Base
       _b[i].x /= _a[i][1]
       _b[i].y /= _a[i][1]
       _a[i][1] = 1
-    }
+    end
 
     _c[num-1] = _b[num-1]
     j = num - 1
@@ -84,7 +84,7 @@ class SprineApp < Stylet::Base
 
     out = []
     frame_counter = 0
-    (num - 1).times{|i|
+    (num - 1).times do |i|
       a = l[i]
       _v00 = points[i].x
       _v01 = _c[i].x
@@ -103,7 +103,7 @@ class SprineApp < Stylet::Base
         ]
         t += a / interpolate
       }
-    }
+    end
 
     out << points.last
 

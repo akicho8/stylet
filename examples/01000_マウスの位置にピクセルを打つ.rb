@@ -8,7 +8,8 @@ class App < Stylet::Base
   end
 
   update do
-    screen[*mouse.point] = screen.format.map_rgb(*3.times.collect{rand(255)})
+    rgb = 3.times.collect { rand(256) }
+    screen[*mouse.point] = screen.format.map_rgb(*rgb)
   end
 
   def background_clear

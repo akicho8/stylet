@@ -105,7 +105,7 @@ class Ball
 
     # ここは完全に重なっている。物理的にはこうならないので左右に移動させる
     if diff.magnitude.zero?
-      arrow = Stylet::Vector.new(*2.times.collect{[1.0, -1.0].sample})
+      arrow = Stylet::Vector.new(*2.times.collect { [1.0, -1.0].sample })
       pA -= arrow * oA.radius
       pB += arrow * oB.radius
       oA.pos = pA
@@ -261,27 +261,27 @@ class App < Stylet::Base
 
     # 円と円の当たり判定
     @balls.each do |ball1|
-      (@balls - [ball1]).each{|ball2|
+      (@balls - [ball1]).each do |ball2|
         Ball.collide_circle_vs_circle(ball1, ball2)
-      }
+      end
     end
 
     # 円と線の当たり判定
     @lines.each_index do |i|
       a = @lines[i]
       b = @lines[i.next.modulo(@lines.size)]
-      @balls.each{|ball|
+      @balls.each do |ball|
         ball.collide_circle_vs_line(a, b, :ground => true)
-      }
+      end
     end
 
     # 円と線の当たり判定(中央の物体)
     @lines2.each_index do |i|
       a = @lines2[i]
       b = @lines2[i.next.modulo(@lines2.size)]
-      @balls.each{|ball|
+      @balls.each do |ball|
         ball.collide_circle_vs_line(b, a)
-      }
+      end
     end
 
     # 線の描画
