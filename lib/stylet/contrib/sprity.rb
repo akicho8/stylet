@@ -34,9 +34,15 @@ module Stylet
           w.to_f / surface.w,     # x倍率
           h.to_f / surface.h,     # y倍率
           0)                      # flags
+
+        if mix = params[:mix]
+          s.draw_rect(0, 0, s.w, s.h, mix[:rgb], true, mix[:alpha])
+        end
+
         if params[:mask]
           s.set_color_key(SDL::SRCCOLORKEY, 0)
         end
+
         s.display_format
       end
     end
