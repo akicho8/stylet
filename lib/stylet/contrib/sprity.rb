@@ -35,7 +35,7 @@ module Stylet
           h.to_f / surface.h,     # y倍率
           0)                      # flags
 
-        if mix = params[:mix]
+        Array(params[:mix]).each do |mix|
           s.draw_rect(0, 0, s.w, s.h, mix[:rgb], true, mix[:alpha])
         end
 
