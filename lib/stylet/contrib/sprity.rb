@@ -1,4 +1,41 @@
 # -*- coding: utf-8 -*-
+#
+# マップチップと単一画像の違いを吸収してキャラクタを表示する
+#
+# ■スプライトの登録と描画
+#
+#   Stylet::Sprity::ImageFile.static_record_list_set [
+#     {:key => :foo, :filename => "assets/images/foo.png"},
+#   ]
+#
+#   screen.put(Stylet::Sprity::Sprite[:foo].surface, 0, 0)
+#
+# ■内部で保持している surface をすべて解放
+#
+#   Stylet::Sprity.reset_cache_all
+#
+# ■ :filename の指定がシンボルなら ImageFile から取得し、文字列ならそのパスから読み出す
+#
+#   {:key => :mario, :filename => :maptip}           ← 主に一つの画像にキャラがたくさん入っている時用でサーフェイスを共有する
+#   {:key => :mario, :filename => "background.png"}  ← 一つの画像とする
+#
+# ■マップチップから指定の部分を刳り貫く 16 x 16 と考えて 2, 3 の部分から 16 x 16 で刳り貫く
+#
+#   {:cliping => [16 * 2, 16 * 3, 16, 16]}
+#
+# ■マップチップから指定の部分を刳り貫いたあと 32 x 32 に拡大して、余白を抜き色にする
+#
+#   {:cliping => [...], :transform => {:wh => [32, 32], :mask => true}}
+#
+# ■回転する
+#
+#   {:transform => {:angle => 45}}
+#
+# ■ (0, 0, 2550 の色を 0.5 だけ掛け合わせる (mixが配列だと何度も実行できる)
+#
+#   {:transform => {:mix => {:rgb => [0, 0, 255], :alpha => 128}}}
+#
+
 module Stylet
   module Sprity
     class << self
@@ -7,8 +44,8 @@ module Stylet
       end
 
       def processing(surface, params)
-        if params[:rect]
-          surface = surface.copy_rect(*params[:rect])
+        if params[:cliping]
+          surface = surface.copy_rect(*params[:cliping])
         end
         if params[:transform]
           surface = transform(surface, params[:transform])
@@ -35,7 +72,7 @@ module Stylet
           h.to_f / surface.h,     # y倍率
           0)                      # flags
 
-        Array(params[:mix]).each do |mix|
+        Array.wrap(params[:mix]).each do |mix|
           s.draw_rect(0, 0, s.w, s.h, mix[:rgb], true, mix[:alpha])
         end
 
