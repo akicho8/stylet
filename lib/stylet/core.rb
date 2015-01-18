@@ -9,7 +9,7 @@ module Stylet
       cattr_accessor :_active_instance
     end
 
-    module ClassMethods
+    class_methods do
       # run{|win| win.vputs 'Hello' }
       # run{ vputs 'Hello' }
       def run(*args, &block)

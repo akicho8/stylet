@@ -11,7 +11,7 @@ module Stylet
       define_model_callbacks :setup, :update, :main_loop
     end
 
-    module ClassMethods
+    class_methods do
       def setup(*args, &block)
         set_callback(:setup, *args, &block)
       end
