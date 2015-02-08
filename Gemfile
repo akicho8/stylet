@@ -21,3 +21,5 @@ gem "rubocop", :require => false
 # bundle config build.rubysdl --enable-bundled-sge
 # ~/.bundle/config
 gem "rubysdl", :github => "ohai/rubysdl"
+
+gem "stackprof"

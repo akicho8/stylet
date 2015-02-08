@@ -1133,7 +1133,7 @@ class App < Stylet::Base
       data = eval(@stage_file.read)
     end
     data.update(@stg_index => attrs)
-    @stage_file.open("w"){|f|f << data.inspect}
+    @stage_file.write(data.inspect)
     puts "output: #{@stage_file}"
   end
 
