@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.1.3'
+ruby '2.2.1'
 gemspec
 
 if File.exist? (path = File.expand_path(File.join(File.dirname(__FILE__), "../static_record")))
