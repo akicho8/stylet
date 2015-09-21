@@ -5,7 +5,7 @@ class App < Stylet::Base
   include Helper::Cursor
 
   setup do
-    @dirs = Array.new(2){0}
+    @dirs = Array.new(2) {0}
   end
 
   update do

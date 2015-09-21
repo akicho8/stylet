@@ -18,13 +18,13 @@ class App < Stylet::Base
 
     # 配列から標準偏差を求める
     avg = list.inject(&:+).to_f / list.size
-    _sd = Math.sqrt(list.collect { |v| (v - avg) ** 2 }.reduce(:+).to_f / list.size)
+    _sd = Math.sqrt(list.collect { |v| (v - avg)**2 }.reduce(:+).to_f / list.size)
 
     k = 24                      # 瓶の数(片方)
     h = 4                       # 瓶の幅
     r = (-k..k).collect do |i|
       range = (avg + i * h)...(avg + i.next * h)
-      count = list.count{|v|range.include?(v)}
+      count = list.count {|v|range.include?(v)}
       bar(i, count)
     end
 
@@ -37,9 +37,9 @@ class App < Stylet::Base
     vputs "実際の標準偏差: #{_sd}"
 
     # ±標準偏差の中にデータが約68%、2倍な95%、3倍なら0.997含まれるのは本当なのか？
-    vputs ["±1*σ割合(0.6826): ", (list.count{|v|(-(_sd*1)..(_sd*1)).include?(v - avg)}.to_f / list.size)].join
-    vputs ["±2*σ割合(0.9544): ", (list.count{|v|(-(_sd*2)..(_sd*2)).include?(v - avg)}.to_f / list.size)].join
-    vputs ["±3*σ割合(0.9974): ", (list.count{|v|(-(_sd*3)..(_sd*3)).include?(v - avg)}.to_f / list.size)].join
+    vputs ["±1*σ割合(0.6826): ", (list.count {|v|(-(_sd * 1)..(_sd * 1)).include?(v - avg)}.to_f / list.size)].join
+    vputs ["±2*σ割合(0.9544): ", (list.count {|v|(-(_sd * 2)..(_sd * 2)).include?(v - avg)}.to_f / list.size)].join
+    vputs ["±3*σ割合(0.9974): ", (list.count {|v|(-(_sd * 3)..(_sd * 3)).include?(v - avg)}.to_f / list.size)].join
   end
 
   def bar(pos, length, color = :white)

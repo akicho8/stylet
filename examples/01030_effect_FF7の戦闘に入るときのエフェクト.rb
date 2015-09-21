@@ -27,7 +27,7 @@ class App < Stylet::Base
   end
 
   def background_clear
-    SDL::Surface.transform_blit(screen, screen, 2, 1.05, 1.05, *srect.center, *srect.center, SDL::Surface::TRANSFORM_AA|SDL::Surface::TRANSFORM_SAFE)
+    SDL::Surface.transform_blit(screen, screen, 2, 1.05, 1.05, *srect.center, *srect.center, SDL::Surface::TRANSFORM_AA | SDL::Surface::TRANSFORM_SAFE)
   end
 
   run

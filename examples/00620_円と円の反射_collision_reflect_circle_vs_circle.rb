@@ -32,12 +32,12 @@ class App < Stylet::Base
     @pA = srect.center.clone + vec2[80, -70]
     @sA = vec2.angle_at(Stylet::Fee.clock(6, 15)).scale(1.0)
     @a_radius = 100
-    @am = @a_radius ** 2
+    @am = @a_radius**2
 
     @pB = srect.center.clone + vec2[-120, -80]
     @sB = vec2.angle_at(Stylet::Fee.clock(4)).scale(1.0)
     @b_radius = 60
-    @bm = @b_radius ** 2            # 質量
+    @bm = @b_radius**2            # 質量
 
     @s_radius = 100 # 速度ベクトル 1.0 を画面上では何ドットで表わすか？
     @vertex = 32
@@ -99,7 +99,7 @@ class App < Stylet::Base
           # (br.x,br.y) 円Ｂから円Ａへ回転運動を発生させるベクトル
 
           # 速度ベクトルを重心方向と垂直な方向に分離する
-          _denominator = (@diff.x ** 2 + @diff.y ** 2)
+          _denominator = (@diff.x**2 + @diff.y**2)
 
           # A
           # A→B 回転運動

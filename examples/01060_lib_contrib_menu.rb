@@ -13,7 +13,7 @@ menu = Stylet::Menu::Basic.new(name: "[メニュー]", elements: [
           ])
       },
     },
-    {name: "サブメニュー2", safe_command: proc { s.chain(name: "[サブメニュー2]", elements: 16.times.collect{|i|{:name => "項目#{i}"}})}},
+    {name: "サブメニュー2", safe_command: proc { s.chain(name: "[サブメニュー2]", elements: 16.times.collect {|i|{:name => "項目#{i}"}})}},
     {:name => "閉じる", :safe_command => :close_and_parent_restart },
   ])
 

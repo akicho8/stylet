@@ -19,7 +19,7 @@ module Helper
 
       unless @dragging_current
         if button.btA.trigger?
-          if v = points.find{|e|Stylet::CollisionSupport.squire_collision?(e, mpoint, :radius => options[:collision_radius])}
+          if v = points.find {|e|Stylet::CollisionSupport.squire_collision?(e, mpoint, :radius => options[:collision_radius])}
             @dragging_current = v
           end
         end
@@ -58,7 +58,7 @@ if $0 == __FILE__
 
     update do
       update_movable_points(@points)
-      @points.each_with_index{|e, i| vputs("#{i}", :vector => e) }
+      @points.each_with_index {|e, i| vputs("#{i}", :vector => e) }
     end
 
     run

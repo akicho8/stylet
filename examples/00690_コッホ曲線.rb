@@ -18,7 +18,7 @@ class Koch < Stylet::Base
     @power += button.btA.repeat - button.btB.repeat
     @vertex_n += button.btC.repeat - button.btD.repeat
 
-    @vertex_n.times.each{|i|
+    @vertex_n.times.each {|i|
       get_pos = proc {|i|
         a = (1.0 * frame_counter / (60 * 60)) + (1.0 / @vertex_n * i)
         vec2.angle_at(a * 7, a * 8) * srect.h * 0.4

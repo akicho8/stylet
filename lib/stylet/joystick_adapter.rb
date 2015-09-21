@@ -86,7 +86,7 @@ module Stylet
       end
 
       def raw_analog_lever_status
-        @object.num_axes.times.collect{|index|@object.axis(index)}
+        @object.num_axes.times.collect {|index|@object.axis(index)}
       end
     end
 

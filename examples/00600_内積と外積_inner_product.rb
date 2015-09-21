@@ -17,7 +17,7 @@ class App < Stylet::Base
 
   update do
     update_movable_points(@points, :origin => srect.center)
-    @points.each.with_index{|e, i| draw_vector(e, :origin => srect.center, :label => "P#{i} #{e.round(2)}") }
+    @points.each.with_index {|e, i| draw_vector(e, :origin => srect.center, :label => "P#{i} #{e.round(2)}") }
 
     a, b = @points
     # Bを動かしているときにはAをnormalizeした方がわかりやすい

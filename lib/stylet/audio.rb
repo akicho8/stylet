@@ -216,10 +216,10 @@ module Stylet
     end
 
     def channel_reset
-      raise if SE.channel_groups.any?{|_, e|e[:counter] < 0}
-      SE.channel_groups.delete_if{|_, e|e[:counter] == 0}
+      raise if SE.channel_groups.any? {|_, e|e[:counter] < 0}
+      SE.channel_groups.delete_if {|_, e|e[:counter] == 0}
       allocate_channels
-      channel_groups.each_value.with_index{|e, index|e[:channel] = SE.preparation_channels + index}
+      channel_groups.each_value.with_index {|e, index|e[:channel] = SE.preparation_channels + index}
     end
 
     def allocate_channels

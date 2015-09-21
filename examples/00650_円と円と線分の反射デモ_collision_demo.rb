@@ -20,11 +20,11 @@ class Ball
     @speed = Stylet::Vector.new(rand(-2.0..2), rand(-8.0..-6)) # 速度ベクトル
     @gravity = Stylet::Vector.new(0, 0.20)                                                  # 重力
     if index < 4
-      @radius = 8 + ((index + 2) ** 2)                                                      # 半径
+      @radius = 8 + ((index + 2)**2)                                                      # 半径
     else
       @radius = rand(8..20)                                               # 半径
     end
-    @mass = @radius ** 2                                                                    # 質量は面積と比例することにする(PI*r二乗)
+    @mass = @radius**2                                                                    # 質量は面積と比例することにする(PI*r二乗)
     @vertex = 16                                                                   # 何角形か？
   end
 
@@ -141,7 +141,7 @@ class Ball
       # (br) 円Ｂから円Ａへ回転運動を発生させるベクトル
 
       # 速度ベクトルを重心方向と垂直な方向に分離する
-      _denominator = (diff.x ** 2 + diff.y ** 2)
+      _denominator = (diff.x**2 + diff.y**2)
 
       # A
       # A→B 回転運動
@@ -240,7 +240,7 @@ class App < Stylet::Base
   include Helper::CursorWithObjectCollection
 
   setup do
-    @balls = Array.new(5){|i|Ball.new(i)}
+    @balls = Array.new(5) {|i|Ball.new(i)}
     @center = srect.center
   end
 

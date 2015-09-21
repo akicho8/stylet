@@ -108,8 +108,8 @@ class App < Stylet::Base
         @ip1 = vec2.dot_product(@ac1, @bc1)
         vputs "C1 dot_product(AC1, BC1): #{@ip1} (#{dot_product_state(@ip1)})"
 
-        draw_vector(@ac1.normalize.scale(20), :origin => @pA + @normal.scale(-20*1), :arrow_size => 8)
-        draw_vector(@bc1.normalize.scale(20), :origin => @pB + @normal.scale(-20*1), :arrow_size => 8)
+        draw_vector(@ac1.normalize.scale(20), :origin => @pA + @normal.scale(-20 * 1), :arrow_size => 8)
+        draw_vector(@bc1.normalize.scale(20), :origin => @pB + @normal.scale(-20 * 1), :arrow_size => 8)
       end
     end
 
@@ -140,8 +140,8 @@ class App < Stylet::Base
         vputs "C2 dot_product(AC2, BC2): #{@ip2} (#{dot_product_state(@ip2)})"
 
         # 二つのベクトルがどちらを向いているか視覚化(お互いが衝突していたら線の中にいることがわかる)
-        draw_vector(@ac2.normalize.scale(20), :origin => @pA + @normal.scale(-20*2), :arrow_size => 8)
-        draw_vector(@bc2.normalize.scale(20), :origin => @pB + @normal.scale(-20*2), :arrow_size => 8)
+        draw_vector(@ac2.normalize.scale(20), :origin => @pA + @normal.scale(-20 * 2), :arrow_size => 8)
+        draw_vector(@bc2.normalize.scale(20), :origin => @pB + @normal.scale(-20 * 2), :arrow_size => 8)
       end
     end
 

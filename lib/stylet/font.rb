@@ -56,7 +56,7 @@ module Stylet
 
     def sdl_ttf_instance
       unless @sdl_ttf_instance
-        if font_file = font_list.collect{|e|Pathname(e)}.find{|e|e.exist?}
+        if font_file = font_list.collect {|e|Pathname(e)}.find {|e|e.exist?}
           @sdl_ttf_instance = SDL::TTF.open(font_file.to_s, @attributes[:font_size])
           Stylet.logger.debug "load: #{font_file} (#{@sdl_ttf_instance.family_name.inspect} #{@sdl_ttf_instance.style_name.inspect} #{@sdl_ttf_instance.height} #{@sdl_ttf_instance.line_skip} #{@sdl_ttf_instance.fixed_width?})" if Stylet.logger
           if @attributes[:bold]
@@ -100,7 +100,7 @@ module Stylet
 
     def update
       super
-      if Stylet.config.production_keys.any?{|key|key_down?(key)}
+      if Stylet.config.production_keys.any? {|key|key_down?(key)}
         Stylet.production = !Stylet.production
       end
     end

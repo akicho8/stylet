@@ -11,7 +11,7 @@ def normalize(in_file, hz)
   system "mv #{out_file.to_s.shellescape} #{in_file.to_s.shellescape}"
 end
 
-Pathname.glob(Pathname(path).expand_path){|in_file|
+Pathname.glob(Pathname(path).expand_path) {|in_file|
   info = `file #{in_file.to_s.shellescape}`
   if info.match(/Microsoft PCM/)
     case

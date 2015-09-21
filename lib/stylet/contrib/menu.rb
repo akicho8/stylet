@@ -30,7 +30,7 @@ module Stylet
           :aroundable        => false,
           :cursor            => 0,
           :every_command_all => nil,
-        }.merge(params).each{|k, v|instance_variable_set("@#{k}", v)}
+        }.merge(params).each {|k, v|instance_variable_set("@#{k}", v)}
 
         @window_cursor  = @cursor
         @state = State.new(:boot)
@@ -68,7 +68,7 @@ module Stylet
       end
 
       def close_trigger?
-        root.cancel_buttons.any?{|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
+        root.cancel_buttons.any? {|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
       end
 
       def diff_val
@@ -332,7 +332,7 @@ module Stylet
         end
 
         def current_run_trigger?
-          root.select_buttons.any?{|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
+          root.select_buttons.any? {|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
         end
 
         def safe_command_around
@@ -361,7 +361,7 @@ module Stylet
         end
 
         def what_type?(s)
-          current.keys.any?{|e|e.to_s.include?(s)}
+          current.keys.any? {|e|e.to_s.include?(s)}
         end
       end
     end
@@ -445,15 +445,15 @@ module Stylet
                       ])
                   },
                 },
-                {name: "サブメニュー2", simple_command: proc {|s| s.chain(name: "[サブメニュー2]", elements: 50.times.collect{|i|{:name => "項目#{i}"}})}},
-                {name: "サブメニュー3", menu: {name: "[サブメニュー3]", elements: 50.times.collect{|i|{:name => "項目#{i}"}}}},
+                {name: "サブメニュー2", simple_command: proc {|s| s.chain(name: "[サブメニュー2]", elements: 50.times.collect {|i|{:name => "項目#{i}"}})}},
+                {name: "サブメニュー3", menu: {name: "[サブメニュー3]", elements: 50.times.collect {|i|{:name => "項目#{i}"}}}},
                 {:name => "閉じる", simple_command: :close_and_parent_restart },
               ])
           end
         end
 
         def counter_loop
-          main_loop{|_| @menu.update }
+          main_loop {|_| @menu.update }
         end
       end
 

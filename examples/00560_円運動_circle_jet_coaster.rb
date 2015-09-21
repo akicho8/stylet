@@ -38,7 +38,7 @@ class App < Stylet::Base
 
   setup do
     cursor.display = false
-    @objects += Array.new(16){|i|Ball.new(i)}
+    @objects += Array.new(16) {|i|Ball.new(i)}
     @xc = 3.5
     @yc = 4.0
   end

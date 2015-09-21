@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {s,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  s.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
   s.require_paths = ["lib"]
 
   s.add_dependency "rsdl"
@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
   # s.add_development_dependency "rspec"
   s.add_development_dependency "yard"
   s.add_development_dependency "test-unit"
+  s.add_development_dependency "rubocop"
   # s.add_development_dependency "test-unit-activesupport"
   # s.add_development_dependency "test-unit-notify"
   # s.add_development_dependency "power_assert"

@@ -60,7 +60,7 @@ module Stylet
         case value
         when String
           if @match_chars
-            value = @match_chars.chars.any?{|m|value.include?(m)}
+            value = @match_chars.chars.any? {|m|value.include?(m)}
           else
             value = nil
           end

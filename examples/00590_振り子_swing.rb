@@ -60,7 +60,7 @@ class App < Stylet::Base
 
     # 鉄球の座標から重力を反映した座標(pC)を求める(これはどういう数式？)
     v = @pA - @p0
-    t = -(v.y * @gravity.y) / (v.x ** 2 + v.y ** 2)
+    t = -(v.y * @gravity.y) / (v.x**2 + v.y**2)
     @pC = @pA + @gravity + v.scale(t)
 
     # 振り子の中心(p0)から重力反映座標(pC)の角度(@dir2)を求める

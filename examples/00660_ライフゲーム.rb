@@ -12,7 +12,7 @@ class App < Stylet::Base
   include Helper::CursorWithObjectCollection
 
   setup do
-    @matrixs = Array.new(2){{}}
+    @matrixs = Array.new(2) {{}}
     @generation = 0
     @cell_list_index = 0
 

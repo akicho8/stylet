@@ -24,6 +24,6 @@ end
 
 player = Player.new
 Window.new(player)
-(60*3).times do
+(60 * 3).times do
   player.render
 end

@@ -10,13 +10,13 @@ class App < Stylet::Base
   setup do
     @points = []
     @points << srect.center + vec2[-srect.w * 0.4, srect.h * 0.4]
-    @points << srect.center + vec2[ srect.w * 0.4, -srect.h * 0.4]
+    @points << srect.center + vec2[srect.w * 0.4, -srect.h * 0.4]
     @gain = 8                   # 0で水平、8ぐらいでS時、マイナスなら反転
   end
 
   update do
     update_movable_points(@points)
-    @points.each_with_index{|e, i|vputs("p#{i}", :vector => e)}
+    @points.each_with_index {|e, i|vputs("p#{i}", :vector => e)}
 
     p0, p1 = *@points
     if p0.x > p1.x              # 動かしていて左から順に p1 p0 になってしまったときは p0 p1 となるように入れ替える

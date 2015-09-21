@@ -28,7 +28,7 @@ class App < Stylet::Base
 
   update do
     GL.ClearColor(0.0, 0.0, 0.2, 0.0) # 背景色の設定(最後の1.0はなんだろう？)
-    GL.Clear(GL::COLOR_BUFFER_BIT|GL::DEPTH_BUFFER_BIT)
+    GL.Clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT)
 
     GL::Begin(GL::QUADS) # 4つの点があることを宣言
 

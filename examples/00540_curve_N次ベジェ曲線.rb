@@ -61,7 +61,7 @@ class App
   def bezier_curve(*points, d)
     o = vec2.zero
 
-    points.size.times{|i|
+    points.size.times {|i|
       p = points[i]
       v = 1.0
       a = points.size - 1
@@ -83,7 +83,7 @@ class App
           c -= 1
         end
       end
-      v *= (d ** i) * ((1 - d) ** ((points.size - 1) - i))
+      v *= (d**i) * ((1 - d)**((points.size - 1) - i))
       o += p.scale(v)
     }
     o

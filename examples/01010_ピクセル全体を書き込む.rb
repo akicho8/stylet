@@ -2,7 +2,7 @@
 require_relative "helper"
 
 Stylet.configure do |config|
-  config.screen_size = [320/4, 240/4]
+  config.screen_size = [320 / 4, 240 / 4]
 end
 
 class App < Stylet::Base

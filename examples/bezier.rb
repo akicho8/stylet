@@ -33,7 +33,7 @@ class App < Stylet::Base
 
     # ベジェのポイントを動かして表示
     update_movable_points(@points)
-    @points.each_with_index{|e, i|vputs("b#{i} #{e}", :vector => e)}
+    @points.each_with_index {|e, i|vputs("b#{i} #{e}", :vector => e)}
 
     unless @points.empty?
       # 物体をいったりきたりさせる
@@ -94,7 +94,7 @@ class App
         update_movable_points(@line_ab)
 
         # ライン両端の番号とライン表示
-        @line_ab.each_with_index{|e, i|vputs("p#{i} #{e}", :vector => e)}
+        @line_ab.each_with_index {|e, i|vputs("p#{i} #{e}", :vector => e)}
         draw_line(*@line_ab)
 
         # 2点から直線 ax+bx+c=0 の a b c を求める
@@ -131,11 +131,11 @@ class App
     def intersection1(p0, p1, p2, a, b, c)
       t = []
 
-      m = b*p2.y+b*p0.y+a*p2.x+a*p0.x-2*b*p1.y-2*a*p1.x
-      n = -2*b*p0.y-2*a*p0.x+2*b*p1.y+2*a*p1.x
-      l = b*p0.y+a*p0.x+c
+      m = b * p2.y + b * p0.y + a * p2.x + a * p0.x - 2 * b * p1.y - 2 * a * p1.x
+      n = -2 * b * p0.y - 2 * a * p0.x + 2 * b * p1.y + 2 * a * p1.x
+      l = b * p0.y + a * p0.x + c
 
-      d = (n**2)-4*m*l
+      d = (n**2) - 4 * m * l
 
       vputs "a: #{a}"
       vputs "b: #{b}"
@@ -156,7 +156,7 @@ class App
 
       vputs "t: #{t}"
 
-      t = t.find_all{|d|(0..1).include?(d)} # (0..1の範囲外は曲線の延長線上の交点になる)
+      t = t.find_all {|d|(0..1).include?(d)} # (0..1の範囲外は曲線の延長線上の交点になる)
       t
     end
 
@@ -165,9 +165,9 @@ class App
     def intersection2(p0, p1, p2, a, b, c)
       t = []
 
-      l = a*(p2.x-2*p1.x+p0.x)+b*(p2.y-2*p1.y+p0.y)
-      m = 2*(a*(p1.x-p0.x)+b*(p1.y-p0.y))
-      n = a*p0.x+b*p0.y+c
+      l = a * (p2.x - 2 * p1.x + p0.x) + b * (p2.y - 2 * p1.y + p0.y)
+      m = 2 * (a * (p1.x - p0.x) + b * (p1.y - p0.y))
+      n = a * p0.x + b * p0.y + c
 
       # 交点があるにもかかわらず t = [Nan, -Infinity] になってしまう場合がある
       # このとき l が 0 になっているので、次のようにごまかせば交点が生まれたけど、計算が間違っている気がする
@@ -175,7 +175,7 @@ class App
       #   l = 0.000000001
       # end
 
-      d = (m**2)-4*l*n
+      d = (m**2) - 4 * l * n
 
       vputs "a: #{a}"
       vputs "b: #{b}"
@@ -188,15 +188,15 @@ class App
 
       if d > 0
         s = Math.sqrt(d)
-        t << (-m+s) / (2*l)
-        t << (-m-s) / (2*l)
+        t << (-m + s) / (2 * l)
+        t << (-m - s) / (2 * l)
       elsif d.zero?
-        t << -m/(2*l)
+        t << -m / (2 * l)
       end
 
       vputs "t: #{t}"
 
-      t = t.find_all{|d|(0..1).include?(d)} # (0..1の範囲外は曲線の延長線上の交点になる)
+      t = t.find_all {|d|(0..1).include?(d)} # (0..1の範囲外は曲線の延長線上の交点になる)
       t
     end
   end

@@ -13,7 +13,7 @@ class App < Stylet::Base
   end
 
   update do
-    a = @p * -@speed ** 2      # 加速度 = 現在の座標 * -角速度^2
+    a = @p * -@speed**2      # 加速度 = 現在の座標 * -角速度^2
     @v += a                    # 速度 += 加速度
     @p += @v                   # 座標 += 速度
     draw_vector(@p)

@@ -83,7 +83,7 @@ module Bullet3waydan
       if @frame_counter.modulo(60 / 5).zero?
         gap = 1.0 / 64
         n = 3
-        n.times{|i|
+        n.times {|i|
           d = @target_dir - (n / 2 * gap) + gap * i
           @win.bullets << Bullet.new(@win, @x, @y, d, 5.00)
         }
@@ -117,7 +117,7 @@ module BulletUzumaki
       div, mod = @frame_counter.divmod(60 / 20)
       if mod.zero?
         n = 4
-        n.times{|i|
+        n.times {|i|
           d = 1.0 / n * i + (Fee.rsin(1.0 / 32 * div) * 0.1)
           @win.bullets << Bullet.new(@win, @x, @y, d, 2)
         }
@@ -141,7 +141,7 @@ module BulletUzumakix2
   def uzumaki2(frame_counter, sign)
     n = 5
     gap = 1.0 / n
-    n.times{|i|
+    n.times {|i|
       d = (n / 2 * gap) + gap * i + (frame_counter * 1.0 / 120 * sign) + (frame_counter * 0.001)
       @win.bullets << Bullet.new(@win, @x, @y, d, 2.0)
     }
@@ -155,7 +155,7 @@ module Bullet128waydan
       if @frame_counter.modulo(60 / 2).zero?
         n = 64
         gap = 1.0 / n
-        n.times{|i|
+        n.times {|i|
           @win.bullets << Bullet.new(@win, @x, @y, gap * i, 4.00)
         }
       end
@@ -178,7 +178,7 @@ module BulletUzumakix2Fast
   def uzumaki2fast(frame_counter, sign)
     n = 3
     gap = 1.0 / n
-    n.times{|i|
+    n.times {|i|
       d = (n / 2 * gap) + gap * i + (frame_counter * 1.0 / 120 * sign) + (frame_counter * 0.001)
       @win.bullets << Bullet.new(@win, @x, @y, d, 6.0)
     }

@@ -112,11 +112,11 @@ module Stylet
         sin = Math.sin(rad)
         {
           a: m[:a] * cos + m[:b] * -sin,
-          b: m[:a] * sin + m[:b] *  cos,
+          b: m[:a] * sin + m[:b] * cos,
           c: m[:c] * cos + m[:d] * -sin,
-          d: m[:c] * sin + m[:d] *  cos,
+          d: m[:c] * sin + m[:d] * cos,
           tx: m[:tx] * cos + m[:ty] * -sin,
-          ty: m[:tx] * sin + m[:ty] *  cos,
+          ty: m[:tx] * sin + m[:ty] * cos,
         }
       end
 

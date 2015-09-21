@@ -9,7 +9,7 @@ SDL::GL.set_attr(SDL::GL_GREEN_SIZE, 5)
 SDL::GL.set_attr(SDL::GL_BLUE_SIZE, 5)
 SDL::GL.set_attr(SDL::GL_DEPTH_SIZE, 16)
 SDL::GL.set_attr(SDL::GL_DOUBLEBUFFER, 1)
-SDL::Screen.open(640,480, 16, SDL::OPENGL)
+SDL::Screen.open(640, 480, 16, SDL::OPENGL)
 
 GL::Viewport(0, 0, 640, 480)
 GL::MatrixMode(GL::PROJECTION)
@@ -37,7 +37,7 @@ loop do
   end
 
   GL.ClearColor(0.0, 0.0, 0.2, 0.0) # 背景色の設定(最後の1.0はなんだろう？)
-  GL.Clear(GL::COLOR_BUFFER_BIT|GL::DEPTH_BUFFER_BIT)
+  GL.Clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT)
 
   GL::Begin(GL::QUADS) # 4つの点があることを宣言
 

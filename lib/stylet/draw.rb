@@ -192,7 +192,7 @@ module Stylet
 
     def screen_info_check
       # フルスクリーンで利用可能なサイズ
-      logger.debug "SDL::Screen.list_modes # => #{SDL::Screen.list_modes(SDL::FULLSCREEN|SDL::HWSURFACE).inspect}"
+      logger.debug "SDL::Screen.list_modes # => #{SDL::Screen.list_modes(SDL::FULLSCREEN | SDL::HWSURFACE).inspect}"
 
       # 画面情報
       logger.debug "SDL::Screen.info # => #{SDL::Screen.info.inspect}"
@@ -204,7 +204,7 @@ module Stylet
         SDL::Event::APPINPUTFOCUS => "K",
         SDL::Event::APPACTIVE     => "A",
       }
-      app_state_list.collect{|k, v|
+      app_state_list.collect {|k, v|
         if (SDL::Event.app_state & k).nonzero?
           v
         end

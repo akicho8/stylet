@@ -17,7 +17,7 @@ class App < Stylet::Base
 
   update do
     update_movable_points([@p0, @p1])
-    [@p0, @p1].each_with_index{|e, i|vputs("p#{i} #{e}", :vector => e)}
+    [@p0, @p1].each_with_index {|e, i|vputs("p#{i} #{e}", :vector => e)}
 
     if button.btC.trigger?
       @x_mode = !@x_mode

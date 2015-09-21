@@ -64,7 +64,7 @@ class App < Stylet::Base
 
   update do
     update_movable_points(@points)
-    @points.each_with_index{|e, i|vputs("p#{i}", :vector => e)}
+    @points.each_with_index {|e, i|vputs("p#{i}", :vector => e)}
 
     # アナログレバーの方向を向く
     if (joy = Stylet.context.joys.first) && (al = joy.adjusted_analog_levers[:right]) && al.magnitude >= 0.5

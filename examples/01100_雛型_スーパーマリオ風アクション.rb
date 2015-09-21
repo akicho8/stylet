@@ -715,7 +715,7 @@ class App < Stylet::Base
         Stylet::SE["nc62985_zelda_secret_open"].play
         @bg_mode = :ff_effect
       end
-      if @state_counter == 60*2
+      if @state_counter == 60 * 2
         @state = :stg_set
         @state_counter = -1
         @stg_index += 1
@@ -789,7 +789,7 @@ class App < Stylet::Base
       if button.btA.trigger?
         if @hold_block
           # 置く
-          if @objects.any?{|o|o != @hold_block && o.pos == @hold_block.pos}
+          if @objects.any? {|o|o != @hold_block && o.pos == @hold_block.pos}
             # 置こうとしたけど自分以外のブロックがある場合
             # Stylet::SE["nc45878_buu"].play
             edit_func_kill_hold_object
@@ -799,7 +799,7 @@ class App < Stylet::Base
         else
           if true
             # ホールドする
-            if v = @objects.find{|o|o.pos == @edit_cursor_center}
+            if v = @objects.find {|o|o.pos == @edit_cursor_center}
               @hold_block = v
             end
           else
@@ -879,7 +879,7 @@ class App < Stylet::Base
 
         if rdiff > 0
           # 反発すると同時にジャンプボタンを押したら反発力4倍
-          rebound = proc{|p, sign|
+          rebound = proc {|p, sign|
             if true
               # めり込んでない位置まで反発する(さらに反発するなら処理を減らすためにここはスキップしてもいい)
               p.pos += diff.normalize * rdiff * sign / 2
@@ -1058,7 +1058,7 @@ class App < Stylet::Base
     if @bg_mode == :ff_effect
       # FF7で敵に遭遇したときの画面エフェクト
       screen.set_alpha(SDL::SRCALPHA, 128)
-      SDL::Surface.transform_blit(screen, screen, 1, 1.05, 1.05, *srect.center, *srect.center, SDL::Surface::TRANSFORM_AA|SDL::Surface::TRANSFORM_SAFE)
+      SDL::Surface.transform_blit(screen, screen, 1, 1.05, 1.05, *srect.center, *srect.center, SDL::Surface::TRANSFORM_AA | SDL::Surface::TRANSFORM_SAFE)
     end
   end
 
@@ -1079,7 +1079,7 @@ class App < Stylet::Base
   end
 
   def edit_func_block_hold
-    if v = @objects.find{|o|o.pos == @edit_cursor_center}
+    if v = @objects.find {|o|o.pos == @edit_cursor_center}
       @hold_block = v
     end
   end
@@ -1106,7 +1106,7 @@ class App < Stylet::Base
 
   def edit_func_kill_hold_object
     if @hold_block
-      if obj = @objects.find{|o|o != @hold_block && o.pos == @hold_block.pos}
+      if obj = @objects.find {|o|o != @hold_block && o.pos == @hold_block.pos}
         kill_task obj
       end
     end
@@ -1114,14 +1114,14 @@ class App < Stylet::Base
 
   def edit_func_kill_object_on_map
     unless @hold_block
-      if obj = @objects.find{|o|o.pos == @edit_cursor_center}
+      if obj = @objects.find {|o|o.pos == @edit_cursor_center}
         kill_task obj
       end
     end
   end
 
   def edit_func_stage_save
-    positions = @objects.group_by(&:class).inject({}){|hash, (klass, objs)|
+    positions = @objects.group_by(&:class).inject({}) {|hash, (klass, objs)|
       hash.merge(klass.name => objs.collect {|e| e.pos.round.to_a })
     }
     attrs = {
@@ -1138,9 +1138,9 @@ class App < Stylet::Base
   end
 
   def edit_func_stage_reload
-    @blocks.clone.each{|block|kill_task(block)}
-    @coins.clone.each{|coin|kill_task(coin)}
-    @players.clone.each{|player|kill_task(player)}
+    @blocks.clone.each {|block|kill_task(block)}
+    @coins.clone.each {|coin|kill_task(coin)}
+    @players.clone.each {|player|kill_task(player)}
 
     begin
       @stage_file = Pathname("stage_infos.rb").expand_path
@@ -1168,7 +1168,7 @@ class App < Stylet::Base
           else
             klass = SoftBlock
           end
-          v = vec2[16 + @virtual_rect.w / n * (i + (j.next.modulo(2) * 0.5)), @ground_y - 16 - 32*2 - 32*3*j]
+          v = vec2[16 + @virtual_rect.w / n * (i + (j.next.modulo(2) * 0.5)), @ground_y - 16 - 32 * 2 - 32 * 3 * j]
           task_set klass.new(pos: v)
           task_set Coin.new(pos: v + [0, -32])
         end
@@ -1187,7 +1187,7 @@ class App < Stylet::Base
       (m = 5).times.each do |j|
         (n = 40).times.each do |i|
           task_set Coin.new(pos:  vec2[16 + @virtual_rect.w / n * i, @ground_y - 100 - j * 100 - 32])
-          task_set [*[SoftBlock]*3, HardBlock].sample.new(pos: vec2[16 + @virtual_rect.w / n * i, @ground_y - 100 - j * 100])
+          task_set [*[SoftBlock] * 3, HardBlock].sample.new(pos: vec2[16 + @virtual_rect.w / n * i, @ground_y - 100 - j * 100])
         end
       end
 

@@ -18,7 +18,7 @@ class Ball
   def update
     dx = (@pos.x - @win.mouse.point.x).abs
     dy = (@pos.y - @win.mouse.point.y).abs
-    distance = Math.sqrt((dx ** 2) + (dy ** 2))
+    distance = Math.sqrt((dx**2) + (dy**2))
     @win.vputs(distance)
     radius_plus = @radius + @win.radius
     gap = radius_plus - distance

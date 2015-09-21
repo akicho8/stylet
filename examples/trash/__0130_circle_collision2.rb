@@ -16,12 +16,12 @@ class Ball
   end
 
   def update
-    @win.objects.each{|object|
+    @win.objects.each {|object|
       next if object == self
 
       dx = (@pos.x - object.pos.x).abs
       dy = (@pos.y - object.pos.y).abs
-      distance = Math.sqrt((dx ** 2) + (dy ** 2))
+      distance = Math.sqrt((dx**2) + (dy**2))
       @win.vputs(distance)
       distance_min = @radius + @win.radius
       if distance < distance_min
