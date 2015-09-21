@@ -5,6 +5,7 @@
 require_relative "helper"
 
 class Joint
+  include Stylet::Delegators
   attr_accessor :p0
 
   def initialize(index, p0)
@@ -59,7 +60,7 @@ class App < Stylet::Base
   attr_reader :hard_level
 
   setup do
-    @objects = Array.new(42){|i|Joint.new(i, srect.center.clone)}
+    @objects = Array.new(42) {|i|Joint.new(i, srect.center.clone)}
     @cursor.display = false     # 三角カーソル非表示
 
     @body_display = true # 胴体描画モード
