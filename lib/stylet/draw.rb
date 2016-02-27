@@ -213,6 +213,10 @@ module Stylet
 
     # オーバーライド推奨
     def background_clear
+      _background_clear
+    end
+
+    def _background_clear
       draw_rect(@srect, :color => :background, :fill => true)
     end
   end
