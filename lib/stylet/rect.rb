@@ -1,4 +1,3 @@
-
 module Stylet
   class Rect4 < Vector
     attr_accessor :wh

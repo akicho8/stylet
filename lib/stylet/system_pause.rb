@@ -1,4 +1,3 @@
-
 module Stylet
   module Pause
     def initialize

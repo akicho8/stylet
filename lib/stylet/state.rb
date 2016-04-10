@@ -1,4 +1,3 @@
-#
 # 状態遷移管理
 #
 #   @state = State.new(:idle)
