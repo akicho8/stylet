@@ -1,3 +1,4 @@
+# ELECOM ゲームパッド JC-U2410TBK http://www.amazon.co.jp/dp/B000FO600A
 module Stylet
   module JoystickAdapters
     class ElecomUsbPadAdapter < JoystickAdapter
@@ -13,13 +14,13 @@ module Stylet
       def lever_on?(dir)
         case dir
         when :up
-          axis(4) == -32768
+          axis(4).negative?
         when :down
-          axis(4) == +32767
+          axis(4).positive?
         when :right
-          axis(3) == +32767
+          axis(3).positive?
         when :left
-          axis(3) == -32768
+          axis(3).negative?
         else
           false
         end

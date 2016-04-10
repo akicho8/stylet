@@ -4,9 +4,6 @@ require "active_support/core_ext/string/inflections"
 
 module Stylet
   class JoystickAdapter
-    ANALOG_LEVER_MAX = 32767
-    ANALOG_LEVER_MAGNITUDE_MAX = Math.sqrt(ANALOG_LEVER_MAX**2 + ANALOG_LEVER_MAX**2)
-
     cattr_accessor :adapter_assigns do
       {
         "PLAYSTATION(R)3 Controller"  => :ps3_standard,   # 純正
@@ -28,7 +25,7 @@ module Stylet
 
     attr_reader :object
 
-    delegate :index, :axis, :button, :to => :object
+    delegate :axis, :button, :to => :object
 
     def initialize(object)
       @object = object
@@ -37,14 +34,14 @@ module Stylet
     # 抽象シリーズ
     begin
       def lever_on?(dir)
-        if pos = lever_button_assigns[dir]
-          button(pos)
+        if i = lever_button_assigns[dir]
+          button(i)
         end
       end
 
       def button_on?(key)
-        if pos = button_assigns[key]
-          button(pos)
+        if i = button_assigns[key]
+          button(i)
         end
       end
 
@@ -72,24 +69,24 @@ module Stylet
     # ハードウェアの値をそのまま返すシリーズ
     begin
       def name
-        SDL::Joystick.index_name(index)
+        SDL::Joystick.index_name(@object.index)
       end
 
       def raw_active_button_numbers
-        @object.num_buttons.times.collect {|index|
-          if @object.button(index)
-            index
+        @object.num_buttons.times.collect {|i|
+          if @object.button(i)
+            i
           end
         }.compact
       end
 
       def raw_analog_lever_status
-        @object.num_axes.times.collect {|index|@object.axis(index)}
+        @object.num_axes.times.collect {|i| @object.axis(i) }
       end
     end
 
     def inspect
-      "#{index}: #{unit_str}"
+      "#{@object.index}: #{unit_str}"
     end
 
     def unit_str
@@ -101,6 +98,9 @@ module Stylet
         raw_analog_lever_status,
       ].collect(&:to_s).join
     end
+
+    ANALOG_LEVER_MAX           = 32767
+    ANALOG_LEVER_MAGNITUDE_MAX = Math.sqrt(ANALOG_LEVER_MAX**2 + ANALOG_LEVER_MAX**2)
 
     # 調整済みアナログレバー
     def adjusted_analog_levers

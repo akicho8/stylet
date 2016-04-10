@@ -9,18 +9,14 @@ module Stylet
     #  |     |    |
     #  +---- r ---+
     def squire_collision?(p0, p1, options = {})
-      [
-        ((p0.x - options[:radius])..(p0.x + options[:radius])).include?(p1.x),
-        ((p0.y - options[:radius])..(p0.y + options[:radius])).include?(p1.y),
-      ].all?
+      ((p0.x - options[:radius])..(p0.x + options[:radius])).include?(p1.x) &&
+        ((p0.y - options[:radius])..(p0.y + options[:radius])).include?(p1.y)
     end
 
     # 領域rectの中に点pが含まれているか？
     def rect_in?(rect, p)
-      [
-        (rect.min_x <= p.x && p.x <= rect.max_x),
-        (rect.min_y <= p.y && p.y <= rect.max_y),
-      ].all?
+      (rect.min_x <= p.x && p.x <= rect.max_x) &&
+        (rect.min_y <= p.y && p.y <= rect.max_y)
     end
 
     # 領域rectの中に点pが含まていない？

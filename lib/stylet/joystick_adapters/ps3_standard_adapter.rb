@@ -1,4 +1,4 @@
-
+# 純正 or 純正風ぱちもん
 module Stylet
   module JoystickAdapters
     class Ps3StandardAdapter < JoystickAdapter

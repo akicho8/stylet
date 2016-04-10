@@ -15,25 +15,28 @@ module Stylet
     #         2
     #        [D]
     def axis_angle_index(axis)
-      if axis.up.press?
-        if axis.right.press?
+      case
+      when axis.up.press?
+        case
+        when axis.right.press?
           7
-        elsif axis.left.press?
+        when axis.left.press?
           5
         else
           6
         end
-      elsif axis.down.press?
-        if axis.right.press?
+      when axis.down.press?
+        case
+        when axis.right.press?
           1
-        elsif axis.left.press?
+        when axis.left.press?
           3
         else
           2
         end
-      elsif axis.right.press?
+      when axis.right.press?
         0
-      elsif axis.left.press?
+      when axis.left.press?
         4
       end
     end
