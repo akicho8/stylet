@@ -5,7 +5,7 @@ Stylet::Palette[:background] = [107, 140, 255]
 Stylet::Palette[:font]       = [0, 0, 0]
 
 if true
-  Stylet::Sprity.reset_cache_all
+  Stylet::Sprity.surface_destroy_all
 
   Stylet::Sprity::ImageFile.static_record_list_set [
     {:key => :castle2, :filename => "../assets/images/dlmap/castle2.png", :mask => true},

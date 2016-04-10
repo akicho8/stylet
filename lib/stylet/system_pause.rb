@@ -7,7 +7,7 @@ module Stylet
 
     def polling
       super
-      if Stylet.config.pause_keys.any? {|key|key_down?(key)}
+      if Stylet.config.pause_keys.any? {|key| key_down?(key) }
         @pause = !@pause
       end
     end

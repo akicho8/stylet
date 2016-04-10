@@ -1,17 +1,16 @@
-#
 # マップチップと単一画像の違いを吸収してキャラクタを表示する
 #
 # ■スプライトの登録と描画
 #
-#   Stylet::Sprity::ImageFile.static_record_list_set [
+#   Sprity::ImageFile.static_record_list_set [
 #     {:key => :foo, :filename => "assets/images/foo.png"},
 #   ]
 #
-#   screen.put(Stylet::Sprity::Sprite[:foo].surface, 0, 0)
+#   screen.put(Sprity::Sprite[:foo].surface, 0, 0)
 #
 # ■内部で保持している surface をすべて解放
 #
-#   Stylet::Sprity.reset_cache_all
+#   Stylet::Sprity.surface_destroy_all
 #
 # ■ :filename の指定がシンボルなら ImageFile から取得し、文字列ならそのパスから読み出す
 #
@@ -38,8 +37,8 @@
 module Stylet
   module Sprity
     class << self
-      def reset_cache_all
-        [ImageFile, Sprite].each(&:reset_cache_all)
+      def surface_destroy_all
+        [ImageFile, Sprite].each(&:surface_destroy_all)
       end
 
       def processing(surface, params)
@@ -91,11 +90,11 @@ module Stylet
         @surface ||= Sprity.load_file(@attributes[:filename], mask: @attributes[:mask])
       end
 
-      def self.reset_cache_all
-        each(&:reset_cache)
+      def self.surface_destroy_all
+        each(&:surface_destroy)
       end
 
-      def reset_cache
+      def surface_destroy
         if @surface
           unless @surface.destroyed?
             @surface.destroy
@@ -119,11 +118,11 @@ module Stylet
         @surface ||= _surface
       end
 
-      def self.reset_cache_all
-        each(&:reset_cache)
+      def self.surface_destroy_all
+        each(&:surface_destroy)
       end
 
-      def reset_cache
+      def surface_destroy
         if @surface
           unless @surface.destroyed?
             @surface.destroy
