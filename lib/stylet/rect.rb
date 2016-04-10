@@ -85,7 +85,7 @@ module Stylet
     end
 
     def rect_vector
-      Vector.new(w - 1, y - 1)
+      Vector.new(w - 1, h - 1)
     end
 
     def inspect
