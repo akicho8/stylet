@@ -21,7 +21,7 @@ class App < Stylet::Base
     self.title = "振り子"
 
     @p0 = srect.center + vec2[0, -srect.h * 0]   # 円の中心
-    @dir1 = Stylet::Fee.clock(1) # 角度
+    @dir1 = Stylet::Magic.clock(1) # 角度
     @speed = 0                   # 角速度
     @friction = 0.0              # 摩擦(0.0:なし 1.0:最大)
     @radius = srect.hy * 0.5 # 糸の長さ
@@ -74,7 +74,7 @@ class App < Stylet::Base
     # 対策として右半分にいるときかつ @dir2 の方が小さいとき @dir2 は一周したことにする
     # ただ 1.0 するのではなく @dir1 が進みすぎて一周したということにしたいので @dir1.round を加算してみたが、これはおかしくなる
     # 1.0 加算するのが正解っぽい
-    if Stylet::Fee.cright?(@dir1)
+    if Stylet::Magic.cright?(@dir1)
       if @dir2 < @dir1
         @dir2 += 1.0
       end
@@ -136,8 +136,8 @@ class App < Stylet::Base
   def rad90_line
     # draw_line(@pB, @pC)
     # _r = 256
-    # p2 = @pA + vec2.angle_at(@dir1 - Stylet::Fee.r90) * _r
-    # p3 = @pA + vec2.angle_at(@dir1 + Stylet::Fee.r90) * _r
+    # p2 = @pA + vec2.angle_at(@dir1 - Stylet::Magic.r90) * _r
+    # p3 = @pA + vec2.angle_at(@dir1 + Stylet::Magic.r90) * _r
     # draw_line(p2, p3)
   end
 

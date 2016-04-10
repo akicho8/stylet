@@ -18,7 +18,7 @@ require "shooting"
 module BulletDir
   def compute
     super
-    @target_dir = Fee.angle(@x, @y, @target.x, @target.y)
+    @target_dir = Magic.angle(@x, @y, @target.x, @target.y)
   end
 end
 
@@ -45,7 +45,7 @@ class Bullet2 < BulletBase
     compute_sincos
     unless @win.pause_mode
       if @frame_counter.modulo(1).zero?
-        d = Fee.angle(@x, @y, @target.x, @target.y)
+        d = Magic.angle(@x, @y, @target.x, @target.y)
         gap = (d - @dir) % 1.00
         if gap >= 0.5
           sign = -1
@@ -117,7 +117,7 @@ module BulletUzumaki
       if mod.zero?
         n = 4
         n.times {|i|
-          d = 1.0 / n * i + (Fee.rsin(1.0 / 32 * div) * 0.1)
+          d = 1.0 / n * i + (Magic.rsin(1.0 / 32 * div) * 0.1)
           @win.bullets << Bullet.new(@win, @x, @y, d, 2)
         }
       end

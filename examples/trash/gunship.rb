@@ -24,8 +24,8 @@ class GunShip
     key_counter_update_all
 
     if dir = axis_angle
-      x = @pos.x + Stylet::Fee.rcos(dir) * @speed
-      y = @pos.y + Stylet::Fee.rsin(dir) * @speed
+      x = @pos.x + Stylet::Magic.rcos(dir) * @speed
+      y = @pos.y + Stylet::Magic.rsin(dir) * @speed
       if (@win.srect.min_x..@win.srect.max_x).include?(x)
         @pos.x = x
       end

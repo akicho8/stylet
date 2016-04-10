@@ -8,7 +8,7 @@ class App < Stylet::Base
     self.title = "戦車"
 
     @pos        = srect.center.clone    # 車体の位置
-    @body_dir   = Stylet::Fee.clock(0) # 車体の進む方向
+    @body_dir   = Stylet::Magic.clock(0) # 車体の進む方向
     @handle_dir = 0                    # ハンドル角度
     @accel      = 0                    # 加速度
     @speed      = 0                    # 速度

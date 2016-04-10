@@ -7,12 +7,12 @@ module Stylet
     #   四角形
     #     win.draw_circle(win.srect.center, :vertex => 4)
     #   三角形で頂点の向きは時計の6時で半径256ピクセル
-    #     win.draw_circle(win.srect.center, :vertex => 3, :angle => Fee.r90, :radius => 256)
+    #     win.draw_circle(win.srect.center, :vertex => 3, :angle => Magic.r90, :radius => 256)
     def draw_circle(p0, options = {})
       options = {
         :radius => 64,       # 半径
         :vertex => 8,        # n角形
-        :angle  => Fee.r270, # 開始地点(初期値は時計の12時)
+        :angle  => Magic.r270, # 開始地点(初期値は時計の12時)
       }.merge(options)
 
       raise "options[:vertex] is not Integer" unless options[:vertex].is_a? Integer
@@ -40,7 +40,7 @@ module Stylet
     def draw_angle_rect(p0, options = {})
       options = {
         :radius => 64,       # 半径
-        :angle  => Fee.r270, # 長方形の細長い部分の方向
+        :angle  => Magic.r270, # 長方形の細長い部分の方向
         :edge => 1.0 / 16,   # 長方形の細長い先っぽの面の大きさ(0なら一本線。0.125で正方形)
       }.merge(options)
       s = options[:edge]

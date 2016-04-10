@@ -40,7 +40,7 @@ module Stylet
           ], :to => "Stylet::Base.active_frame")
       end
 
-      delegate(*[:rsin, :rcos], :to => "Stylet::Fee")
+      delegate(*[:rsin, :rcos], :to => "Stylet::Magic")
     end
   end
 end

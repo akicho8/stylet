@@ -17,7 +17,7 @@ class Ball
     @arrow = rand(2).zero? ? 1 : -1
 
     @pos = vec2[rand(srect.w), srect.min_y - @radius * 2]
-    @speed = vec2.angle_at(Stylet::Fee.clock(rand(5.5..6.5))).scale(rand(1.0..1.5))
+    @speed = vec2.angle_at(Stylet::Magic.clock(rand(5.5..6.5))).scale(rand(1.0..1.5))
   end
 
   def update

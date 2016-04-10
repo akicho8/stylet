@@ -58,7 +58,7 @@ class App < Stylet::Base
     @points = []
     @points << srect.center + vec2[+srect.w / 4, 0]  # 右の点
 
-    @rot = Stylet::Fee.clock(10, 30)
+    @rot = Stylet::Magic.clock(10, 30)
   end
 
   update do

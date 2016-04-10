@@ -12,12 +12,12 @@ class App < Stylet::Base
     # A
     @pA = srect.center.clone                              # 点
     @rA = Stylet::Rect4.centered_create(40, 40)                # 大きさ
-    @sA = vec2.angle_at(Stylet::Fee.degree(180 + 90)) # 速度
+    @sA = vec2.angle_at(Stylet::Magic.degree(180 + 90)) # 速度
 
     # B
     @pB = srect.center.clone                        # 点
     @rB = Stylet::Rect4.centered_create(100, 60)         # 大きさ
-    @sB = vec2.angle_at(Stylet::Fee.degree(45)) # 速度
+    @sB = vec2.angle_at(Stylet::Magic.degree(45)) # 速度
 
     @speed = 100    # 速度ベクトル 1.0 を画面上では何ドットで表わすか？
     @max_length = 1 # どれだけめり込んだら当たったとみなすか？

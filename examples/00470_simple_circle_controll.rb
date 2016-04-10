@@ -9,7 +9,7 @@ class App < Stylet::Base
   setup do
     self.title = "円の移動の定石"
     @pA = srect.center.clone
-    @sA = vec2.angle_at(Stylet::Fee.clock(8))
+    @sA = vec2.angle_at(Stylet::Magic.clock(8))
     @radius = 50
     @vertex = 32
   end

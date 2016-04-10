@@ -278,7 +278,7 @@ Style/EmptyLineBetweenDefs:
   Exclude:
     - 'lib/stylet/rect.rb'
     - 'lib/stylet/shortcut.rb'
-    - 'stylet_math/lib/stylet/fee.rb'
+    - 'stylet_math/lib/stylet/magic.rb'
     - 'vortex/cgi/index.rb'
     - 'vortex/lib/vortex/db_server.rb'
     - 'vortex/lib/vortex/simulator.rb'
@@ -521,7 +521,7 @@ Style/SingleLineMethods:
   Exclude:
     - 'lib/stylet/rect.rb'
     - 'lib/stylet/shortcut.rb'
-    - 'stylet_math/lib/stylet/fee.rb'
+    - 'stylet_math/lib/stylet/magic.rb'
     - 'vortex/lib/vortex/db_server.rb'
     - 'vortex/lib/vortex/field.rb'
     - 'vortex/lib/vortex/window.rb'

@@ -4,7 +4,7 @@ require "shooting"
 module BulletTrigger
   def compute
     super
-    dir = Fee.angle(@x, @y, @target.x, @target.y)
+    dir = Magic.angle(@x, @y, @target.x, @target.y)
     if joy && joy.button(0)
       if @frame_counter.modulo(60 / 6).zero?
         @win.bullets << Bullet.new(@win, @x, @y, dir, 3.00)

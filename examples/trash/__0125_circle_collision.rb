@@ -22,7 +22,7 @@ class Ball
     radius_plus = @radius + @win.radius
     gap = radius_plus - distance
     if gap > 0
-      @dir = Stylet::Fee.angle(@win.mouse.point.x, @win.mouse.point.y, @pos.x, @pos.y)
+      @dir = Stylet::Magic.angle(@win.mouse.point.x, @win.mouse.point.y, @pos.x, @pos.y)
       @cpos = @pos.clone
       @r = 0
       @vr = gap
@@ -32,8 +32,8 @@ class Ball
       @vr = 0
     end
     @r += @vr
-    @pos.x = @cpos.x + Stylet::Fee.rcos(@dir) * @r
-    @pos.y = @cpos.y + Stylet::Fee.rsin(@dir) * @r
+    @pos.x = @cpos.x + Stylet::Magic.rcos(@dir) * @r
+    @pos.y = @cpos.y + Stylet::Magic.rsin(@dir) * @r
     @win.draw_polygon(@pos, :radius => @radius, :vertex => 32)
   end
 
@@ -70,8 +70,8 @@ module Helper
       end
 
       if dir = axis_angle
-        @cursor.point.x += Stylet::Fee.rcos(dir) * @cursor.speed
-        @cursor.point.y += Stylet::Fee.rsin(dir) * @cursor.speed
+        @cursor.point.x += Stylet::Magic.rcos(dir) * @cursor.speed
+        @cursor.point.y += Stylet::Magic.rsin(dir) * @cursor.speed
       end
 
       vputs @mouse.point.to_a

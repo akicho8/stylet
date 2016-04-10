@@ -17,7 +17,7 @@ class Bullet
   end
 
   def update
-    d = Stylet::Fee.angle_diff(from: @dir, to: @pos.angle_to(@target))
+    d = Stylet::Magic.angle_diff(from: @dir, to: @pos.angle_to(@target))
     @dir += d * @adir
 
     if d.abs < @angle_window   # angle_window 度未満なら

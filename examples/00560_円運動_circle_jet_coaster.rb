@@ -24,8 +24,8 @@ class Ball
   #
   def pos_new(frame_counter)
     srect.center + vec2[
-      Stylet::Fee.rcos(1.0 / 512 * (frame_counter * xc + @index * 24)) * srect.w * 0.4,
-      Stylet::Fee.rsin(1.0 / 512 * (frame_counter * yc + @index * 24)) * srect.h * 0.4,
+      Stylet::Magic.rcos(1.0 / 512 * (frame_counter * xc + @index * 24)) * srect.w * 0.4,
+      Stylet::Magic.rsin(1.0 / 512 * (frame_counter * yc + @index * 24)) * srect.h * 0.4,
     ]
   end
 end

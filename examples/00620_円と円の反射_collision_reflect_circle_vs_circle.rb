@@ -29,12 +29,12 @@ class App < Stylet::Base
     @reflect_mode = @modes.first
 
     @pA = srect.center.clone + vec2[80, -70]
-    @sA = vec2.angle_at(Stylet::Fee.clock(6, 15)).scale(1.0)
+    @sA = vec2.angle_at(Stylet::Magic.clock(6, 15)).scale(1.0)
     @a_radius = 100
     @am = @a_radius**2
 
     @pB = srect.center.clone + vec2[-120, -80]
-    @sB = vec2.angle_at(Stylet::Fee.clock(4)).scale(1.0)
+    @sB = vec2.angle_at(Stylet::Magic.clock(4)).scale(1.0)
     @b_radius = 60
     @bm = @b_radius**2            # 質量
 

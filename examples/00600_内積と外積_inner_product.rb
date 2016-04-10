@@ -9,8 +9,8 @@ class App < Stylet::Base
 
   setup do
     @points = []
-    @points << vec2.angle_at(Stylet::Fee.clock(3)).scale(100)
-    @points << vec2.angle_at(Stylet::Fee.clock(0)).scale(100)
+    @points << vec2.angle_at(Stylet::Magic.clock(3)).scale(100)
+    @points << vec2.angle_at(Stylet::Magic.clock(0)).scale(100)
     self.title = "内積と外積"
   end
 
@@ -27,7 +27,7 @@ class App < Stylet::Base
     vputs "外積(縦): #{cross_product.round(2)}"
 
     vC = a.normalize * dot_product
-    vD = a.normalize.rotate(Stylet::Fee.r90) * cross_product
+    vD = a.normalize.rotate(Stylet::Magic.r90) * cross_product
     draw_vector(vC, :origin => srect.center, :color => :orange)
     draw_vector(vD, :origin => vC + srect.center, :color => :orange)
   end

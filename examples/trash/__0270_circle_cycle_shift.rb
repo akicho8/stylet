@@ -10,8 +10,8 @@ class Ball
 
   def update
     pos = vec2.zero
-    pos.x = Stylet::Fee.rcos(1.0 / 512 * (@win.frame_counter * 3)) * @win.srect.w / 2
-    pos.y = Stylet::Fee.rsin(1.0 / 512 * (@win.frame_counter * 4)) * @win.srect.h / 2
+    pos.x = Stylet::Magic.rcos(1.0 / 512 * (@win.frame_counter * 3)) * @win.srect.w / 2
+    pos.y = Stylet::Magic.rsin(1.0 / 512 * (@win.frame_counter * 4)) * @win.srect.h / 2
     pos += @win.srect.center
     @win.draw_polygon(pos, :radius => 64)
   end

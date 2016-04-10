@@ -908,7 +908,7 @@ class App < Stylet::Base
               p.jump_process
               d = diff * sign
               # FIXME: 真上補正は上向きベクトルがあるもののみにした方がいいかも
-              a = d.angle + Stylet::Fee.angle_diff(from: d.angle, to: Stylet::Fee.clock(12)) * @vertical_correction
+              a = d.angle + Stylet::Magic.angle_diff(from: d.angle, to: Stylet::Magic.clock(12)) * @vertical_correction
               p.speed = vec2.angle_at(a) * p.speed.magnitude * @head_jump_mul # だんだんスピードが大きくなる
             end
           }
@@ -957,7 +957,7 @@ class App < Stylet::Base
     # 強制スクロールする例(左右に揺らす例)
     if false
       movable_width = virtual_rect.w - srect.w # カメラの移動可能な幅
-      @camera.x = virtual_rect.half_w + Stylet::Fee.rsin(1.0 / 512 * frame_counter) * movable_width / 2
+      @camera.x = virtual_rect.half_w + Stylet::Magic.rsin(1.0 / 512 * frame_counter) * movable_width / 2
     end
 
     # キャラに合わせてスクロールする例

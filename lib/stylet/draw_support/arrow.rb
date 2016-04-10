@@ -32,7 +32,7 @@ module Stylet
       end
 
       options = {
-        :angle      => Fee.r45,                  # 傘の開き
+        :angle      => Magic.r45,                  # 傘の開き
         :arrow_size => p0.distance_to(p1) * 0.1, # 傘の大きさは線分の長さに比例
       }.merge(options)
 

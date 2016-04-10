@@ -24,13 +24,13 @@ class Ball
       @win.vputs(distance)
       distance_min = @radius + @win.radius
       if distance < distance_min
-        dir = Stylet::Fee.angle(object.pos.x, object.pos.y, @pos.x, @pos.y)
-        @pos.x = object.pos.x + Stylet::Fee.rcos(dir) * distance_min
-        @pos.y = object.pos.y + Stylet::Fee.rsin(dir) * distance_min
+        dir = Stylet::Magic.angle(object.pos.x, object.pos.y, @pos.x, @pos.y)
+        @pos.x = object.pos.x + Stylet::Magic.rcos(dir) * distance_min
+        @pos.y = object.pos.y + Stylet::Magic.rsin(dir) * distance_min
       end
     }
-    @pos.x += Stylet::Fee.rcos(@dir) * @r
-    @pos.y += Stylet::Fee.rsin(@dir) * @r
+    @pos.x += Stylet::Magic.rcos(@dir) * @r
+    @pos.y += Stylet::Magic.rsin(@dir) * @r
     @win.draw_polygon(@pos, :radius => @radius, :vertex => 32)
   end
 

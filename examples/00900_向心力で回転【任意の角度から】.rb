@@ -8,7 +8,7 @@ class App < Stylet::Base
     @speed = (2 * Math::PI / (60 * 8))       # 角速度 (一周2πを120分割 = 8秒で一周想定)
 
     @r = 100                                 # 半径
-    @p = vec2.angle_at(Stylet::Fee.r45) * @r # 座標(45度=右下)
+    @p = vec2.angle_at(Stylet::Magic.r45) * @r # 座標(45度=右下)
 
     # 速度の求め方
     # vx = -rω * sin(ωt)
