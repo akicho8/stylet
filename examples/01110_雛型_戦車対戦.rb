@@ -250,7 +250,7 @@ class Bullet
     @radius += @speed
     _pos = @pos + vec2.angle_at(@dir) * @radius
     Stylet.context.draw_triangle(_pos, :radius => @size, :angle => @dir, :vertex => 8)
-    rc = Stylet::Rect4.centered_create(@size * 1.5).add_vector(_pos)
+    rc = Stylet::Rect4.centered_create(@size * 1.5).vector_add(_pos)
     Stylet.context.draw_rect(rc) if $DEBUG
     if Stylet::CollisionSupport.rect_in?(rc, @tank.target.pos)
       if @tank.target.life >= 1
@@ -307,7 +307,7 @@ class Missile
     @radius += @speed
     _pos = @pos + vec2.angle_at(@dir) * @radius
     Stylet.context.draw_triangle(_pos, :radius => @size, :angle => @dir)
-    rc = Stylet::Rect4.centered_create(@size * 1.5).add_vector(_pos)
+    rc = Stylet::Rect4.centered_create(@size * 1.5).vector_add(_pos)
     Stylet.context.draw_rect(rc) if $DEBUG
     if Stylet::CollisionSupport.rect_in?(rc, @tank.target.pos)
       if @tank.target.life >= 1

@@ -46,8 +46,8 @@ class App < Stylet::Base
     end
 
     # それぞれを実座標に変換
-    @tA = @rA.add_vector(@pA)
-    @tB = @rB.add_vector(@pB)
+    @tA = @rA.vector_add(@pA)
+    @tB = @rB.vector_add(@pB)
 
     # めりこみサイズを4辺について調べる
     _l = @tA.max_xi - @tB.min_xi # A|B
@@ -86,14 +86,14 @@ class App < Stylet::Base
       # @pA += diff / 2
       # @pB -= diff / 2
 
-      # @tA = @tA.add_vector(diff.scale(0.99))
+      # @tA = @tA.vector_add(diff.scale(0.99))
       # @pB -= diff.scale(0.01)
 
       # # 実座標から大きさベクトルを引くと中心点になる
       # @pA = @tA.to_vector - @rA.to_vector
 
-      @tA = @rA.add_vector(@pA)
-      @tB = @rB.add_vector(@pB)
+      @tA = @rA.vector_add(@pA)
+      @tB = @rB.vector_add(@pB)
     end
 
     # screen.fill_rect(10, 10, 0, 0, [255, 255, 255])
@@ -103,14 +103,14 @@ class App < Stylet::Base
 
     if button.btC.press? && @collision
       # ゴーストの表示
-      draw_rect(@rA.add_vector(cursor.point))
+      draw_rect(@rA.vector_add(cursor.point))
     end
 
     vputs "A", :vector => @pA
     vputs "A: #{@tA}"
     draw_vector(@sA.scale(@speed), :origin => @pA, :label => @sA.magnitude)
 
-    draw_rect(@rB.add_vector(@pB))
+    draw_rect(@rB.vector_add(@pB))
     vputs "B", :vector => @pB
     vputs "B: #{@rB}"
     draw_vector(@sB.scale(@speed), :origin => @pB, :label => @sB.magnitude)

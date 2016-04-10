@@ -1,4 +1,6 @@
 module Stylet
+  # w, h が余分についただけの Vector と考える
+  # そうしないとベクトル処理の対象が [x, y] か [w, h] か判然としなくなってしまう
   class Rect4 < Vector
     attr_accessor :wh
 
@@ -13,7 +15,7 @@ module Stylet
       # 用意した記憶あり。
       # なので次のように書ける
       # rc = Stylet::Rect4.centered_create(image.w / 2, image.h / 2) # => [-16, -16, 32, 32]
-      # draw_rect(rc.add_vector(pos))                                # ← ここが楽になる
+      # draw_rect(rc.vector_add(pos))                                # ← ここが楽になる
       # が、 31 を期待して max_x としたときに 31 ではなく 15 になったりして、混乱するのでこれは廃止したい→これでいい
       def centered_create(rx, ry = rx)
         new(-rx, -ry, rx * 2, ry * 2)
@@ -65,27 +67,23 @@ module Stylet
     def hx; x + w / 2; end
     def hy; y + h / 2; end
 
-    alias width w
+    alias width  w
     alias height h
 
     def center
       Vector.new(hx, hy)
     end
 
-    def add_vector(vec)
+    def vector_add(vec)
       Rect4.new(x + vec.x, y + vec.y, w, h)
     end
 
-    def sub_vector(vec)
+    def vector_sub(vec)
       Rect4.new(x - vec.x, y - vec.y, w, h)
     end
 
     def to_vector
       Vector.new(x, y)
-    end
-
-    def rect_vector
-      Vector.new(w - 1, h - 1)
     end
 
     def inspect
@@ -110,6 +108,6 @@ end
 
 if $0 == __FILE__
   p Stylet::Rect4.new(2, 3, 4, 5)
-  p Stylet::Rect4.new(2, 3, 4, 5).add_vector(Stylet::Vector.new(6, 7))
+  p Stylet::Rect4.new(2, 3, 4, 5).vector_add(Stylet::Vector.new(6, 7))
   p Stylet::Rect2[1, 2]
 end

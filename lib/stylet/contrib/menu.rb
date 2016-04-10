@@ -29,7 +29,7 @@ module Stylet
           :aroundable        => false,
           :cursor            => 0,
           :every_command_all => nil,
-        }.merge(params).each {|k, v|instance_variable_set("@#{k}", v)}
+        }.merge(params).each {|k, v| instance_variable_set("@#{k}", v) }
 
         @window_cursor  = @cursor
         @state = State.new(:boot)
@@ -193,7 +193,21 @@ module Stylet
 
         def current_run
           return unless current
-          current.assert_valid_keys(:name, :menu, :simple_command, :se_command, :safe_command, :change, :change_with_self, :change_with_se, :value, :every_call, :call_if_current, :cursor_in, :cursor_out)
+          current.assert_valid_keys *[
+            :name,
+            :menu,
+            :simple_command,
+            :se_command,
+            :safe_command,
+            :change,
+            :change_with_self,
+            :change_with_se,
+            :value,
+            :every_call,
+            :call_if_current,
+            :cursor_in,
+            :cursor_out,
+          ]
 
           if command = current[:call_if_current]
             command.call(self)

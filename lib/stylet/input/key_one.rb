@@ -13,21 +13,20 @@ module Stylet
         # キーリピート2としたときの挙動
         # 3フレーム目に押された場合
         #
-        #        2 3 4 5 6 7 (Frames)
-        #  counter 0 1 2 3 4 5
-        # repeat 0 1 0 0 2 3
-        #            ^ ^  の数(1と2の間がの数)がkey_repeat
+        #         1 2 3 4 5 6 7 (Frames)
+        # counter 0 0 1 2 3 4 5
+        # repeat  0 0 1 0 0 2 3
+        #               ^ ^  の数(1と2の間がの数)が key_repeat_first_delay 値
         #
-        def repeat(counter, key_repeat)
-          repeat = 0
-          if counter == 1
-            repeat = 1
-          elsif counter > key_repeat + 1
-            repeat = counter - key_repeat
+        def repeat(counter, key_repeat_first_delay)
+          case
+          when counter == 1
+            1
+          when counter > key_repeat_first_delay + 1
+            counter - key_repeat_first_delay
           else
-            repeat = 0
+            0
           end
-          repeat
         end
       end
 
@@ -59,7 +58,7 @@ module Stylet
         case value
         when String
           if @match_chars
-            value = @match_chars.chars.any? {|m|value.include?(m)}
+            value = @match_chars.chars.any? {|m| value.include?(m) }
           else
             value = nil
           end
@@ -98,16 +97,16 @@ module Stylet
       # repeat 0 1 0 0 2 3
       #            ^ ^  の数(1と2の間がの数)がkey_repeat
       #
-      def repeat(key_repeat = 12) # FIXME
-        self.class.repeat(@counter, key_repeat)
+      def repeat(key_repeat_first_delay = 12) # FIXME
+        self.class.repeat(@counter, key_repeat_first_delay)
       end
 
-      # 押されていない？
+      # 押してない？
       def free?
         @counter == 0
       end
 
-      # 押しっぱなし？
+      # 押している？
       def press?
         @counter >= 1
       end
@@ -117,6 +116,11 @@ module Stylet
         @counter == 1
       end
 
+      # 離した瞬間？
+      def free_trigger?
+        @free_counter == 1
+      end
+
       # 押していないとき 0.0 で押している間は 1.0 を返す
       def repeat_0or1
         if repeat >= 1
@@ -124,11 +128,6 @@ module Stylet
         else
           0.0
         end
-      end
-
-      # 離した瞬間？
-      def free_trigger?
-        @free_counter == 1
       end
 
       def inspect
