@@ -1,19 +1,21 @@
 # 状態遷移管理
 #
-#   @state = State.new(:idle)
-#   @state.loop_in do
-#     case @state.key
-#     when :idle
-#       if @state.start_at?
-#         @state.jump_to :active
-#       end
-#     when :active
-#       if @state.start?
+#   状態が少ないときは case when でいいと思う
+#
+#     @state = State.new(:idle)
+#     @state.loop_in do
+#       case @state.key
+#       when :idle
+#         if @state.start_at?
+#           @state.jump_to :active
+#         end
+#       when :active
+#         if @state.start?
+#         end
 #       end
 #     end
-#   end
 #
-#   状態が多い場合や継承が重要な場合などは Pluggable Selector パターンにする
+#   状態が多い場合や継承が重要な場合などは Pluggable Selector パターンがおすすめ
 #
 #     @state = State.new(:idle)
 #     @state.loop_in { send @state.key }

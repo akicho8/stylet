@@ -2,32 +2,34 @@ module Stylet
   class Rect4 < Vector
     attr_accessor :wh
 
-    def self.create(*args)      # DEPRECATE
-      new(*args)
-    end
+    class << self
+      def create(*args)      # DEPRECATE
+        new(*args)
+      end
 
-    # オブジェクトの中央が原点と考えている場合、
-    # 32x32のオブジェクトの16,16が原点になる
-    # そのとき表示するのに draw(x-16, y-16, w, h) と書くのが煩雑なので
-    # 用意した記憶あり。
-    # なので次のように書ける
-    # rc = Stylet::Rect4.centered_create(image.w / 2, image.h / 2) # => [-16, -16, 32, 32]
-    # draw_rect(rc.add_vector(pos))                                # ← ここが楽になる
-    # が、 31 を期待して max_x としたときに 31 ではなく 15 になったりして、混乱するのでこれは廃止したい→これでいい
-    def self.centered_create(rx, ry = rx)
-      new(-rx, -ry, rx * 2, ry * 2)
-    end
+      # オブジェクトの中央が原点と考えている場合、
+      # 32x32のオブジェクトの16,16が原点になる
+      # そのとき表示するのに draw(x-16, y-16, w, h) と書くのが煩雑なので
+      # 用意した記憶あり。
+      # なので次のように書ける
+      # rc = Stylet::Rect4.centered_create(image.w / 2, image.h / 2) # => [-16, -16, 32, 32]
+      # draw_rect(rc.add_vector(pos))                                # ← ここが楽になる
+      # が、 31 を期待して max_x としたときに 31 ではなく 15 になったりして、混乱するのでこれは廃止したい→これでいい
+      def centered_create(rx, ry = rx)
+        new(-rx, -ry, rx * 2, ry * 2)
+      end
 
-    def self.wh(w, h)
-      new(0, 0, w, h)
-    end
+      def wh(w, h)
+        new(0, 0, w, h)
+      end
 
-    def self.new2(w, h)
-      new(0, 0, w, h)
-    end
+      def new2(w, h)
+        new(0, 0, w, h)
+      end
 
-    def self.new4(x, y, w, h)
-      new(x, y, w, h)
+      def new4(x, y, w, h)
+        new(x, y, w, h)
+      end
     end
 
     def initialize(x, y, w, h)

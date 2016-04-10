@@ -157,13 +157,13 @@ module Stylet
 end
 
 if $0 == __FILE__
-  # require_relative "../stylet"
+  require_relative "../stylet"
   # Stylet.config.font_name = "VeraMono.ttf"
   # Stylet.config.font_size = 20
-  # Stylet.run do
-  #   vputs [*"A".."Z"].join
-  #   vputs "left",   :vector => srect.center + [0, 20*0], :align => :left
-  #   vputs "center", :vector => srect.center + [0, 20*1], :align => :center
-  #   vputs "right",  :vector => srect.center + [0, 20*2], :align => :right
-  # end
+  Stylet.run do
+    vputs [*"A".."Z"].join
+    vputs "left",   :vector => srect.center + [0, 20*0], :align => :left
+    vputs "center", :vector => srect.center + [0, 20*1], :align => :center
+    vputs "right",  :vector => srect.center + [0, 20*2], :align => :right
+  end
 end

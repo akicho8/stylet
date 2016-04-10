@@ -29,7 +29,7 @@ module Stylet
     end
 
     def initialize
-      raise "Singletonなのに再び初期化されている。Stylet::Base を継承したクラスを複数作っている？" if _active_instance
+      raise "Singletonなのに再び初期化されている。ということは Stylet::Base を継承したクラスを複数作っている可能性があります。" if _active_instance
       self._active_instance = self
       @init_code = 0
       @initialized = []
@@ -65,8 +65,8 @@ module Stylet
 
     def run(title: nil, &block)
       self.title = title
-      run_initializers                # SDL.init(@init_code)
-      setup                         # for user
+      run_initializers          # SDL.init(@init_code)
+      setup                     # for user
       main_loop(&block)
     end
 
@@ -84,15 +84,15 @@ module Stylet
       if pause? || !screen_active
         return
       end
-      after_draw            # @screen.flip
-      before_draw           # @console_current_line = 0
+      after_draw                # @screen.flip
+      before_draw               # @console_current_line = 0
       background_clear
-      before_update         # vputs(system_infos)
+      before_update             # vputs(system_infos)
 
       # ここからユーザーの処理
       # ということは next_frame の中のブロックから呼ぶ必要はない？
 
-      update                # for user
+      update                    # for user
 
       if block_given?
         if block.arity == 1
