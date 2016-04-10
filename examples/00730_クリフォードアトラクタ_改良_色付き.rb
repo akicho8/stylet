@@ -11,10 +11,17 @@ class App < Stylet::Base
     @y = 1.0
 
     reset
+
+    # @test_var = 0
+    # @menu = Stylet::Menu::Basic.new(name: "[メニュー]", elements: [
+    #     {name: "モード", safe_command: proc {}, :value => proc { @test_var }, :change => proc {|v| @test_var += v }},
+    #   ])
   end
 
   update do
-    if frame_counter.modulo(30).zero?
+    # @menu.update
+
+    if button.btD.trigger?
       _background_clear
     end
 
@@ -27,11 +34,19 @@ class App < Stylet::Base
       @y = yn
       p0 = srect.center + [@x * srect.w * 0.3, @y * srect.h * 0.3]
 
-      r, g, b = screen.get_rgb(screen[*p0])
-      r = Stylet::Etc.max_clamp(r + 4*1, 255)
-      g = Stylet::Etc.max_clamp(g + 4*3, 255)
-      b = Stylet::Etc.max_clamp(b + 4*2, 255)
-      screen[*p0] = screen.format.map_rgb(r, g, b)
+      case
+      when true
+        r, g, b = screen.get_rgb(screen[*p0])
+        r = Stylet::Etc.max_clamp(r + 4*1, 255)
+        g = Stylet::Etc.max_clamp(g + 4*1, 255)
+        b = Stylet::Etc.max_clamp(b + 4*4, 255)
+        screen[*p0] = screen.format.map_rgb(r, g, b)
+      when false
+        s = 1
+        screen.draw_filled_rect_alpha(p0.x-s, p0.y-s, s*2+1, s*2+1, [0, 255, 255], 16)
+      when false
+        screen.draw_filled_rect_alpha(p0.x, p0.y, 1, 1, [255, 255, 255], 128)
+      end
     end
   end
 
