@@ -14,11 +14,11 @@ module Stylet
       @mouse.update { SDL::Mouse.state }
     end
 
-    # moved?        移動した？
-    # point         現在座標
-    # button        ボタンの状態
-    # vector        移動ベクトル
-    # vector.angle  移動方向
+    # moved?           移動した？
+    # point            現在座標
+    # button           ボタンの状態
+    # vector           移動ベクトル
+    # vector.angle     移動方向
     # vector.magnitude 移動距離
     class Info
       cattr_accessor(:sensitivity) { 3 }

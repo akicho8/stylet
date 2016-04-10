@@ -14,6 +14,7 @@ module Stylet
             :srect,
             :frame_counter,
             :joys,
+
             :draw_dot,
             :draw_line,
             :draw_circle,
@@ -25,6 +26,7 @@ module Stylet
             :draw_vector,
             :draw_arrow,
             :draw_polygon,
+
             :screen,
             :system_font,
 
