@@ -18,6 +18,8 @@ class App < Stylet::Base
     vputs "atan:  #{v}"
 
     vputs "atan2: #{Math.atan2(y, x)}"
+
+    draw_vector(vec, :origin => srect.center)
   end
 
   run

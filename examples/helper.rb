@@ -16,7 +16,7 @@ module Helper
 
       update do
         @objects.each(&:update)
-        @objects.reject! {|e|e.respond_to?(:screen_out?) && e.screen_out?}
+        @objects.reject! {|e| e.respond_to?(:screen_out?) && e.screen_out? }
       end
     end
   end
