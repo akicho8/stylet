@@ -82,16 +82,16 @@ module Stylet
       end
     end
 
-    class ImageFile
-      include StaticRecord
-      static_record []
+    module SurfaceShare
+      extend ActiveSupport::Concern
 
-      def surface
-        @surface ||= Sprity.load_file(@attributes[:filename], mask: @attributes[:mask])
+      included do
       end
 
-      def self.surface_destroy_all
-        each(&:surface_destroy)
+      class_methods do
+        def surface_destroy_all
+          each(&:surface_destroy)
+        end
       end
 
       def surface_destroy
@@ -102,9 +102,28 @@ module Stylet
           @surface = nil
         end
       end
+
+      def surface
+        @surface ||= _surface
+      end
+    end
+
+    class ImageFile
+      include SurfaceShare
+
+      include StaticRecord
+      static_record []
+
+      private
+
+      def _surface
+        Sprity.load_file(@attributes[:filename], mask: @attributes[:mask])
+      end
     end
 
     class Sprite
+      include SurfaceShare
+
       include Stylet::Delegators
 
       include StaticRecord
@@ -112,23 +131,6 @@ module Stylet
 
       def swh
         @swh ||= vec2[surface.w, surface.h]
-      end
-
-      def surface
-        @surface ||= _surface
-      end
-
-      def self.surface_destroy_all
-        each(&:surface_destroy)
-      end
-
-      def surface_destroy
-        if @surface
-          unless @surface.destroyed?
-            @surface.destroy
-          end
-          @surface = nil
-        end
       end
 
       private
