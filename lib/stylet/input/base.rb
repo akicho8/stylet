@@ -1,4 +1,3 @@
-
 require_relative "../axis_support"
 
 module Stylet
