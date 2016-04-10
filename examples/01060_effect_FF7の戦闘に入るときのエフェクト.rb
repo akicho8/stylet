@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # FF7の戦闘に入るときのエフェクト
 
 require_relative "helper"

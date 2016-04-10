@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # atan で atan2 を書く
 require_relative "helper"
 

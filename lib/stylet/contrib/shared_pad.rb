@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # すべてのジョイスティックに反応
 
 require "stylet"

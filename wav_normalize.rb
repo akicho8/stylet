@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # 22050 or 44100 に統一
 require "pathname"
 require "shellwords"

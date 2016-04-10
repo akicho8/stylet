@@ -1,5 +1,4 @@
 #!/usr/local/var/rbenv/shims/ruby
-# -*- coding: utf-8 -*-
 require "sdl"
 
 SDL.init(SDL::INIT_AUDIO)

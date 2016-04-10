@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # 参照
 # 「プログラムでシダを描画する」を Ruby で描画する - Qiita
 # http://qiita.com/quanon86/items/d96cbea02800f97156e7

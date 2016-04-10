@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # 参考
 # 画像のコンボリュート法によるブラー処理(dinop.com)
 # http://www.dinop.com/vc/image_convolute_blur.html

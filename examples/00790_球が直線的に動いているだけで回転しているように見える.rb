@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # 球が直線的に動いているだけで回転しているように見える
 # http://www.gizmodo.jp/2014/07/post_15084.html
 require_relative "helper"

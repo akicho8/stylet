@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # 背景画像を暗く3_背景の上に黒_画面サイズフィット_高速化
 require_relative "helper"
 

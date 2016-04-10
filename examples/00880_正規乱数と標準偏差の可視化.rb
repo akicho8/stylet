@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # 正規乱数と標準偏差の可視化
 # https://www.google.co.jp/search?q=%E6%AD%A3%E8%A6%8F%E5%88%86%E5%B8%83&lr=lang_ja&hl=ja&tbs=lr:lang_1ja&tbm=isch&tbo=u&source=univ&sa=X&ei=enmsUsPLNI_qlAWZooC4Bw&ved=0CDoQsAQ&biw=1280&bih=638

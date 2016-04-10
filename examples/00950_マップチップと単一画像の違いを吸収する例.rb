@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require_relative "helper"
 require "stylet/contrib/sprity" # ../lib/stylet/contrib/sprity.rb
 

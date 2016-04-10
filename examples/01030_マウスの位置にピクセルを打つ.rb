@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # マウスの位置にピクセルを打つ
 require_relative "helper"
 

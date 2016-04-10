@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # 戦車
 require_relative "helper"
 

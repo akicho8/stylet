@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require "./setup"
 
 Stylet::Palette[:background] = [107, 140, 255]

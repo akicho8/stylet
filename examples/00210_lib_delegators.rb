@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Stylet::Delegators で Stylet::Base.active_frame に移譲しまくっているので vputs がそのまま使える
 require "./setup"
 

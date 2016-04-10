@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # 再帰曲線 ヒルベルト曲線(アルゴリズム)
 # http://www.softist.com/programming/hilbert/hilbert.htm

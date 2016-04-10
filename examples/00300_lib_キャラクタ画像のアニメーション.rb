@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # 画像を切り替えるだけのアニメーション
 require_relative "helper"
 

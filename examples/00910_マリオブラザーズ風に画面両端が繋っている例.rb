@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # 左右が繋がっている例
 require_relative "helper"
 

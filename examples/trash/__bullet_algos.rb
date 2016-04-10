@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 $LOAD_PATH << ".." if $0 == __FILE__
 require "shooting"
 

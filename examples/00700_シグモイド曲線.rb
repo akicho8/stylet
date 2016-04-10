@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # シグモイド関数 - Wikipedia
 # http://ja.wikipedia.org/wiki/%E3%82%B7%E3%82%B0%E3%83%A2%E3%82%A4%E3%83%89%E9%96%A2%E6%95%B0
 require_relative "helper"

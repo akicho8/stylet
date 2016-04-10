@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 module Stylet
   class Rect4 < Vector

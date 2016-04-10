@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # 58バイトの WAV を blank.wav で置き換える
 require "pathname"
 require "shellwords"

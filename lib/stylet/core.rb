@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 module Stylet
   module Core
     extend ActiveSupport::Concern

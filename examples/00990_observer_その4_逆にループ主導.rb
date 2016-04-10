@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Stylet::Base 側のループで描画されるのではなくPlayer側のタイミングで描画するとみせかけて、やっぱり Stylet::Base 側のループで描画する
 require_relative "helper"
 

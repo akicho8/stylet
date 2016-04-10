@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require_relative "helper"
 
 menu = Stylet::Menu::Basic.new(name: "[メニュー]", elements: [

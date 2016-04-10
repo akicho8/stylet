@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # アフィン変換
 
 require_relative "helper"

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require "sdl"
 require "pathname"
 require "opengl"

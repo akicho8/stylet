@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 module Stylet
   module JoystickAdapters
     # iBUFFALO USBゲームパッド 8ボタン スーパーファミコン風

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # フォント関連
 require "./setup"
 

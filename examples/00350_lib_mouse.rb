@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require "./setup"
 Stylet.run(:title => "マウス確認") do
   vputs mouse

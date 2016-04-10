@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Vector#rotate の確認
 #

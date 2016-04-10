@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # キーボードの入力チェック
 require "./setup"
 

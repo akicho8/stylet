@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # 標準ライブラリを使った場合の例
 require_relative "helper"
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require "benchmark"
 require "active_support/core_ext/benchmark"
 

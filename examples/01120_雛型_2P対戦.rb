@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # 2P対戦雛型
 require_relative "helper"
 

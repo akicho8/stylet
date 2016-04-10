@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # スーパーマリオ風アクション雛型
 require_relative "helper"
 require "pathname"

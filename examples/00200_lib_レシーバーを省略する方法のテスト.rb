@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # .Stylet.context を書かない方法の実験
 # Stylet::Delegators の中身がこんな感じ

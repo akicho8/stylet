@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # カーソルの位置に補正していくミサイル
 
 require_relative "helper"

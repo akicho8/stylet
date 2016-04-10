@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 module Stylet
   # FPSの計測
   #

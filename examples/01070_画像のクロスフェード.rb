@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # 画像のクロスフェード
 require_relative "helper"
 require "pathname"

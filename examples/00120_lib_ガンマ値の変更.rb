@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ガンマ値の変更
 require_relative "helper"
 

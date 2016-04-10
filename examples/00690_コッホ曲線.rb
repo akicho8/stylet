@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # 再帰プログラムによるフラクタル図形の描画：CodeZine
 # http://codezine.jp/article/detail/73
