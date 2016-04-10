@@ -248,7 +248,7 @@ Style/ConstantName:
     - 'examples/lifegame_patterns.rb'
     - 'lib/stylet/palette.rb'
     - 'vortex/lib/vortex/basic_check_list.rb'
-    - 'vortex/lib/vortex/charactor_list.rb'
+    - 'vortex/lib/vortex/character_list.rb'
     - 'vortex/lib/vortex/item_check_list.rb'
     - 'vortex/lib/vortex/max_gravity_experience.rb'
     - 'vortex/lib/vortex/modes/classic_tap_master_debug_mode.rb'

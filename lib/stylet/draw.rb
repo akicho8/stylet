@@ -169,7 +169,7 @@ module Stylet
     private
 
     def screen_open
-      screen_destroy            # 既存サーフェスを破棄しないとGCの際に落ちる
+      screen_destroy    # 既存サーフェスを破棄しないとGCの際に落ちる
       @screen = SDL::Screen.open(*Stylet.config.screen_size, Stylet.config.color_depth, screen_flags)
       @srect = Rect2.new(@screen.w, @screen.h)
     end

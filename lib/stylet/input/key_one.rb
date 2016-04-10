@@ -89,15 +89,7 @@ module Stylet
         @state = false
       end
 
-      # キーリピート2としたときの挙動
-      # 3フレーム目に押された場合
-      #
-      #        2 3 4 5 6 7 (Frames)
-      #  counter 0 1 2 3 4 5
-      # repeat 0 1 0 0 2 3
-      #            ^ ^  の数(1と2の間がの数)がkey_repeat
-      #
-      def repeat(key_repeat_first_delay = 12) # FIXME
+      def repeat(key_repeat_first_delay = 12)
         self.class.repeat(@counter, key_repeat_first_delay)
       end
 

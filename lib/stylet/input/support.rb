@@ -47,7 +47,7 @@ module Stylet
 
       # 3つ以上のキーの優先順位を得る
       def preference_keys(list)
-        if v = list.sort_by {|e|(e.counter.zero? ? Float::INFINITY : e.counter)}.first
+        if v = list.sort_by {|e| (e.counter.zero? ? Float::INFINITY : e.counter) }.first
           if v.press?
             v
           end
