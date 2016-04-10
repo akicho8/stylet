@@ -5,7 +5,7 @@ module Stylet
     include StaticRecord
     static_record Stylet.config.font_list
 
-    delegate :line_skip, :text_size, :drawBlendedUTF8, :to => :sdl_ttf_instance
+    delegate :line_skip, :text_size, :drawBlendedUTF8, :to => :sdl_ttf
 
     def initialize(*)
       super
@@ -13,31 +13,31 @@ module Stylet
     end
 
     def init
-      @_sdl_ttf_instance = nil
+      @_sdl_ttf = nil
       @char_width = nil
     end
 
     def char_width
-      @char_width ||= sdl_ttf_instance.text_size("A").first
+      @char_width ||= sdl_ttf.text_size("A").first
     end
 
     def close
-      if @_sdl_ttf_instance
-        @_sdl_ttf_instance.close
+      if @_sdl_ttf
+        @_sdl_ttf.close
         init
       end
     end
 
     concerning :BoldMethods do
       def bold
-        (sdl_ttf_instance.style & SDL::TTF::STYLE_BOLD).nonzero?
+        (sdl_ttf.style & SDL::TTF::STYLE_BOLD).nonzero?
       end
 
       def bold=(v)
         if v
-          sdl_ttf_instance.style |= SDL::TTF::STYLE_BOLD
+          sdl_ttf.style |= SDL::TTF::STYLE_BOLD
         else
-          sdl_ttf_instance.style &= ~SDL::TTF::STYLE_BOLD
+          sdl_ttf.style &= ~SDL::TTF::STYLE_BOLD
         end
       end
 
@@ -53,17 +53,17 @@ module Stylet
 
     private
 
-    def sdl_ttf_instance
-      unless @_sdl_ttf_instance
+    def sdl_ttf
+      unless @_sdl_ttf
         if font_file = font_dir_list.collect {|e| Pathname(e) }.find {|e| e.exist? }
-          @_sdl_ttf_instance = SDL::TTF.open(font_file.to_s, @attributes[:font_size])
-          Stylet.logger.debug "load: #{font_file} (#{@_sdl_ttf_instance.family_name.inspect} #{@_sdl_ttf_instance.style_name.inspect} #{@_sdl_ttf_instance.height} #{@_sdl_ttf_instance.line_skip} #{@_sdl_ttf_instance.fixed_width?})" if Stylet.logger
+          @_sdl_ttf = SDL::TTF.open(font_file.to_s, @attributes[:font_size])
+          Stylet.logger.debug "load: #{font_file} (#{@_sdl_ttf.family_name.inspect} #{@_sdl_ttf.style_name.inspect} #{@_sdl_ttf.height} #{@_sdl_ttf.line_skip} #{@_sdl_ttf.fixed_width?})" if Stylet.logger
           if @attributes[:bold]
-            @_sdl_ttf_instance.style |= SDL::TTF::STYLE_BOLD
+            @_sdl_ttf.style |= SDL::TTF::STYLE_BOLD
           end
         end
       end
-      @_sdl_ttf_instance
+      @_sdl_ttf
     end
 
     def font_dir_list
