@@ -124,6 +124,12 @@ module Stylet
           rendar_bar
           @elements.slice(@window_cursor, @display_height).each {|element| element_display(element) }
           rendar_bar
+
+          if current
+            if s = current[:desc]
+              vputs s
+            end
+          end
         end
 
         def menu_name
@@ -195,6 +201,7 @@ module Stylet
           return unless current
           current.assert_valid_keys *[
             :name,
+            :desc,
             :menu,
             :simple_command,
             :se_command,
@@ -374,7 +381,7 @@ module Stylet
         end
 
         def what_type?(s)
-          current.keys.any? {|e|e.to_s.include?(s)}
+          current.keys.any? { |e| e.to_s.include?(s) }
         end
       end
     end
@@ -444,7 +451,7 @@ module Stylet
           else
             @test_var = 0
             @menu = Stylet::Menu::Basic.new(elements: [
-                {name: "モード", safe_command: proc {}, :value => proc { @test_var }, :change => proc {|v| @test_var += v }},
+                {name: "モード", safe_command: proc {}, :value => proc { @test_var }, :change => proc {|v| @test_var += v }, :desc => "説明"},
 
                 {name: "実行", safe_command: proc { SampleWindow.new.counter_loop }},
                 {
