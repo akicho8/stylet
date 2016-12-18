@@ -1,29 +1,17 @@
-#+OPTIONS: toc:nil num:nil author:nil creator:nil \n:nil |:t
-#+OPTIONS: @:t ::t ^:t -:t f:t *:t <:t
+* Ruby/SDLを簡単に使うための自分用フレームワーク
 
-* テスト
-
-# * 物理シミュレーション覚書
-
-  - [[https://travis-ci.org/akicho8/stylet][Travis]]: [[https://travis-ci.org/akicho8/stylet.png]]
+  # - [[https://travis-ci.org/akicho8/stylet][Travis]]: [[https://travis-ci.org/akicho8/stylet.png]]
   - [[https://gemnasium.com/akicho8/stylet/][Gemnasium]]: [[https://gemnasium.com/akicho8/stylet.png]]
-  - [[https://codeclimate.com/github/akicho8/stylet][Code Climate]]: [[https://codeclimate.com/github/akicho8/stylet.png]]
+  # - [[https://codeclimate.com/github/akicho8/stylet][Code Climate]]: [[https://codeclimate.com/github/akicho8/stylet.png]]
 
 #  [[https://raw.github.com/akicho8/stylet/master/images/demo1.png]]
 #  [[https://raw.github.com/akicho8/stylet/master/images/demo2.png]]
 #  [[https://raw.github.com/akicho8/stylet/master/images/demo3.png]]
 #  [[https://raw.github.com/akicho8/stylet/master/images/demo4.png]]
 
-# ** セットアップ手順
-# 
-#    SDL関連
-#    [[https://raw.github.com/akicho8/stylet/master/rubysdl_setup.sh]]
-# 
-#    このライブラリの動作確認([q]で終了)
-# 
-#    : rsdl -r stylet -e 'Stylet.run { vputs "Hello, world." }'
-# 
-#    参考
-# 
-#    - Mac OS X Lionにsgeを入れる http://qiita.com/items/f52daed19fa0198121b5 (2013-08-03 の時点ではSGEがTTF関連でこけてしまった)
-#    - MacにRuby/SDL、rsdl、SGEを入れて、ゲームライブラリMyGameを動かす http://qiita.com/noanoa07/items/88fefe232dc605720e09 (2013-08-03 の時点ではインストールできた)
+** セットアップ手順
+
+   [[https://raw.github.com/akicho8/stylet/master/rubysdl_setup.sh]]
+
+   このライブラリの動作確認([q]で終了)
+   : rsdl -r stylet -e 'Stylet.run { vputs "Hello, world." }'
