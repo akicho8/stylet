@@ -127,6 +127,9 @@ module Stylet
 
           if current
             if s = current[:desc]
+              if s.respond_to?(:call)
+                s = s.call
+              end
               vputs s
             end
           end
@@ -451,7 +454,7 @@ module Stylet
           else
             @test_var = 0
             @menu = Stylet::Menu::Basic.new(elements: [
-                {name: "モード", safe_command: proc {}, :value => proc { @test_var }, :change => proc {|v| @test_var += v }, :desc => "説明"},
+                {name: "モード", safe_command: proc {}, :value => proc { @test_var }, :change => proc {|v| @test_var += v }, :desc => proc { "説明" }},
 
                 {name: "実行", safe_command: proc { SampleWindow.new.counter_loop }},
                 {
