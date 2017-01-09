@@ -32,7 +32,7 @@ class App < Stylet::Base
     @matrixs[0].clear
     LifegamePatterns[@cell_list_index.modulo(LifegamePatterns.size)].strip.lines.each_with_index do |line, y|
       line.chars.each_with_index do |char, x|
-        if char.match(/[oO■]/)
+        if char.match?(/[oO■]/)
           @matrixs[0][[x, y]] = true
         end
       end
