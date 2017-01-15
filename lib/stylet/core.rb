@@ -57,7 +57,7 @@ module Stylet
     def update
     end
 
-    def after_draw
+    def screen_flip
     end
 
     def after_run
@@ -68,6 +68,8 @@ module Stylet
       run_initializers          # SDL.init(@init_code)
       setup                     # for user
       main_loop(&block)
+    ensure
+      after_run
     end
 
     def main_loop(&block)
@@ -84,7 +86,7 @@ module Stylet
       if pause? || !screen_active
         return
       end
-      after_draw                # @screen.flip
+      screen_flip               # @screen.flip
       before_draw               # @console_current_line = 0
       background_clear
       before_update             # vputs(system_infos)

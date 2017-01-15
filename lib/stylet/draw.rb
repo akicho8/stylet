@@ -30,7 +30,7 @@ module Stylet
 
     # ハードウェアがダブルバッファ対応の場合flipで自動的にVSYNCを待って切り替えるため
     # ハードウェアのフレーム数(60FPS)以上にはならない
-    def after_draw
+    def screen_flip
       super
       @fps_adjust.delay
       @fps_stat.update
@@ -41,10 +41,7 @@ module Stylet
     def after_run
       super
       screen_destroy
-      if @backgroud_image
-        @backgroud_image.destroy
-        @backgroud_image = nil
-      end
+      backgroud_image_destroy
     end
 
     def title=(str)
@@ -239,6 +236,13 @@ module Stylet
           bin = SDL::Surface.load(file.to_s)
           bin.display_format
         end
+      end
+    end
+
+    def backgroud_image_destroy
+      if @backgroud_image
+        @backgroud_image.destroy
+        @backgroud_image = nil
       end
     end
   end
