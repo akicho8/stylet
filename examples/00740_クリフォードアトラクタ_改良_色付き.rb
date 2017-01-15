@@ -22,7 +22,7 @@ class App < Stylet::Base
     # @menu.update
 
     if button.btD.trigger?
-      _background_clear
+      simple_background_clear
     end
 
     @b += (button.btA.repeat - button.btB.repeat) * 0.1

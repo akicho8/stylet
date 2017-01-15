@@ -1,6 +1,4 @@
-#
 # SDL描画関連
-#
 
 module Stylet
   module Draw
@@ -91,7 +89,6 @@ module Stylet
       @screen.draw_line(x0, y0, x1, y1, Palette.fetch(color))
     end
 
-    #
     # draw_rect の場合、デフォルトだと幅+1ドット描画されるため -1 してある
     # draw_rect(0, 0, 0, 0) で 1 ドット表示されてしまう
     #
@@ -184,9 +181,9 @@ module Stylet
     end
 
     def screen_flags
-      options = Stylet.config.screen_flags
-      options |= SDL::FULLSCREEN if Stylet.config.full_screen
-      options
+      flags = Stylet.config.screen_flags
+      flags |= SDL::FULLSCREEN if Stylet.config.full_screen
+      flags
     end
 
     def screen_info_check
@@ -203,7 +200,7 @@ module Stylet
         SDL::Event::APPINPUTFOCUS => "K",
         SDL::Event::APPACTIVE     => "A",
       }
-      app_state_list.collect {|k, v|
+      app_state_list.collect { |k, v|
         if (SDL::Event.app_state & k).nonzero?
           v
         end
@@ -212,10 +209,10 @@ module Stylet
 
     # オーバーライド推奨
     def background_clear
-      _background_clear
+      simple_background_clear
     end
 
-    def _background_clear
+    def simple_background_clear
       draw_rect(@srect, :color => :background, :fill => true)
     end
   end
@@ -224,7 +221,7 @@ module Stylet
     def screen_open
       super
 
-      @backgroud_image ||= __background_image
+      @backgroud_image ||= background_image_load
     end
 
     def background_clear
@@ -235,13 +232,13 @@ module Stylet
       end
     end
 
-    def __background_image
-      return unless Stylet.config.background_image
-
-      file = Pathname(Stylet.config.background_image)
-      if file.exist?
-        bin = SDL::Surface.load(file.to_s)
-        bin.display_format
+    def background_image_load
+      if v = Stylet.config.background_image
+        file = Pathname(v)
+        if file.exist?
+          bin = SDL::Surface.load(file.to_s)
+          bin.display_format
+        end
       end
     end
   end

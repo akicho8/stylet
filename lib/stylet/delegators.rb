@@ -7,37 +7,37 @@ module Stylet
 
     included do
       unless self <= Base
-        delegate(*[
-            :vputs,
-            :vputs_vector,
-            :dputs,
-            :srect,
-            :frame_counter,
-            :joys,
+        delegate *[
+          :vputs,
+          :vputs_vector,
+          :dputs,
+          :srect,
+          :frame_counter,
+          :joys,
 
-            :draw_dot,
-            :draw_line,
-            :draw_circle,
-            :draw_triangle,
-            :draw_square,
-            :draw_angle_rect,
-            :draw_rect,
-            :draw_rect4,
-            :draw_vector,
-            :draw_arrow,
-            :draw_polygon,
+          :draw_dot,
+          :draw_line,
+          :draw_circle,
+          :draw_triangle,
+          :draw_square,
+          :draw_angle_rect,
+          :draw_rect,
+          :draw_rect4,
+          :draw_vector,
+          :draw_arrow,
+          :draw_polygon,
 
-            :screen,
-            :system_font,
+          :screen,
+          :system_font,
 
-            :fps_stat,
-            :cpu_stat,
+          :fps_stat,
+          :cpu_stat,
 
-            :vec2,
-            :vec3,
-            :rect2,
-            :rect4,
-          ], :to => "Stylet::Base.active_frame")
+          :vec2,
+          :vec3,
+          :rect2,
+          :rect4,
+        ], :to => "Stylet::Base.active_frame"
       end
 
       delegate(*[:rsin, :rcos], :to => "Stylet::Magic")
