@@ -62,7 +62,7 @@ module Stylet
         if @sdl_event.sym == SDL::Key::ESCAPE || @sdl_event.sym == SDL::Key::Q
           throw :exit, :break
         end
-        if @sdl_event.sym == SDL::Key::F1
+        if @sdl_event.sym == SDL::Key::K1
           full_screen_toggle
         end
       when SDL::Event::Active
