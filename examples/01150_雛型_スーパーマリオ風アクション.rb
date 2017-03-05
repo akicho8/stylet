@@ -3,6 +3,7 @@ require_relative "helper"
 require "pathname"
 
 Stylet.production = true
+Stylet.config.full_screen = true
 
 Stylet::Palette[:background] = [107, 140, 255]
 Stylet::Palette[:font]       = [255, 255, 255]
@@ -97,14 +98,14 @@ end
 
 class HardBlock < BlockBase
   def initialize(*)
-    @image = Sprite.load_file("assets/hard_block.png", :mask => true)
+    @image = Sprite.load_file("assets/hard_block.png")
     super
   end
 end
 
 class WhiteBlock < BlockBase
   def initialize(*)
-    @image = Sprite.load_file("assets/white_block.png", :mask => true)
+    @image = Sprite.load_file("assets/white_block.png")
     super
   end
 end
