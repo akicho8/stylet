@@ -27,16 +27,17 @@ module Stylet
         }
       end
 
+      # ニュートラルが 0 とは限らないため negative positive メソッドでのチェックはできない
       def lever_on?(dir)
         case dir
         when :up
-          axis(1).negative?
+          axis(1) <= -32768
         when :down
-          axis(1).positive?
+          axis(1) >= 32767
         when :right
-          axis(0).positive?
+          axis(0) >= 32767
         when :left
-          axis(0).negative?
+          axis(0) <= -32768
         else
           false
         end

@@ -27,20 +27,6 @@ module Stylet
       end
 
       def lever_on?(dir)
-        # 以前まではニュートラルが0だったのでこの方法でよかった
-        # case dir
-        # when :up
-        #   axis(1).negative?
-        # when :down
-        #   axis(1).positive?
-        # when :right
-        #   axis(0).positive?
-        # when :left
-        #   axis(0).negative?
-        # else
-        #   false
-        # end
-
         # macOS Sierra にしたらニュートラルが 128 になってしまったので汎用的な判別方法に変更。
         case dir
         when :up

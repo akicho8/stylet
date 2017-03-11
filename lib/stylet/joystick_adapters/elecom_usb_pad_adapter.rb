@@ -14,13 +14,13 @@ module Stylet
       def lever_on?(dir)
         case dir
         when :up
-          axis(4).negative?
+          axis(4) <= -32768
         when :down
-          axis(4).positive?
+          axis(4) >= 32767
         when :right
-          axis(3).positive?
+          axis(3) <= -32768
         when :left
-          axis(3).negative?
+          axis(3) >= 32767
         else
           false
         end
