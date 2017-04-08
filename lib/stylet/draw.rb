@@ -184,6 +184,8 @@ module Stylet
     end
 
     def screen_info_check
+      logger.debug "SGE: #{SDL.respond_to?(:auto_lock).inspect}"
+
       # フルスクリーンで利用可能なサイズ
       logger.debug "SDL::Screen.list_modes # => #{SDL::Screen.list_modes(SDL::FULLSCREEN | SDL::HWSURFACE).inspect}"
 
