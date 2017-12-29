@@ -1,6 +1,6 @@
 require "./setup"
 
-Stylet::FontList.send(:static_record_list_set, Stylet.config.font_list + [
+Stylet::FontList.send(:memory_record_reset, Stylet.config.font_list + [
     {:key => :font_small,  :path => "LiberationMono-Bold.ttf", :bold => true,  :font_size => 12},
     {:key => :font_midium, :path => "LiberationMono-Bold.ttf", :bold => true,  :font_size => 16},
     {:key => :font_large,  :path => "LiberationMono-Bold.ttf", :bold => true,  :font_size => 24},

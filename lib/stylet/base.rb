@@ -16,7 +16,7 @@ require 'pathname'
 require 'stylet/config'
 
 # 汎用ライブラリ
-require_relative 'application_static_record'
+require_relative 'application_memory_record'
 require_relative 'palette'
 require_relative 'fps_adjust'
 require_relative 'fps_stat'

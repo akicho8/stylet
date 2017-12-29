@@ -7,11 +7,11 @@ Stylet::Palette[:font]       = [0, 0, 0]
 if true
   Stylet::Sprity.surface_destroy_all
 
-  Stylet::Sprity::ImageFile.static_record_list_set [
+  Stylet::Sprity::ImageFile.memory_record_reset [
     {:key => :castle2, :filename => "../assets/images/dlmap/castle2.png", :mask => true},
   ]
 
-  Stylet::Sprity::Sprite.static_record_list_set [
+  Stylet::Sprity::Sprite.memory_record_reset [
     {:key => :kusa,   :filename => :castle2, :cliping => [16 * 7,  16 * 0, 16, 16]},
     {:key => :kusa_l, :filename => :castle2, :cliping => [16 * 7,  16 * 0, 16, 16], :transform => {:wh => [32, 32], :mask => true}},
     {:key => :hana,   :filename => :castle2, :cliping => [16 * 28, 16 * 1, 16, 16], :transform => {:wh => [32, 32], :angle => 45, :mask => true}},

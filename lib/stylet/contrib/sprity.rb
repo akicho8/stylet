@@ -2,7 +2,7 @@
 #
 # ▼スプライトの登録と描画
 #
-#   Sprity::ImageFile.static_record_list_set [
+#   Sprity::ImageFile.memory_record_reset [
 #     {:key => :foo, :filename => "assets/images/foo.png"},
 #   ]
 #
@@ -111,8 +111,8 @@ module Stylet
     class ImageFile
       include SurfaceShare
 
-      include StaticRecord
-      static_record []
+      include MemoryRecord
+      memory_record []
 
       private
 
@@ -126,8 +126,8 @@ module Stylet
 
       include Stylet::Delegators
 
-      include StaticRecord
-      static_record []
+      include MemoryRecord
+      memory_record []
 
       def swh
         @swh ||= vec2[surface.w, surface.h]

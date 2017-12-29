@@ -1,7 +1,7 @@
 module Stylet
   class FontList
-    include ApplicationStaticRecord
-    static_record Stylet.config.font_list
+    include ApplicationMemoryRecord
+    memory_record Stylet.config.font_list
 
     delegate :line_skip, :text_size, :drawBlendedUTF8, :to => :sdl_ttf
 

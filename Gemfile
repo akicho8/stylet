@@ -1,12 +1,6 @@
 source 'https://rubygems.org'
 gemspec
 
-if File.exist? (path = File.expand_path(File.join(__dir__, "../static_record")))
-  gem "static_record", :path => path
-else
-  gem "static_record", :github => "akicho8/static_record"
-end
-
 if File.exist? (path = File.expand_path(File.join(__dir__, "stylet_math")))
   gem "stylet_math", :path => path
 else
@@ -21,4 +15,4 @@ gem "ruby-opengl", :require => false
 # ~/.bundle/config
 gem "rubysdl", :github => "ohai/rubysdl"
 
-gem "stackprof"
+# gem "stackprof"
