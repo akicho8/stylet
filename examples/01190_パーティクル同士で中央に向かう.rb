@@ -6,7 +6,7 @@ class Particle
 
   GRAVITY = 2.0
 
-  attr_reader :p0, :p1, :diameter, :mass_amount
+  attr_reader :p0, :p1, :diameter, :mass
 
   def initialize(point, mass)
     @p0 = point.clone
@@ -15,8 +15,8 @@ class Particle
     @speed = vec2[0, 0]
     @accel = vec2[0, 0]
 
-    @mass_amount = mass
-    @diameter = Math.sqrt(mass_amount) * 20
+    @mass = mass                            # 質量
+    @diameter = Math.sqrt(mass) * 20 # 直径
   end
 
   def update
@@ -32,10 +32,10 @@ class Particle
       if dist < @min_dist
         @min_dist = dist
       end
-      force = (GRAVITY * mass_amount * e.mass_amount) / dist
+      force = (GRAVITY * mass * e.mass) / dist
       if dist > diameter
-        @accel.x += force / mass_amount * Math.cos(dir)
-        @accel.y += force / mass_amount * Math.sin(dir)
+        @accel.x += force / mass * Math.cos(dir)
+        @accel.y += force / mass * Math.sin(dir)
       end
     end
 
@@ -50,12 +50,6 @@ class Particle
     tot_col_3   = diameter + 8 + charge_col
 
     draw_circle(p1, :radius => diameter / 2)
-
-    # fill(tot_col_1, tot_col_1, 255, charge_col * 150 + 3)
-    # ellipse(p1.x, p1.y, tot_col_3, tot_col_3)
-    # fill 0, 255
-    # stroke tot_col_2, tot_col_2, 255, charge_col * 255 + 3
-    # ellipse p1.x, p1.y, diameter, diameter
 
     @p0 = p1.clone
   end

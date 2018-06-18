@@ -9,9 +9,11 @@
 #  [[https://raw.github.com/akicho8/stylet/master/images/demo3.png]]
 #  [[https://raw.github.com/akicho8/stylet/master/images/demo4.png]]
 
+#+html: <p><img src="https://raw.github.com/akicho8/stylet/master/ss.png" /></a></p>
+
 ** セットアップ手順
 
-   [[https://raw.github.com/akicho8/stylet/master/rubysdl_setup.sh]]
+   [[https://raw.github.com/akicho8/stylet/master/bin/setup]]
 
    このライブラリの動作確認([q]で終了)
    : rsdl -r stylet -e 'Stylet.run { vputs "Hello, world." }'

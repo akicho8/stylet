@@ -30,18 +30,19 @@ brew install sdl_image
 gem uninstall -ax rsdl
 gem install rsdl
 
-gem uninstall -ax rubysdl
-gem install specific_install
-# gem install rubysdl
-# gem install rubysdl -- --enable-bundled-sge
+# gem uninstall -ax rubysdl
+# gem install specific_install
+
+gem install rubysdl
+gem install rubysdl -- --enable-bundled-sge
 
 # # いつのまにか効かなくなった
 # gem specific_install ohai/rubysdl -- --enable-bundled-sge
 
-gem git_install ohai/rubysdl -- --enable-bundled-sge
+# gem git_install ohai/rubysdl -- --enable-bundled-sge
 
 # Ruby/SDL 附属の SGE を使う
-gem install rubysdl -- --enable-bundled-sge
+# gem install rubysdl -- --enable-bundled-sge
 
 # これは Gemfile 用
 # 要は bundler の方も gem install rubysdl -- --enable-bundled-sge を実行してほしい。

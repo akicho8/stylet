@@ -6,6 +6,7 @@ require 'sdl'
 require 'active_support/concern'                    # ActiveSupport::Concern
 require 'active_support/core_ext/module/concerning' # concerning
 require "active_support/core_ext/hash/keys"         # assert_valid_keys
+require "active_support/core_ext/array/wrap"        # Array.wrap
 require 'active_support/callbacks'
 
 # ruby library
