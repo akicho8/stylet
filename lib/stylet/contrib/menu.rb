@@ -231,7 +231,11 @@ module Stylet
               chain(menu)
             end
             if command = current[:simple_command]
-              command.call(self)
+              if command.respond_to?(:call)
+                command.call(self)
+              else
+                send(command)
+              end
             end
             if command = current[:se_command]
               notify(:menu_select)
