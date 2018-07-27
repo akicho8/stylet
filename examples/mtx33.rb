@@ -27,7 +27,7 @@
 #   http://hakuhin.jp/as/matrix_33.html
 #
 if $0 == __FILE__
-  $LOAD_PATH << "../stylet_math/lib"
+  $LOAD_PATH << "../stylet_support/lib"
 end
 
 require "stylet/vector"

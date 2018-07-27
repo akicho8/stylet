@@ -37,9 +37,9 @@ class App < Stylet::Base
       case
       when true
         r, g, b = screen.get_rgb(screen[*p0])
-        r = Stylet::Etc.max_clamp(r + 4*1, 255)
-        g = Stylet::Etc.max_clamp(g + 4*1, 255)
-        b = Stylet::Etc.max_clamp(b + 4*4, 255)
+        r = Stylet::Chore.max_clamp(r + 4*1, 255)
+        g = Stylet::Chore.max_clamp(g + 4*1, 255)
+        b = Stylet::Chore.max_clamp(b + 4*4, 255)
         screen[*p0] = screen.format.map_rgb(r, g, b)
       when false
         s = 1

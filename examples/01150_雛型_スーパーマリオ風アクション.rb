@@ -290,7 +290,7 @@ class PlayerBase < ObjectX
       #   @speed = @speed.normalize * 30
       # end
 
-      @speed.x = Stylet::Etc.clamp(@speed.x, (-@speed_max..@speed_max))
+      @speed.x = Stylet::Chore.clamp(@speed.x, (-@speed_max..@speed_max))
       @pos_before = @pos.clone
       @pos += @speed
       @pos_diff = @pos - @pos_before
@@ -741,8 +741,8 @@ class App < Stylet::Base
       _edit_cursor = @edit_cursor.clone
       @edit_cursor.x += Stylet.context.axis.right.repeat - Stylet.context.axis.left.repeat
       @edit_cursor.y += Stylet.context.axis.down.repeat - Stylet.context.axis.up.repeat
-      @edit_cursor.x = Stylet::Etc.clamp(@edit_cursor.x, @edit_rect.x_range)
-      @edit_cursor.y = Stylet::Etc.clamp(@edit_cursor.y, @edit_rect.y_range)
+      @edit_cursor.x = Stylet::Chore.clamp(@edit_cursor.x, @edit_rect.x_range)
+      @edit_cursor.y = Stylet::Chore.clamp(@edit_cursor.y, @edit_rect.y_range)
       if @edit_cursor != _edit_cursor
         Stylet::SE[:nc6131_ff_cursor].play
       end

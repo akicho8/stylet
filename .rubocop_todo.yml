@@ -9,7 +9,7 @@
 # Offense count: 6
 Lint/AmbiguousOperator:
   Exclude:
-    - 'stylet_math/test/test_etc.rb'
+    - 'stylet_support/test/test_etc.rb'
     - 'vortex/test/test_field.rb'
 
 # Offense count: 71
@@ -46,8 +46,8 @@ Lint/LiteralInCondition:
 Lint/ParenthesesAsGroupedExpression:
   Exclude:
     - 'Gemfile'
-    - 'stylet_math/test/test_fee.rb'
-    - 'stylet_math/test/test_vector.rb'
+    - 'stylet_support/test/test_fee.rb'
+    - 'stylet_support/test/test_vector.rb'
     - 'vortex/test/test_randomizer.rb'
 
 # Offense count: 23
@@ -97,15 +97,15 @@ Lint/UselessAssignment:
 # Offense count: 3
 Lint/UselessComparison:
   Exclude:
-    - 'stylet_math/examples/0100_vector.rb'
+    - 'stylet_support/examples/0100_vector.rb'
     - 'vortex/test/test_cell.rb'
     - 'vortex/test/test_piece.rb'
 
 # Offense count: 10
 Lint/Void:
   Exclude:
-    - 'stylet_math/examples/0100_vector.rb'
-    - 'stylet_math/lib/stylet/vector.rb'
+    - 'stylet_support/examples/0100_vector.rb'
+    - 'stylet_support/lib/stylet/vector.rb'
 
 # Offense count: 193
 Metrics/AbcSize:
@@ -160,7 +160,7 @@ Style/Alias:
   Exclude:
     - 'lib/stylet/audio.rb'
     - 'lib/stylet/rect.rb'
-    - 'stylet_math/lib/stylet/vector.rb'
+    - 'stylet_support/lib/stylet/vector.rb'
     - 'vortex/lib/vortex/field.rb'
     - 'vortex/lib/vortex/simulator.rb'
 
@@ -278,7 +278,7 @@ Style/EmptyLineBetweenDefs:
   Exclude:
     - 'lib/stylet/rect.rb'
     - 'lib/stylet/shortcut.rb'
-    - 'stylet_math/lib/stylet/magic.rb'
+    - 'stylet_support/lib/stylet/magic.rb'
     - 'vortex/cgi/index.rb'
     - 'vortex/lib/vortex/db_server.rb'
     - 'vortex/lib/vortex/simulator.rb'
@@ -443,7 +443,7 @@ Style/ModuleFunction:
     - 'lib/stylet/collision_support.rb'
     - 'lib/stylet/input/support.rb'
     - 'lib/stylet/stylet.rb'
-    - 'stylet_math/lib/stylet/etc.rb'
+    - 'stylet_support/lib/stylet/etc.rb'
     - 'vortex/lib/vortex/optimize_helper.rb'
     - 'vortex/lib/vortex/simulator.rb'
     - 'vortex/lib/vortex/start_menu.rb'
@@ -521,7 +521,7 @@ Style/SingleLineMethods:
   Exclude:
     - 'lib/stylet/rect.rb'
     - 'lib/stylet/shortcut.rb'
-    - 'stylet_math/lib/stylet/magic.rb'
+    - 'stylet_support/lib/stylet/magic.rb'
     - 'vortex/lib/vortex/db_server.rb'
     - 'vortex/lib/vortex/field.rb'
     - 'vortex/lib/vortex/window.rb'
@@ -583,7 +583,7 @@ Style/StringLiteralsInInterpolation:
 # Offense count: 4
 Style/StructInheritance:
   Exclude:
-    - 'stylet_math/lib/stylet/vector.rb'
+    - 'stylet_support/lib/stylet/vector.rb'
     - 'vortex/lib/vortex/area.rb'
     - 'vortex/lib/vortex/jump_info.rb'
 

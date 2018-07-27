@@ -17,7 +17,7 @@ class Bullet
     @dir = @pos.angle_to(@target)
     len = (@target - @pos).length
     speed = len * 0.04
-    speed = Stylet::Etc.clamp(speed, 3.0..12.0)
+    speed = Stylet::Chore.clamp(speed, 3.0..12.0)
     speed_vec = vec2.angle_at(@dir) * speed
     @pos += speed_vec
     draw_triangle(@pos, :radius => 10, :angle => @pos.angle_to(@target))

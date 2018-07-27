@@ -22,15 +22,10 @@ Gem::Specification.new do |s|
   s.add_dependency "i18n"
   s.add_dependency "rake"
   s.add_dependency "memory_record"
-  s.add_dependency "stylet_math"
+  s.add_dependency "stylet_support"
   s.add_dependency "rgb"
 
   s.add_development_dependency "rcodetools"
-  # s.add_development_dependency "rspec"
-  s.add_development_dependency "yard"
   s.add_development_dependency "test-unit"
-  s.add_development_dependency "rubocop"
-  # s.add_development_dependency "test-unit-activesupport"
-  # s.add_development_dependency "test-unit-notify"
-  # s.add_development_dependency "power_assert"
+  s.add_development_dependency "rspec"
 end

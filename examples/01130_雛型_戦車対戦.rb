@@ -72,7 +72,7 @@ class Tank
       end
       @handle_dir *= 0.95   # ハンドルを元に戻す
       handle_gap = 0.1     # ハンドルが曲る最大の角度
-      @handle_dir = Stylet::Etc.clamp(@handle_dir, (-handle_gap..handle_gap))
+      @handle_dir = Stylet::Chore.clamp(@handle_dir, (-handle_gap..handle_gap))
       @body_dir += @handle_dir
       vputs "ハンドル: #{@handle_dir.round(4)}" if $DEBUG
       vputs "車体向き: #{@body_dir.round(4)}" if $DEBUG
@@ -90,7 +90,7 @@ class Tank
       # @accel *= 2 if @life <= 1
       @speed += @accel if @life >= 1
       @speed *= 0.999              # 空気抵抗
-      @speed = Stylet::Etc.clamp(@speed, (-1.0..5)) # 下るときと進むときの速度のリミット
+      @speed = Stylet::Chore.clamp(@speed, (-1.0..5)) # 下るときと進むときの速度のリミット
       vputs "速度: #{@speed.round(4)}" if $DEBUG
     end
 
@@ -106,7 +106,7 @@ class Tank
       if joy = joys[@joystick_index]
         if vec = joy.adjusted_analog_levers[:right]
           if vec.magnitude > 0.5
-            @cannon_dir += Stylet::Etc.shortest_angular_difference(vec.angle, @cannon_dir) * 0.1
+            @cannon_dir += Stylet::Chore.shortest_angular_difference(vec.angle, @cannon_dir) * 0.1
           end
         end
       end
@@ -114,14 +114,14 @@ class Tank
       if false
         # 相手の方向に合わせる
         if ext_button.btR1.press?
-          @cannon_dir2 = Stylet::Etc.shortest_angular_difference(@pos.angle_to(@target.pos), @cannon_dir)
+          @cannon_dir2 = Stylet::Chore.shortest_angular_difference(@pos.angle_to(@target.pos), @cannon_dir)
           # # ただしスピードが落ちる
           # @speed *= 0.9
         end
       end
 
       # ゆっくりと砲台を車体の方向に向けていく
-      @cannon_dir += Stylet::Etc.shortest_angular_difference(@body_dir, @cannon_dir) * 0.08
+      @cannon_dir += Stylet::Chore.shortest_angular_difference(@body_dir, @cannon_dir) * 0.08
 
       vputs "cannon_dir: #{@cannon_dir}" if $DEBUG
     end
@@ -303,7 +303,7 @@ class Missile
     end
     @dir += d * 0.04            # 誘導率
     # @speed += 0.01
-    @speed = Stylet::Etc.clamp(@speed, (1..3))
+    @speed = Stylet::Chore.clamp(@speed, (1..3))
     @radius += @speed
     _pos = @pos + vec2.angle_at(@dir) * @radius
     Stylet.context.draw_triangle(_pos, :radius => @size, :angle => @dir)

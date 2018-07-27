@@ -44,8 +44,8 @@ class App < Stylet::Base
   update do
     @player.x += -Stylet.context.axis.left.repeat_0or1 + Stylet.context.axis.right.repeat_0or1
     @player.y += -Stylet.context.axis.up.repeat_0or1 + Stylet.context.axis.down.repeat_0or1
-    @player.x = Stylet::Etc.clamp(@player.x, (0...@map_rect.x))
-    @player.y = Stylet::Etc.clamp(@player.y, (0...@map_rect.y))
+    @player.x = Stylet::Chore.clamp(@player.x, (0...@map_rect.x))
+    @player.y = Stylet::Chore.clamp(@player.y, (0...@map_rect.y))
 
     @field.each_with_index do |row, y|
       row.chars.each_with_index do |key, x|

@@ -39,7 +39,7 @@ module Stylet
 
       def volume_cast(v)
         raise if v.is_a? Integer
-        (Stylet::Etc.clamp(v) / 1.0 * 128).to_i
+        (Stylet::Chore.clamp(v) / 1.0 * 128).to_i
       end
     end
 

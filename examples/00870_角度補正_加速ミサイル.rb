@@ -25,7 +25,7 @@ class Bullet
     else
       @speed -= @accel         # そうでないなら速度を下げる
     end
-    @speed = Stylet::Etc.clamp(@speed, 1.0..8.0) # 速度が下がりすぎたり上がりすぎたりするのを防ぐ
+    @speed = Stylet::Chore.clamp(@speed, 1.0..8.0) # 速度が下がりすぎたり上がりすぎたりするのを防ぐ
 
     speed_vec = vec2.angle_at(@dir) * @speed
     @pos += speed_vec

@@ -45,7 +45,7 @@ class App < Stylet::Base
       end
       @handle_dir *= 0.95  # ハンドルを元に戻す
       handle_gap = 0.1     # ハンドルが曲る最大の角度
-      @handle_dir = Stylet::Etc.clamp(@handle_dir, (-handle_gap..handle_gap))
+      @handle_dir = Stylet::Chore.clamp(@handle_dir, (-handle_gap..handle_gap))
       @body_dir += @handle_dir
       vputs "ハンドル: #{@handle_dir.round(4)}"
       vputs "車体向き: #{@body_dir.round(4)}"
@@ -62,7 +62,7 @@ class App < Stylet::Base
       end
       @speed += @accel
       @speed *= 0.98              # 空気抵抗
-      @speed = Stylet::Etc.clamp(@speed, (-2..2)) # 下るときと進むときの速度のリミット
+      @speed = Stylet::Chore.clamp(@speed, (-2..2)) # 下るときと進むときの速度のリミット
       vputs "速度: #{@speed.round(4)}"
     end
 

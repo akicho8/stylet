@@ -300,7 +300,7 @@ module Stylet
           if d >= 1
             @window_cursor += d
           end
-          @window_cursor = Stylet::Etc.clamp(@window_cursor, window_range)
+          @window_cursor = Stylet::Chore.clamp(@window_cursor, window_range)
         end
 
         def window_range

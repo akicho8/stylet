@@ -63,7 +63,7 @@ class IceHockey < Stylet::Base
     @speed -= @friction
 
     # 速度調整
-    @speed = Stylet::Etc.clamp(@speed, (0..@speed_max))
+    @speed = Stylet::Chore.clamp(@speed, (0..@speed_max))
 
     # 速度反映
     @radius += @speed
