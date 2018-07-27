@@ -1,3 +1,7 @@
+if $0 == __FILE__
+  require_relative "../stylet"
+end
+
 module Stylet
   class FontList
     include ApplicationMemoryRecord
@@ -68,6 +72,7 @@ module Stylet
       [
         @attributes[:path],
         "#{__dir__}/../../assets/fonts/#{@attributes[:path]}",
+        "/Library/Fonts/Tahoma.ttf", # fallback font
       ]
     end
   end
@@ -155,7 +160,7 @@ module Stylet
 end
 
 if $0 == __FILE__
-  require_relative "../stylet"
+  # require_relative "../stylet"
   # Stylet.config.font_name = "VeraMono.ttf"
   # Stylet.config.font_size = 20
   Stylet.run do
