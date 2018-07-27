@@ -1,5 +1,5 @@
 # 数学系汎用
-require 'stylet_support/all'
+require 'stylet_support'
 
 # gem
 require 'sdl'
