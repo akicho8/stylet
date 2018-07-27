@@ -11,9 +11,6 @@ Rake::TestTask.new do |t|
   # t.options = "--no-use-color"
 end
 
-require "yard"
-YARD::Rake::YardocTask.new
-
 desc "examples/* の最低限の動作確認"
 task :test_examples do
   system("cd examples && ruby test_all.rb")
