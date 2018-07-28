@@ -1,6 +1,4 @@
 # 数学系汎用
-pp $LOAD_PATH
-exit
 require 'stylet_support'
 
 # gem
