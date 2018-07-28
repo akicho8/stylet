@@ -1,0 +1,6 @@
+/README.html
+/Gemfile.lock
+/*.gem
+/doc
+/.yardoc
+/TODO
