@@ -3,8 +3,6 @@ ruby "2.5.1"
 source 'https://rubygems.org'
 gemspec
 
-# gem "stylet_support", path: File.expand_path(File.join(__dir__, "stylet_support"))
-
 # if File.exist? (path = File.expand_path(File.join(__dir__, "stylet_support")))
 #   gem "stylet_support", path: path
 # else
