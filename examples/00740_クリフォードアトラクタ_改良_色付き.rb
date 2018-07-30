@@ -11,16 +11,9 @@ class App < Stylet::Base
     @y = 1.0
 
     reset
-
-    # @test_var = 0
-    # @menu = Stylet::Menu::Basic.new(name: "[メニュー]", elements: [
-    #     {name: "モード", safe_command: proc {}, :value => proc { @test_var }, :change => proc {|v| @test_var += v }},
-    #   ])
   end
 
   update do
-    # @menu.update
-
     if button.btD.trigger?
       simple_background_clear
     end
