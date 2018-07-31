@@ -30,7 +30,7 @@ if $0 == __FILE__
   $LOAD_PATH << "../stylet_support/lib"
 end
 
-require "stylet/vector"
+require "stylet_support"
 
 module Stylet
   class Mtx33
@@ -269,26 +269,29 @@ module Stylet
     # m * 拡縮行列
     Mtx33.scale_post(1.2, 3.4, m)   # => {:a=>1.2, :b=>0.0, :c=>0.0, :d=>3.4, :tx=>0.0, :ty=>0.0}
     # 座標の投影変換
-    Mtx33.vec2_transform_point(1, 2, m)  # => [1.0, 2.0]
+    Mtx33.vec2_transform_point(1, 2, m)  # => 
     # ベクトルの投影変換
-    Mtx33.vec2_transform_vector(1, 2, m) # => [1.0, 2.0]
+    Mtx33.vec2_transform_vector(1, 2, m) # => 
     # 行列 * 行列
-    Mtx33.transform(m1, m2)         # => {:a=>0.7071067811865476, :b=>0.7071067811865475, :c=>-0.7071067811865475, :d=>0.7071067811865476, :tx=>-0.7071067811865474, :ty=>2.121320343559643}
+    Mtx33.transform(m1, m2)         # => 
     # 正規直交行列の逆行列
-    Mtx33.invert_ortho_normal(m)    # => {:a=>1.0, :b=>0.0, :c=>0.0, :d=>1.0, :tx=>-0.0, :ty=>-0.0}
+    Mtx33.invert_ortho_normal(m)    # => 
     # 逆行列
-    Mtx33.invert(m)                 # => {:a=>1.0, :b=>0.0, :c=>0.0, :d=>1.0, :tx=>0.0, :ty=>0.0}
+    Mtx33.invert(m)                 # => 
 
     m = Mtx33.translate(10, 20)
-    Mtx33.vec2_transform_point(100, 100, m)  # => [110.0, 120.0]
+    Mtx33.vec2_transform_point(100, 100, m)  # => 
     m = Mtx33.rotate(1)
-    Mtx33.vec2_transform_point(100, 100, m)  # => [98.23952887191078, 101.73001015936748]
+    Mtx33.vec2_transform_point(100, 100, m)  # => 
     m = Mtx33.scale(1.1, 1.1)
-    Mtx33.vec2_transform_point(100, 100, m)  # => [110.00000000000001, 110.00000000000001]
+    Mtx33.vec2_transform_point(100, 100, m)  # => 
 
     m1 = Mtx33.translate(10, 20)
     m2 = Mtx33.rotate(1)
     m3 = Mtx33.transform(m1, m2)
-    Mtx33.vec2_transform_point(100, 100, m3) # => [107.88895769472902, 121.90148812686814]
+    Mtx33.vec2_transform_point(100, 100, m3) # => 
   end
 end
+# ~> -:232:in `vec2_transform_point': uninitialized constant Stylet::Vector (NameError)
+# ~> 	from -:270:in `<module:Stylet>'
+# ~> 	from -:33:in `<main>'

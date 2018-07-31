@@ -1,15 +1,16 @@
 module Stylet
   module DrawSupport
     # ベクトル確認用
-    #   開始地点のデフォルトは画面中央になる
-    #   開始地点がわかっている場合は origin を指定すること
     #
-    #   draw_vector(vec2[100, 0], :origin => vec2[50, 50], :label => "ok")
+    # 開始地点のデフォルトは画面中央になる
+    # 開始地点がわかっている場合は origin を指定すること
     #
-    #     p0 -----> p1 ok
+    # draw_vector(vec2[100, 0], :origin => vec2[50, 50], :label => "ok")
     #
-    #   p0: origin オプションで指定(指定しないと画面中央)
-    #   p1: 第一引数
+    #   p0 -----> p1 ok
+    #
+    # p0: origin オプションで指定(指定しないと画面中央)
+    # p1: 第一引数
     #
     def draw_vector(vec, options = {})
       options = {
