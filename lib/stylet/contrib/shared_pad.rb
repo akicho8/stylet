@@ -24,9 +24,9 @@ end
 if $0 == __FILE__
   require_relative "../../stylet"
   shared_pad = Stylet::Input::SharedPad.new
-  Stylet.run {
+  Stylet.run do
     shared_pad.key_bit_update_all
     shared_pad.key_counter_update_all
     vputs shared_pad
-  }
+  end
 end
