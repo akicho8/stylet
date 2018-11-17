@@ -16,7 +16,7 @@ module Stylet
         oparser.on("-p", "--production", TrueClass)      {|v| Stylet.production = v                                        }
         oparser.on("-s", "--screen-size=SIZE", String)   {|v| Stylet.config.screen_size = [*v.scan(/\d+/).collect(&:to_i)] }
         oparser.on("-c", "--color-depth=DEPTH", Integer) {|v| Stylet.config.color_depth = v                                }
-        oparser.on("-m", "--mute-mute", TrueClass)       {|v| Stylet.config.mute_music = v                                 }
+        oparser.on("-m", "--music-mute", TrueClass)      {|v| Stylet.config.music_mute = v                                 }
         oparser.on("-M", "--mute", TrueClass)            {|v| Stylet.config.mute = v                                       }
         oparser.on("-i", "--hide-mouse", TrueClass)      {|v| Stylet.config.hide_mouse = v                                 }
       end

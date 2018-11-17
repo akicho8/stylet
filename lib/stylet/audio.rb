@@ -79,7 +79,7 @@ module Stylet
     end
 
     def play(filename, volume: nil, loop: true, fade_in_sec: nil, **unsed_options)
-      return if Stylet.config.mute_music || Stylet.config.mute
+      return if Stylet.config.music_mute || Stylet.config.mute
 
       Audio.setup_once
 

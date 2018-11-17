@@ -28,7 +28,7 @@ module Stylet
 
   # Audio
   config.sound_freq       = 22050 # 44100  # SDLのデフォルトは 22050
-  config.mute_music       = false
+  config.music_mute       = false
   config.mute             = false
 
   # etc.
