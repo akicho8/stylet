@@ -27,7 +27,7 @@ brew install sdl_image
 # SGE install from gist
 # brew install https://gist.github.com/mitmul/5410467/raw/c4fa716635e951b61f489726976b10f00dd41306/sge.rb
 
-gem uninstall -ax rsdl
+gem uninstall -axI rsdl
 gem install rsdl
 
 # gem uninstall -ax rubysdl
@@ -57,7 +57,9 @@ ruby -r sdl -e 'p [:mixer, SDL.constants.include?(:Mixer)]'
 ruby -r sdl -e 'p [:sge, SDL.respond_to?(:auto_lock)]'
 # ruby -r sdl -e 'p [:sge, SDL.defined?(:CollisionMap)]'
 
-# ↓これが動かない
+bundle install
+
+# ↓これが動かなくなった
 rsdl -r sdl -e 'SDL.init(SDL::INIT_EVERYTHING); SDL.set_video_mode(640, 480, 16, SDL::SWSURFACE); sleep(3)'
 
 # rsdl -r stylet -e 'Stylet.run { vputs "Hello, world." }'
