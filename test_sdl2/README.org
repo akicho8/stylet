@@ -1,0 +1,3 @@
+* ruby-sdl2 の練習
+
+https://ohai.github.io/ruby-sdl2/doc-en/

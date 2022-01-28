@@ -13,7 +13,7 @@ brew uninstall --ignore-dependencies sdl_rtf
 brew uninstall --ignore-dependencies sdl_sound
 brew uninstall --ignore-dependencies sge
 
-brew update
+# brew update
 
 brew install libogg
 brew install libvorbis
