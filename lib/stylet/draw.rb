@@ -147,7 +147,9 @@ module Stylet
     def before_update
       super
       # return if Stylet.production
-      vputs system_infos.compact.join(" ")
+      if v = system_infos.presence
+        vputs v.compact.join(" ")
+      end
     end
 
     def full_screen_toggle
