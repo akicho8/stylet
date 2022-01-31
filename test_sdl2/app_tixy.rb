@@ -9,7 +9,7 @@ class App
 
   GRADATION_MODE = false   # グラデーションにするか？
   SIDE_SIZE      = 16      # 辺の長さ
-  VIEW_SIZE_RATE = 0.95    # 画面に対する表示領域の大きさ
+  VIEW_SIZE_RATE = 1.0     # 画面に対する表示領域の大きさ
   COLOR_MAX      = 255     # 色の要素の最大
   FPS            = 60      # 決め打ち
 
@@ -70,7 +70,11 @@ class App
   def run
     SDL2.init(SDL2::INIT_EVERYTHING)
 
-    @window = SDL2::Window.create("(WindowTitle)", SDL2::Window::POS_CENTERED, SDL2::Window::POS_CENTERED, 640, 480, 0)
+    @window_flags = 0
+    # @window_flags |= SDL2::Window::Flags::FULLSCREEN
+    @window_flags |= SDL2::Window::Flags::FULLSCREEN_DESKTOP
+
+    @window = SDL2::Window.create("(WindowTitle)", SDL2::Window::POS_CENTERED, SDL2::Window::POS_CENTERED, 640, 480, @window_flags)
     @renderer = @window.create_renderer(-1, SDL2::Renderer::Flags::PRESENTVSYNC)
     @srect = Vec2[*@window.size]
 
@@ -137,7 +141,7 @@ class App
       t = v - old_time
       if t >= 1000
         @real_fps = fps_counter
-        # puts "#{@real_fps} FPS"
+        puts "#{@real_fps} FPS"
         old_time = v
         fps_counter = 0
       end
@@ -163,8 +167,8 @@ class App
   end
 
   def filtered_preset_list
-    # @filtered_preset_list ||= PresetList.find_all { |e| e[:favorite] }
-    @filtered_preset_list ||= PresetList
+    @filtered_preset_list ||= PresetList.find_all { |e| e[:favorite] }
+    # @filtered_preset_list ||= PresetList
   end
 
   def counter_reset
