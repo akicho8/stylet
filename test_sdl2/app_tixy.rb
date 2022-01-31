@@ -1,21 +1,17 @@
-# -*- coding: utf-8; compile-command: "be rsdl 00670_tixy.rb --fps 60" -*-
-# -*- coding: utf-8; compile-command: "be rsdl 00670_tixy.rb --fps 60 --full-screen" -*-
+require "./setup"
+require "matrix"
 
-# tixy.land
+class Vec2 < Vector
+end
 
-require_relative "helper"
-
-# Stylet.config.fps = 30
-
-class App < Stylet::Base
+class App
   include Math
-  include Helper::Cursor
 
-  RECT_MODE      = false   # 四角形で描画するか？
-  GRADATION_MODE = true    # グラデーションにするか？
+  GRADATION_MODE = false   # グラデーションにするか？
   SIDE_SIZE      = 16      # 辺の長さ
-  VIEW_SIZE_RATE = 0.8     # 画面に対する表示領域の大きさ
-  COLOR_MAX      = 16 * 10 # 最大255だけど眩しいので控えめにしておく
+  VIEW_SIZE_RATE = 0.95    # 画面に対する表示領域の大きさ
+  COLOR_MAX      = 255     # 色の要素の最大
+  FPS            = 60      # 決め打ち
 
   PresetList = [
     { favorite: false, name: "default",                                              func: -> (t, i, x, y) { sin(y/8+t)                                                     }},
@@ -66,44 +62,88 @@ class App < Stylet::Base
     { favorite: false, name: "input is limited to 32 characters!",                   func: -> (t, i, x, y) { (x-5)**2 + (y-5)**2 - 99*sin(t)                                }},
   ]
 
-  def initialize(*)
-    super
-
+  def initialize
     @preset_index = 0
     @counter      = 0
   end
 
-  setup do
-  end
+  def run
+    SDL2.init(SDL2::INIT_EVERYTHING)
 
-  update do
-    vputs "#{@preset_index}: #{current_preset[:name]}"
-    preset_change
+    @window = SDL2::Window.create("(WindowTitle)", SDL2::Window::POS_CENTERED, SDL2::Window::POS_CENTERED, 640, 480, 0)
+    @renderer = @window.create_renderer(-1, SDL2::Renderer::Flags::PRESENTVSYNC)
+    @srect = Vec2[*@window.size]
 
-    time = @counter.fdiv(Stylet.config.fps || 60)
-    index = 0
-    SIDE_SIZE.times do |y|
-      SIDE_SIZE.times do |x|
-        retval = func_call(time, index, x, y)
-        if retval.kind_of?(Numeric)
-          if retval.nonzero?
-            retval = retval.clamp(-1.0, 1.0)
-            rgb = value_to_color(retval)
-            v = @top_left + @cell_wh.map2(vec2[x, y]) { |a, b| a * b } # それぞれに乗算するため scale ではだめ
-            if RECT_MODE
-              screen.fill_rect(*v, *@cell_wh, rgb)
-            else
-              v2 = v + @half_cell_wh # 円の中心まで半径ぶんずらす
-              radius = @half_cell_wh.scale(value_to_radius_rate(retval)) # 楕円の半径 = 最大半径 * 割合
-              screen.drawAAFilledEllipse(*v2, *radius, rgb) # draw_aa_filled_ellipse は定義されていない
-            end
+    setup_vars
+
+    @real_fps = FPS
+    fps_counter = 0
+    old_time = SDL2.get_ticks
+
+    loop do
+      while ev = SDL2::Event.poll
+        case ev
+        when SDL2::Event::KeyDown
+          if ev.scancode == SDL2::Key::Scan::ESCAPE
+            exit
+          end
+          if ev.scancode == SDL2::Key::Scan::Q
+            exit
+          end
+          if ev.scancode == SDL2::Key::Scan::Z
+            preset_change(1)
+          end
+          if ev.scancode == SDL2::Key::Scan::X
+            preset_change(-1)
           end
         end
-        index += 1
       end
-    end
 
-    @counter += 1
+      @renderer.draw_color = [0, 0, 0]
+      @renderer.clear
+
+      if false
+        # https://ohai.github.io/ruby-sdl2/doc-en/SDL2/Mouse.html
+        @local_state = SDL2::Mouse.state
+        @renderer.draw_color = [0, 0, 255]
+        rect = SDL2::Rect.new(@local_state.x, @local_state.y, 32, 32)
+        @renderer.fill_rect(rect)
+      end
+
+      time = @counter.fdiv(FPS)
+      index = 0
+      SIDE_SIZE.times do |y|
+        SIDE_SIZE.times do |x|
+          retval = func_call(time, index, x, y)
+          if retval.kind_of?(Numeric)
+            if retval.nonzero?
+              retval = retval.clamp(-1.0, 1.0)
+              v = @top_left + @cell_wh.map2([x, y]) { |a, b| a * b } # それぞれに乗算するため scale ではだめ
+              radius = @half_cell_wh * value_to_radius_rate(retval)  # 楕円の半径 = 最大半径 * 割合
+              center = v + @half_cell_wh                             # セルの中心
+              v2 = center - radius                                   # 長方形の左上
+              @renderer.draw_color = value_to_color(retval)
+              @renderer.fill_rect(SDL2::Rect.new(*v2, *(radius*2)))  # v2 から [radius, radius] の長方形を描画
+            end
+          end
+          index += 1
+        end
+      end
+
+      @counter += 1
+
+      fps_counter += 1
+      v = SDL2.get_ticks
+      t = v - old_time
+      if t >= 1000
+        @real_fps = fps_counter
+        # puts "#{@real_fps} FPS"
+        old_time = v
+        fps_counter = 0
+      end
+
+      @renderer.present
+    end
   end
 
   def func_call(t, i, x, y)
@@ -146,40 +186,26 @@ class App < Stylet::Base
     if v.positive?
       rgb = [c, c, c]
     else
-      rgb = [16, c, c*0.8]
+      rgb = [c, 0, 0]
     end
     rgb
   end
 
   # 楕円の半径の割り合いを返す
   def value_to_radius_rate(rv)
-    rv.abs
+    rv.abs * 0.9
   end
 
   def setup_vars
-    @cell_wh      = vec2[srect.w, srect.h].scale(1.0 / SIDE_SIZE).scale(VIEW_SIZE_RATE) # 画面の大きさから1つのセルのサイズを求める
-    @half_cell_wh = @cell_wh.scale(0.5)                                                 # 扱いやすいように半分バージョンも作っておく
-    @top_left     = srect.center - @cell_wh.scale(SIDE_SIZE * 0.5)                      # 左上
+    @cell_wh      = @srect * (1.0 / SIDE_SIZE) * VIEW_SIZE_RATE # 画面の大きさから1つのセルのサイズを求める
+    @half_cell_wh = @cell_wh * 0.5                                                # 扱いやすいように半分バージョンも作っておく
+    @top_left     = @srect * 0.5 - @cell_wh * SIDE_SIZE * 0.5                     # 左上
   end
 
-  # def system_infos
-  #   []
-  # end
-
-  def screen_open
-    super
-    setup_vars
+  def preset_change(sign)
+    @preset_index += sign
+    counter_reset
   end
-
-  def preset_change
-    if button.btA.repeat == 1 || button.btB.repeat == 1
-      @preset_index += (button.btA.repeat_0or1 - button.btB.repeat_0or1).to_i
-      counter_reset
-    end
-    if button.btC.repeat == 1
-      counter_reset
-    end
-  end
-
-  run
 end
+
+App.new.run
