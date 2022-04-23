@@ -4,7 +4,7 @@ module Stylet
   module Draw
     attr_reader :frame_counter, :sdl_event, :srect, :screen, :screen_active
     attr_reader :fps_stat, :cpu_stat
-    attr_accessor :title
+    attr_reader :title
 
     def run_initializers
       super

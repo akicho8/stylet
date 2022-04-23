@@ -31,7 +31,7 @@ module Stylet
       end
 
       def factory(attrs)
-        KeyOne.new(attrs.merge(:index => @key_objects.size)).tap do |e|
+        KeyOne.new(**attrs.merge(:index => @key_objects.size)).tap do |e|
           @key_objects << e
         end
       end
