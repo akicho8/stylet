@@ -1,4 +1,0 @@
-source 'https://rubygems.org'
-
-gem "ruby-sdl2", require: "sdl2"
-gem "table_format"
