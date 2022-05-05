@@ -6,7 +6,7 @@ module Stylet
     # 多角形描画
     #   draw_polygon([Vector.zero, vec2[0, 100], vec2[50, 50]])
     def draw_polygon(points, options = {})
-      (points + points.take(1)).each_cons(2) {|a, b| draw_line(a, b, options) }
+      (points + points.take(1)).each_cons(2) {|a, b| draw_line(a, b, **options) }
     end
   end
 end

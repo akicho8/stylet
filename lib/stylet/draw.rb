@@ -115,11 +115,11 @@ module Stylet
     end
 
     def draw_dot(p0, **options)
-      draw_line(p0, p0, options)
+      draw_line(p0, p0, **options)
     end
 
     def draw_rect(rect, **options)
-      draw_rect4(*rect, options)
+      draw_rect4(*rect, **options)
     end
 
     def save_bmp(fname)

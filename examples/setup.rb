@@ -3,3 +3,5 @@ require "stylet"
 require "observer"
 require "stylet/contrib/menu"
 require "active_support/core_ext/benchmark"
+
+require "active_support/isolated_execution_state"

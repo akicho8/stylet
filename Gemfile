@@ -12,3 +12,5 @@ gem "ruby-opengl", require: false
 # bundle config build.rubysdl --enable-bundled-sge
 # ~/.bundle/config
 gem "rubysdl", github: "ohai/rubysdl"
+
+gem "matrix"
