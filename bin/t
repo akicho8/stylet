@@ -1,0 +1,3 @@
+#!/bin/zsh
+cd ~/src/stylet/vortex
+bundle exec rsdl lib/vortex/start_menu.rb --production --full-screen --screen-size 640x480 --hide-mouse --music-mute $*

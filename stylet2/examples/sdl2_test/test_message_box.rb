@@ -1,4 +1,11 @@
-require "./setup"
+# require "./setup"
+
+require "bundler/inline"
+
+gemfile do
+  source "https://rubygems.org"
+  gem "ruby-sdl2", require: "sdl2"
+end
 
 selected_id = SDL2::MessageBox.show({
     flags: SDL2::MessageBox::WARNING,

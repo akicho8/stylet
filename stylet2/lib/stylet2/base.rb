@@ -3,8 +3,8 @@ module Stylet2
     include Math
 
     class << self
-      def run(*args)
-        new(*args).run
+      def run(...)
+        new(...).run
       end
     end
 
@@ -27,6 +27,7 @@ module Stylet2
     def process_once
       before_process
       event_loop
+      update
       before_view
       view
       after_view
@@ -43,6 +44,9 @@ module Stylet2
     end
 
     def before_process
+    end
+
+    def update
     end
 
     def before_view

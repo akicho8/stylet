@@ -1,3 +1,5 @@
+require "active_support/isolated_execution_state"
+
 module Stylet
   module Core
     extend ActiveSupport::Concern

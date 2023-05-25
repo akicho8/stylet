@@ -104,7 +104,7 @@ module Stylet
       end
     end
 
-    def draw_line(p0, p1, **options)
+    def draw_line(p0, p1, options = {})
       options = {
         :color => :foreground,
       }.merge(options)

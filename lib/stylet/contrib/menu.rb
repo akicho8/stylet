@@ -11,7 +11,7 @@ module Stylet
       attr_accessor :parent, :bar, :display_height, :select_buttons, :cancel_buttons, :line_format, :close_hook, :input, :elements, :every_command_all
       attr_reader :state, :children
 
-      def initialize(**params)
+      def initialize(params = {})
         super() if defined? super
 
         {

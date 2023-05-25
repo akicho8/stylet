@@ -5,7 +5,7 @@ module Stylet2
     def setup
       super
 
-      @fps = 60
+      @fps = 0
       @fps_counter = 0
       @old_ticks = SDL2.get_ticks
     end
@@ -18,6 +18,7 @@ module Stylet2
       t = v - @old_ticks
       if t >= 1000
         @fps = @fps_counter
+
         @old_ticks = v
         @fps_counter = 0
         if params[:fps_console_print]

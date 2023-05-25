@@ -57,6 +57,28 @@ module Stylet2
 
     def after_background_clear
     end
+
+    # p0 から p1 へ矢印の描画
+    def draw_arrow(p0, p1, options = {})
+      d = p0 - p1
+
+      # if d.x.nan? || d.y.nan?
+      #   return
+      # end
+
+      # options = {
+      #   :angle      => PI * 0.25,             # 傘の開き
+      #   :arrow_size => p0.distance(p1) * 0.1, # 傘の大きさは線分の長さに比例
+      # }.merge(options)
+
+      renderer.draw_line(*p0, *p1)
+
+      # # 傘の表示
+      # a = p1.angle_to(p0)
+      draw_line(p1, p1 + Vector.angle_at(a + options[:angle]).scale(options[:arrow_size]), options)
+      draw_line(p1, p1 + Vector.angle_at(a - options[:angle]).scale(options[:arrow_size]), options)
+    end
+
   end
 
   Base.prepend WindowMethods

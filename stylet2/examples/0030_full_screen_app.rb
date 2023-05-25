@@ -1,7 +1,7 @@
 require "./setup"
 
 class FullScreenApp < Stylet2::Base
-  def initialize(*)
+  def initialize(...)
     super
     params[:full_screen] = true
   end

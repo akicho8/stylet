@@ -75,7 +75,7 @@ module Stylet
     self.volume_magnification = 1.0
 
     def play_by(params)
-      play(params[:filename], params)
+      play(params[:filename], **params)
     end
 
     def play(filename, volume: nil, loop: true, fade_in_sec: nil, **unsed_options)
@@ -180,9 +180,9 @@ module Stylet
       se_hash[key.to_sym]
     end
 
-    def load_once(**params)
+    def load_once(params = {})
       return if exist?(params[:key])
-      load(params[:filename], params.except(:filename))
+      load(params[:filename], **params.except(:filename))
     end
 
     def load(filename, volume: 1.0, key: nil, channel_group: nil, channel_auto: false, preload: false)

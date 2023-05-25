@@ -33,7 +33,7 @@ gem install rsdl
 # gem uninstall -ax rubysdl
 # gem install specific_install
 
-gem install rubysdl
+gem uninstall rubysdl
 gem install rubysdl -- --enable-bundled-sge
 
 # # いつのまにか効かなくなった
