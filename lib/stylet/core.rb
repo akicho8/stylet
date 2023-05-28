@@ -13,8 +13,8 @@ module Stylet
     class_methods do
       # run{|win| win.vputs 'Hello' }
       # run{ vputs 'Hello' }
-      def run(*args, &block)
-        active_frame.run(*args, &block)
+      def run(...)
+        active_frame.run(...)
       end
 
       # run_initializers 実行済みの active_frame

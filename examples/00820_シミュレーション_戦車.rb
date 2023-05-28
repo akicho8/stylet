@@ -21,7 +21,7 @@ class App < Stylet::Base
 
   update do
     # リセット(画面外に行ってしまったとき用)
-    if key_down?(SDL2::Key::Scan::R)
+    if key_down?(SDL2::Key::R)
       @pos = srect.center.clone
     end
 

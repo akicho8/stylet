@@ -705,7 +705,7 @@ class App < Stylet::Base
       end
     end
     if @state == :stg_loop
-      if @coins.empty? || key_down?(SDL2::Key::Scan::N)
+      if @coins.empty? || key_down?(SDL2::Key::N)
         @state = :stg_clear
         @state_counter = 0
       end
@@ -821,8 +821,8 @@ class App < Stylet::Base
         end
       end
 
-      if key_down?(SDL2::Key::Scan::N) || key_down?(SDL2::Key::Scan::P)
-        @stg_index += (key_down?(SDL2::Key::Scan::N) ? 1 : 0) - (key_down?(SDL2::Key::Scan::P) ? 1 : 0)
+      if key_down?(SDL2::Key::N) || key_down?(SDL2::Key::P)
+        @stg_index += (key_down?(SDL2::Key::N) ? 1 : 0) - (key_down?(SDL2::Key::P) ? 1 : 0)
         edit_func_stage_reload
       end
 
@@ -833,17 +833,17 @@ class App < Stylet::Base
       # @camera.x += (Stylet.context.ext_button.btL1.repeat_0or1 - Stylet.context.ext_button.btR1.repeat_0or1)
       # @camera.y += (Stylet.context.ext_button.btL1.repeat_0or1 - Stylet.context.ext_button.btR1.repeat_0or1)
 
-      if key_down?(SDL2::Key::Scan::S)
+      if key_down?(SDL2::Key::S)
         edit_func_stage_save
       end
 
-      if key_down?(SDL2::Key::Scan::E) || ext_button.btPS.trigger?
+      if key_down?(SDL2::Key::E) || ext_button.btPS.trigger?
         @state = :stg_loop
         @state_counter = 0
         SDL2::Mixer.resume_music
       end
     else
-      if key_down?(SDL2::Key::Scan::E) || ext_button.btPS.trigger?
+      if key_down?(SDL2::Key::E) || ext_button.btPS.trigger?
         @state = :edit_mode
         @state_counter = -1
       end
@@ -851,7 +851,7 @@ class App < Stylet::Base
 
     dputs "#{@state}: #{@state_counter}"
 
-    if key_down?(SDL2::Key::Scan::R)
+    if key_down?(SDL2::Key::R)
       # edit_func_stage_reload
       @state = :stg_set
       @state_counter = -1

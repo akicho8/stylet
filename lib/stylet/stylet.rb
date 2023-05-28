@@ -9,8 +9,8 @@ module Stylet
 
   # ショートカット
   #   Stylet.run { vputs "Hello" }
-  def run(*args, &block)
-    Base.run(*args, &block)
+  def run(...)
+    Base.run(...)
   end
 
   # Stylet.context {|e| e.vputs "Hello" }
@@ -19,10 +19,10 @@ module Stylet
   # Stylet.context.instance_exec(args{|args|...}
   def context(&block)
     if block
-      if block.arity == 1
-        block.call(Base.active_frame)
-      else
+      if block.arity.zero?
         Base.active_frame.instance_eval(&block)
+      else
+        block.call(Base.active_frame)
       end
     else
       Base.active_frame

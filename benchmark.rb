@@ -31,13 +31,13 @@ loop do
     when SDL2::Event2::Quit
       exit
     when SDL2::Event2::KeyDown
-      if event.sym == SDL2::Key::Scan::ESCAPE || event.sym == SDL2::Key::Scan::Q
+      if event.sym == SDL2::Key::ESCAPE || event.sym == SDL2::Key::Q
         exit
       end
-      if event.sym == SDL2::Key::Scan::LEFT
+      if event.sym == SDL2::Key::LEFT
         @item_index -= 1
       end
-      if event.sym == SDL2::Key::Scan::RIGHT
+      if event.sym == SDL2::Key::RIGHT
         @item_index += 1
       end
     end

@@ -19,9 +19,9 @@ loop do
       exit
     when SDL2::Event::KeyDown
       case ev.scancode
-      when SDL2::Key::Scan::ESCAPE
+      when SDL2::Key::ESCAPE
         exit
-      when SDL2::Key::Scan::Q
+      when SDL2::Key::Q
         exit
       end
     end

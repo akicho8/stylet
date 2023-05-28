@@ -5,14 +5,14 @@ module Stylet
     module StandardKeybordBind
       def key_bit_update_all(*args)
         super if defined? super
-        @axis.up    << SDL2::Key.press?(SDL2::Key::Scan::UP)
-        @axis.down  << SDL2::Key.press?(SDL2::Key::Scan::DOWN)
-        @axis.left  << SDL2::Key.press?(SDL2::Key::Scan::LEFT)
-        @axis.right << SDL2::Key.press?(SDL2::Key::Scan::RIGHT)
-        @button.btA << SDL2::Key.press?(SDL2::Key::Scan::Z)
-        @button.btB << SDL2::Key.press?(SDL2::Key::Scan::X)
-        @button.btC << SDL2::Key.press?(SDL2::Key::Scan::C)
-        @button.btD << SDL2::Key.press?(SDL2::Key::Scan::V)
+        @axis.up    << SDL2::Key.press?(SDL2::Key::UP)
+        @axis.down  << SDL2::Key.press?(SDL2::Key::DOWN)
+        @axis.left  << SDL2::Key.press?(SDL2::Key::LEFT)
+        @axis.right << SDL2::Key.press?(SDL2::Key::RIGHT)
+        @button.btA << SDL2::Key.press?(SDL2::Key::Z)
+        @button.btB << SDL2::Key.press?(SDL2::Key::X)
+        @button.btC << SDL2::Key.press?(SDL2::Key::C)
+        @button.btD << SDL2::Key.press?(SDL2::Key::V)
       end
     end
 
@@ -28,14 +28,14 @@ module Stylet
     module HjklKeyboardBind
       def key_bit_update_all(*args)
         super if defined? super
-        @axis.up    << SDL2::Key.press?(SDL2::Key::Scan::K)
-        @axis.down  << SDL2::Key.press?(SDL2::Key::Scan::J)
-        @axis.left  << SDL2::Key.press?(SDL2::Key::Scan::H)
-        @axis.right << SDL2::Key.press?(SDL2::Key::Scan::L)
-        @button.btA << SDL2::Key.press?(SDL2::Key::Scan::U)
-        @button.btB << SDL2::Key.press?(SDL2::Key::Scan::I)
-        @button.btC << SDL2::Key.press?(SDL2::Key::Scan::O)
-        @button.btD << SDL2::Key.press?(SDL2::Key::Scan::P)
+        @axis.up    << SDL2::Key.press?(SDL2::Key::K)
+        @axis.down  << SDL2::Key.press?(SDL2::Key::J)
+        @axis.left  << SDL2::Key.press?(SDL2::Key::H)
+        @axis.right << SDL2::Key.press?(SDL2::Key::L)
+        @button.btA << SDL2::Key.press?(SDL2::Key::U)
+        @button.btB << SDL2::Key.press?(SDL2::Key::I)
+        @button.btC << SDL2::Key.press?(SDL2::Key::O)
+        @button.btD << SDL2::Key.press?(SDL2::Key::P)
       end
     end
 

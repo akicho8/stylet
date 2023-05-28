@@ -9,10 +9,10 @@ loop do
   while ev = SDL2::Event.poll
     case ev
     when SDL2::Event::KeyDown
-      if ev.scancode == SDL2::Key::Scan::ESCAPE
+      if ev.scancode == SDL2::Key::ESCAPE
         exit
       end
-      if ev.scancode == SDL2::Key::Scan::Q
+      if ev.scancode == SDL2::Key::Q
         exit
       end
     end

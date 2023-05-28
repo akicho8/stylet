@@ -49,7 +49,7 @@ module Stylet
         if @title != str
           @title = str
           if @screen
-            SDL2::WM.set_caption(@title.to_s, @title.to_s)
+            @screen.title = @title.to_s
           end
         end
       end
@@ -60,10 +60,10 @@ module Stylet
 
       case @sdl_event
       when SDL2::Event::KeyDown
-        if @sdl_event.sym == SDL2::Key::Scan::ESCAPE || @sdl_event.sym == SDL2::Key::Scan::Q
+        if @sdl_event.sym == SDL2::Key::ESCAPE || @sdl_event.sym == SDL2::Key::Q
           throw :exit, :break
         end
-        if @sdl_event.sym == SDL2::Key::Scan::K1
+        if @sdl_event.sym == SDL2::Key::K1
           full_screen_toggle
         end
       when SDL2::Event::Window::SHOWN

@@ -88,16 +88,16 @@ class App
       while ev = SDL2::Event.poll
         case ev
         when SDL2::Event::KeyDown
-          if ev.scancode == SDL2::Key::Scan::ESCAPE
+          if ev.scancode == SDL2::Key::ESCAPE
             exit
           end
-          if ev.scancode == SDL2::Key::Scan::Q
+          if ev.scancode == SDL2::Key::Q
             exit
           end
-          if ev.scancode == SDL2::Key::Scan::Z
+          if ev.scancode == SDL2::Key::Z
             preset_change(1)
           end
-          if ev.scancode == SDL2::Key::Scan::X
+          if ev.scancode == SDL2::Key::X
             preset_change(-1)
           end
         end

@@ -81,7 +81,7 @@ class App < Stylet::Base
       @hard_level = Stylet::Chore.clamp(@hard_level, 0.0..1.0)
 
       # 円の表示トグル
-      if key_down?(SDL2::Key::Scan::A)
+      if key_down?(SDL2::Key::A)
         @body_display = !@body_display
       end
     end

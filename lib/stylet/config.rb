@@ -37,7 +37,7 @@ module Stylet
 
   # etc.
   config.production       = false
-  config.production_keys  = [SDL2::Key::Scan::K0] # [SDL2::Key::Scan::RETURN]
-  config.pause_keys       = [SDL2::Key::Scan::SPACE]
+  config.production_keys  = [SDL2::Key::K0] # [SDL2::Key::RETURN]
+  config.pause_keys       = [SDL2::Key::SPACE]
   config.optparse_skip    = false
 end

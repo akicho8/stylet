@@ -44,7 +44,7 @@ class App < Stylet::Base
   end
 
   update do
-    if key_down?(SDL2::Key::Scan::S)
+    if key_down?(SDL2::Key::S)
       @reflect_mode = @modes[@modes.index(@reflect_mode).next.modulo(@modes.size)]
     end
 
