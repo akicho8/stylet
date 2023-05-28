@@ -7,13 +7,13 @@ class App < Stylet::Base
   def screen_open
     super
 
-    _image = SDL::Surface.load("assets/bg960x480_green_ruins.png").display_format
+    _image = SDL2::Surface.load("assets/bg960x480_green_ruins.png").display_format
 
     # 画面サイズと同じバッファを作る
     temp_surface = screen.copy_rect(*srect)
 
     # 画面サイズに合わせて画像表示
-    SDL::Surface.transform_draw(
+    SDL2::Surface.transform_draw(
       _image,                     # これを
       temp_surface,               # ここに
       0,                          # 回転角度
@@ -21,7 +21,7 @@ class App < Stylet::Base
       srect.h.to_f / _image.h,     # y倍率
       _image.w / 2, _image.h / 2, # 画像の拡大や回転の中心を
       srect.w / 2, srect.h / 2,     # 転送先のどこに合わせるか
-      SDL::Surface::TRANSFORM_AA) # 綺麗フラグ
+      SDL2::Surface::TRANSFORM_AA) # 綺麗フラグ
 
     # その上に黒
     temp_surface.draw_rect(*srect, [0, 0, 0], true, 192)

@@ -9,7 +9,7 @@ class App < Stylet::Base
   include Helper::Cursor
 
   setup do
-    SDL::Mouse.hide
+    SDL2::Mouse.hide
 
     @around = [
       [-1, -1], [0, -1], [1, -1],
@@ -107,7 +107,7 @@ class App < Stylet::Base
   end
 
   def load_image
-    s = SDL::Surface.load("assets/love_live.png")
+    s = SDL2::Surface.load("assets/love_live.png")
     image = s.display_format
     screen.put(image, 0, 0)
   end

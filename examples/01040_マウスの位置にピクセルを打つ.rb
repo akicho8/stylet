@@ -3,7 +3,7 @@ require_relative "helper"
 
 class App < Stylet::Base
   setup do
-    SDL::Mouse.hide
+    SDL2::Mouse.hide
   end
 
   update do

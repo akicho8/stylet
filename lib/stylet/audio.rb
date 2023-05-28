@@ -44,9 +44,9 @@ module Stylet
     end
 
     def initialize
-      if SDL.inited_system(SDL::INIT_AUDIO).zero?
-        SDL.initSubSystem(SDL::INIT_AUDIO)
-        SDL::Mixer.open(Stylet.config.sound_freq, SDL::Mixer::DEFAULT_FORMAT, 2, 512) # デフォルトの4096では効果音が遅延する
+      if SDL2.inited_system(SDL2::INIT_AUDIO).zero?
+        SDL2.initSubSystem(SDL2::INIT_AUDIO)
+        SDL2::Mixer.open(Stylet.config.sound_freq, SDL2::Mixer::DEFAULT_FORMAT, 2, 512) # デフォルトの4096では効果音が遅延する
         spec_check
       end
     end
@@ -58,8 +58,8 @@ module Stylet
 
     def spec_check
       return unless Stylet.logger
-      Stylet.logger.debug "SDL::Mixer.driver_name: #{SDL::Mixer.driver_name.inspect}"
-      Stylet.logger.debug "SDL::Mixer.spec: #{Hash[[:frequency, :format, :channels].zip(SDL::Mixer.spec)]}"
+      Stylet.logger.debug "SDL2::Mixer.driver_name: #{SDL2::Mixer.driver_name.inspect}"
+      Stylet.logger.debug "SDL2::Mixer.spec: #{Hash[[:frequency, :format, :channels].zip(SDL2::Mixer.spec)]}"
     end
   end
 
@@ -89,31 +89,31 @@ module Stylet
         bin = load(filename)
         loop = loop ? -1 : 0
         if fade_in_sec
-          SDL::Mixer.fade_in_music(bin, loop, fade_in_sec * 1000.0)
+          SDL2::Mixer.fade_in_music(bin, loop, fade_in_sec * 1000.0)
         else
-          SDL::Mixer.play_music(bin, loop)
+          SDL2::Mixer.play_music(bin, loop)
         end
         self.volume = volume if volume
       end
     end
 
     def volume=(v)
-      SDL::Mixer.set_volume_music(Audio.volume_cast(v * volume_magnification))
+      SDL2::Mixer.set_volume_music(Audio.volume_cast(v * volume_magnification))
     end
 
     def play?
-      SDL::Mixer.play_music?
+      SDL2::Mixer.play_music?
     end
 
     def wait_if_play?
-      SDL.delay(1) while SDL::Mixer.play_music?
+      SDL2.delay(1) while SDL2::Mixer.play_music?
     end
 
     def halt(fade_out_sec: nil)
       if fade_out_sec
-        SDL::Mixer.fade_out_music(fade_out_sec * 1000.0)
+        SDL2::Mixer.fade_out_music(fade_out_sec * 1000.0)
       else
-        SDL::Mixer.halt_music
+        SDL2::Mixer.halt_music
       end
     end
 
@@ -131,7 +131,7 @@ module Stylet
       destroy
       filename = Pathname(filename).expand_path.to_s
       self.last_music_file = filename
-      @muisc = SDL::Mixer::Music.load(filename)
+      @muisc = SDL2::Mixer::Music.load(filename)
     end
 
     def destroy
@@ -160,7 +160,7 @@ module Stylet
     self.preparation_channels = 0
 
     # チャンネルボリュームの初期値
-    # SDL は何もしないと 1.0 だけど音が大きすぎるため全チャンネルを 0.5 としている
+    # SDL2 は何もしないと 1.0 だけど音が大きすぎるため全チャンネルを 0.5 としている
     # WAVE毎にボリュームを設定できるため、この値は固定しておいた方がシンプルになる
     # この設定は不要かもしれない
     mattr_accessor :default_master_volume
@@ -221,17 +221,17 @@ module Stylet
     end
 
     def allocate_channels
-      self.allocated_channels = SDL::Mixer.allocate_channels(SE.preparation_channels + channel_groups.size)
+      self.allocated_channels = SDL2::Mixer.allocate_channels(SE.preparation_channels + channel_groups.size)
       SE.master_volume = SE.default_master_volume
     end
 
     # nil while se_hash.values.any? {|e| e.play? } と同等
     def wait_if_play?
-      SDL.delay(1) while play_any?
+      SDL2.delay(1) while play_any?
     end
 
     def play_any?
-      SDL::Mixer.playing_channels.nonzero?
+      SDL2::Mixer.playing_channels.nonzero?
     end
 
     def play_none?
@@ -240,9 +240,9 @@ module Stylet
 
     def halt(fade_out_sec: nil)
       if fade_out_sec
-        SDL::Mixer.fade_out(-1, fade_out_sec * 1000.0)
+        SDL2::Mixer.fade_out(-1, fade_out_sec * 1000.0)
       else
-        SDL::Mixer.halt(-1)
+        SDL2::Mixer.halt(-1)
       end
     end
 
@@ -255,7 +255,7 @@ module Stylet
       @master_volume = v
       # チャンネル数が0の状態で呼ぶとエラーになるため1以上としている
       if allocated_channels >= 1
-        SDL::Mixer.set_volume(-1, Audio.volume_cast(v))
+        SDL2::Mixer.set_volume(-1, Audio.volume_cast(v))
       end
     end
 
@@ -320,20 +320,20 @@ module Stylet
       end
 
       def play(loop: false)
-        SDL::Mixer.play_channel(channel, wave, loop ? -1 : 0)
-      rescue SDL::Error => error
+        SDL2::Mixer.play_channel(channel, wave, loop ? -1 : 0)
+      rescue SDL2::Error => error
         Stylet.logger.debug "ERROR: #{error.inspect}" if Stylet.logger
       end
 
       def play?
-        SDL::Mixer.play?(channel)
+        SDL2::Mixer.play?(channel)
       end
 
       def halt(fade_out_sec: nil)
         if fade_out_sec
-          SDL::Mixer.fade_out(channel, fade_out_sec * 1000)
+          SDL2::Mixer.fade_out(channel, fade_out_sec * 1000)
         else
-          SDL::Mixer.halt(channel)
+          SDL2::Mixer.halt(channel)
         end
       end
 
@@ -370,7 +370,7 @@ module Stylet
       end
 
       def wave
-        @wave ||= SDL::Mixer::Wave.load(@filename.to_s).tap do |wave|
+        @wave ||= SDL2::Mixer::Wave.load(@filename.to_s).tap do |wave|
           wave_volume_set(wave)
           Stylet.logger.debug "disk_load: #{@key.inspect}" if Stylet.logger
         end

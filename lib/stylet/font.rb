@@ -15,7 +15,7 @@ module Stylet
     end
 
     def init
-      @_sdl_ttf = nil
+      @sdl_ttf = nil
       @char_width = nil
     end
 
@@ -23,23 +23,23 @@ module Stylet
       @char_width ||= sdl_ttf.text_size("A").first
     end
 
-    def close
-      if @_sdl_ttf
-        @_sdl_ttf.close
+    def destroy
+      if @sdl_ttf
+        @sdl_ttf.destroy
         init
       end
     end
 
     concerning :BoldMethods do
       def bold
-        (sdl_ttf.style & SDL::TTF::STYLE_BOLD).nonzero?
+        (sdl_ttf.style & SDL2::TTF::STYLE_BOLD).nonzero?
       end
 
       def bold=(v)
         if v
-          sdl_ttf.style |= SDL::TTF::STYLE_BOLD
+          sdl_ttf.style |= SDL2::TTF::STYLE_BOLD
         else
-          sdl_ttf.style &= ~SDL::TTF::STYLE_BOLD
+          sdl_ttf.style &= ~SDL2::TTF::STYLE_BOLD
         end
       end
 
@@ -53,20 +53,20 @@ module Stylet
       end
     end
 
-    private
-
     def sdl_ttf
-      unless @_sdl_ttf
+      @sdl_ttf ||= yield_self do
         if font_file = font_dir_list.collect {|e| Pathname(e) }.find {|e| e.exist? }
-          @_sdl_ttf = SDL::TTF.open(font_file.to_s, @attributes[:font_size])
-          Stylet.logger.debug "load: #{font_file} (#{@_sdl_ttf.family_name.inspect} #{@_sdl_ttf.style_name.inspect} #{@_sdl_ttf.height} #{@_sdl_ttf.line_skip} #{@_sdl_ttf.fixed_width?})" if Stylet.logger
+          sdl_ttf = SDL2::TTF.open(font_file.to_s, @attributes[:font_size])
+          # Stylet.logger.debug "load: #{font_file} (#{@sdl_ttf.family_name.inspect} #{@sdl_ttf.style_name.inspect} #{@sdl_ttf.height} #{@sdl_ttf.line_skip} #{@sdl_ttf.fixed_width?})" if Stylet.logger
           if @attributes[:bold]
-            @_sdl_ttf.style |= SDL::TTF::STYLE_BOLD
+            sdl_ttf.style |= SDL2::TTF::STYLE_BOLD
           end
+          sdl_ttf
         end
       end
-      @_sdl_ttf
     end
+
+    private
 
     def font_dir_list
       [
@@ -84,7 +84,7 @@ module Stylet
     def run_initializers
       super
       init_on(:font) do
-        SDL::TTF.init
+        SDL2::TTF.init
         @system_font = FontList[Stylet.config.system_font_key]
         @console_current_line = nil
       end
@@ -97,7 +97,7 @@ module Stylet
 
     def after_run
       super if defined? super
-      FontList.each(&:close)
+      FontList.each(&:destroy)
     end
 
     def update
@@ -123,6 +123,7 @@ module Stylet
     def vputs(str = "", vector: nil, color: :font, align: :left, font: @system_font, bold: nil)
       str = str.to_s
       font = FontList[font]
+      sdl_ttf = font.sdl_ttf
       if vector
         begin
           x = vector.x
@@ -139,7 +140,17 @@ module Stylet
             end
           end
           font.bold_block(bold) do
-            font.drawBlendedUTF8(@screen, str, x, vector.y, *Palette.fetch(color))
+            # font.drawBlendedUTF8(@screen, str, x, vector.y, *Palette.fetch(color))
+
+            rect = SDL2::Rect.new(x, vector.y, *sdl_ttf.size_text(str))
+
+            # renderer.draw_blend_mode = SDL2::BlendMode::NONE
+            # @renderer.draw_color = font_color
+            # @renderer.fill_rect(rect)
+
+            font_color = [255, 255, 255]
+            texture = renderer.create_texture_from(sdl_ttf.render_blended(str, font_color))
+            renderer.copy(texture, nil, rect)
           end
         rescue RangeError
         end

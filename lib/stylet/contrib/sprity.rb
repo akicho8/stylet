@@ -52,9 +52,9 @@ module Stylet
       end
 
       def load_file(filename, mask: false)
-        surface = SDL::Surface.load(filename)
+        surface = SDL2::Surface.load(filename)
         if mask
-          surface.set_color_key(SDL::SRCCOLORKEY, 0)
+          surface.set_color_key(SDL2::SRCCOLORKEY, 0)
         end
         surface.display_format
       end
@@ -75,7 +75,7 @@ module Stylet
         end
 
         if params[:mask]
-          s.set_color_key(SDL::SRCCOLORKEY, 0)
+          s.set_color_key(SDL2::SRCCOLORKEY, 0)
         end
 
         s.display_format

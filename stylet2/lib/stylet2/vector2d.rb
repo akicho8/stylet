@@ -4,10 +4,10 @@ module Stylet2
       # 方向ベクトル
       #
       #   これを使うと次のように簡単に書ける
-      #   cursor.x += Stylet::Magic.rcos(dir) * speed
-      #   cursor.y += Stylet::Magic.rsin(dir) * speed
+      #   x += cos(dir) * speed
+      #   y += sin(dir) * speed
       #     ↓
-      #   cursor += Stylet::Magic.angle_at(dir) * speed
+      #   vec += angle_at(dir) * speed
       #
       def angle_at(x, y = x)
         new(Math.cos(x), Math.sin(y))
@@ -523,10 +523,10 @@ module Stylet2
   # Vector2d(2, 3) / Vector2d(2, 3) # => Vector[1, 1]
 end
 
-def Vector2d(*args)
-  Stylet2::Vector2d.new(*args)
+def Vector2d(...)
+  Stylet2::Vector2d.new(...)
 end
 
-def vec2(*args)
-  Stylet2::Vector2d.new(*args)
+def vec2(...)
+  Stylet2::Vector2d.new(...)
 end

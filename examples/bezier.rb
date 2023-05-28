@@ -13,7 +13,7 @@ class App < Stylet::Base
   end
 
   update do
-    if key_down?(SDL::Key::A)
+    if key_down?(SDL2::Key::Scan::A)
       points_switch
     end
 
@@ -85,7 +85,7 @@ class App
       end
 
       update do
-        if key_down?(SDL::Key::S)
+        if key_down?(SDL2::Key::Scan::S)
           lpoints_switch
         end
 

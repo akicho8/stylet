@@ -48,7 +48,7 @@ class App < Stylet::Base
   setup do
     self.title = "2P対戦雛型"
     cursor.display = false
-    SDL::Mouse.hide
+    SDL2::Mouse.hide
 
     @players = []
     @players << Player1.new(vec2[srect.half_w - srect.half_w * 0.5, srect.half_h])

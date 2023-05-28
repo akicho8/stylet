@@ -18,3 +18,6 @@ SDL2::Key::Scan::SPACE               # => 44
 SDL2::Key::Scan.from_keycode(97)     # => 0
 SDL2::Key::Scan.from_name("A")       # => 4
 SDL2::Key::Scan.name_of(4)           # => "A"
+
+SDL2::Key::Scan::K0             # => 39
+SDL2::Key::Scan::A              # => 4

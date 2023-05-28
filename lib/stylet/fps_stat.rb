@@ -16,12 +16,12 @@ module Stylet
     def initialize
       @fps = 0
       @counter = 0
-      @old_time = SDL.get_ticks
+      @old_time = SDL2.get_ticks
     end
 
     def update
       @counter += 1
-      now = SDL.get_ticks
+      now = SDL2.get_ticks
       if now >= @old_time + 1000.0
         @old_time = now
         @fps = @counter

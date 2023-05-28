@@ -43,11 +43,21 @@ module Stylet
 
     def run_initializers
       init_on(:core) do
-        SDL.init(SDL::INIT_VIDEO)
+        # SDL2.init(SDL2::INIT_VIDEO)
+        SDL2.init(SDL2::INIT_EVERYTHING)
       end
     end
 
     def setup
+    end
+
+    def event_loop
+      while @sdl_event = SDL2::Event.poll
+        event_receive
+      end
+    end
+
+    def event_receive
     end
 
     def polling
@@ -67,7 +77,7 @@ module Stylet
 
     def run(title: nil, &block)
       self.title = title
-      run_initializers          # SDL.init(@init_code)
+      run_initializers          # SDL2.init(@init_code)
       setup                     # for user
       main_loop(&block)
     ensure
@@ -83,7 +93,8 @@ module Stylet
     end
 
     def next_frame(&block)
-      raise "SDL is not initialized" if @initialized.empty?
+      raise "SDL2 is not initialized" if @initialized.empty?
+      event_loop
       polling
       if pause? || !screen_active
         return

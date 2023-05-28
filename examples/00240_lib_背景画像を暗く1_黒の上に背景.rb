@@ -5,8 +5,8 @@ class App < Stylet::Base
   include Helper::Cursor
 
   setup do
-    @image = SDL::Surface.load("assets/bg960x480_green_ruins.png").display_format
-    @image.set_alpha(SDL::SRCALPHA, 64)
+    @image = SDL2::Surface.load("assets/bg960x480_green_ruins.png").display_format
+    @image.set_alpha(SDL2::SRCALPHA, 64)
   end
 
   def background_clear

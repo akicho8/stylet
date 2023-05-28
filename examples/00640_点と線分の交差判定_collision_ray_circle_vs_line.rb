@@ -29,11 +29,11 @@ class App < Stylet::Base
   end
 
   update do
-    if key_down?(SDL::Key::A)
+    if key_down?(SDL2::Key::Scan::A)
       @ray_mode = !@ray_mode
       mode_init
     end
-    if key_down?(SDL::Key::S)
+    if key_down?(SDL2::Key::Scan::S)
       @reflect_mode = !@reflect_mode
     end
 

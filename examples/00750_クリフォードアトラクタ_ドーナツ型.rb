@@ -4,7 +4,7 @@ class App < Stylet::Base
   include Helper::Cursor
 
   setup do
-    SDL::Mouse.hide
+    SDL2::Mouse.hide
     @cursor.display = false
 
     @x = 1.0

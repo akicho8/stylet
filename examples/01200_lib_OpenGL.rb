@@ -1,17 +1,17 @@
 require_relative "helper"
 require "opengl"
 
-Stylet.config.screen_flags |= SDL::OPENGL
+Stylet.config.screen_flags |= SDL2::OPENGL
 
 class App < Stylet::Base
   include Helper::CursorWithObjectCollection
 
   setup do
-    SDL::GL.set_attr(SDL::GL_RED_SIZE, 5)
-    SDL::GL.set_attr(SDL::GL_GREEN_SIZE, 5)
-    SDL::GL.set_attr(SDL::GL_BLUE_SIZE, 5)
-    SDL::GL.set_attr(SDL::GL_DEPTH_SIZE, 16)
-    SDL::GL.set_attr(SDL::GL_DOUBLEBUFFER, 1)
+    SDL2::GL.set_attr(SDL2::GL_RED_SIZE, 5)
+    SDL2::GL.set_attr(SDL2::GL_GREEN_SIZE, 5)
+    SDL2::GL.set_attr(SDL2::GL_BLUE_SIZE, 5)
+    SDL2::GL.set_attr(SDL2::GL_DEPTH_SIZE, 16)
+    SDL2::GL.set_attr(SDL2::GL_DOUBLEBUFFER, 1)
 
     GL::Viewport(0, 0, 640, 480)
     GL::MatrixMode(GL::PROJECTION)
@@ -45,7 +45,7 @@ class App < Stylet::Base
     GL::MatrixMode(GL::MODELVIEW)
     GL::Rotate(0.5, 0.5, 0.5, 0.5) # ここを有効にするとなんか知らんが回転する
 
-    SDL::GL.swap_buffers
+    SDL2::GL.swap_buffers
   end
 
   def background_clear

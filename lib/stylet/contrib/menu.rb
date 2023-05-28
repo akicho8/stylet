@@ -67,7 +67,7 @@ module Stylet
       end
 
       def close_trigger?
-        root.cancel_buttons.any? {|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::BACKSPACE)
+        root.cancel_buttons.any? {|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL2::Key::Scan::BACKSPACE)
       end
 
       def diff_val
@@ -359,7 +359,7 @@ module Stylet
         end
 
         def current_run_trigger?
-          root.select_buttons.any? {|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL::Key::RETURN)
+          root.select_buttons.any? {|e|root.input.button.send(e).trigger?} || Stylet::Base.active_frame.key_down?(SDL2::Key::Scan::RETURN)
         end
 
         def safe_command_around

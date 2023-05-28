@@ -2,7 +2,7 @@
 
 module Stylet
   module Draw
-    attr_reader :frame_counter, :sdl_event, :srect, :screen, :screen_active
+    attr_reader :frame_counter, :sdl_event, :srect, :screen, :screen_active, :renderer
     attr_reader :fps_stat, :cpu_stat
     attr_reader :title
 
@@ -19,7 +19,7 @@ module Stylet
         screen_info_check
 
         if Stylet.config.hide_mouse
-          SDL::Mouse.hide
+          SDL2::Mouse.hide
         end
 
         if @title
@@ -34,7 +34,7 @@ module Stylet
       super
       @fps_adjust.delay
       @fps_stat.update
-      @cpu_stat.benchmark { @screen.flip }
+      @cpu_stat.benchmark { @renderer.present }
       @frame_counter += 1
     end
 
@@ -49,35 +49,36 @@ module Stylet
         if @title != str
           @title = str
           if @screen
-            SDL::WM.set_caption(@title.to_s, @title.to_s)
+            SDL2::WM.set_caption(@title.to_s, @title.to_s)
           end
         end
       end
     end
 
-    def polling
+    def event_receive
       super
-      case @sdl_event = SDL::Event.poll
-      when SDL::Event::KeyDown
-        if @sdl_event.sym == SDL::Key::ESCAPE || @sdl_event.sym == SDL::Key::Q
+
+      case @sdl_event
+      when SDL2::Event::KeyDown
+        if @sdl_event.sym == SDL2::Key::Scan::ESCAPE || @sdl_event.sym == SDL2::Key::Scan::Q
           throw :exit, :break
         end
-        if @sdl_event.sym == SDL::Key::K1
+        if @sdl_event.sym == SDL2::Key::Scan::K1
           full_screen_toggle
         end
-      when SDL::Event::Active
-        if (@sdl_event.state & SDL::Event::APPINPUTFOCUS).nonzero?
+      when SDL2::Event::Window::SHOWN
+        if (@sdl_event.state & SDL2::Event::APPINPUTFOCUS).nonzero?
           @screen_active = @sdl_event.gain
         end
-      when SDL::Event::VideoResize
+      when SDL2::Event::Window::RESIZED
         screen_resize(@sdl_event.w, @sdl_event.h)
-      when SDL::Event::Quit
+      when SDL2::Event::Quit
         throw :exit, :break
       end
     end
 
     def key_down?(sym)
-      if @sdl_event.is_a? SDL::Event::KeyDown
+      if @sdl_event.is_a? SDL2::Event::KeyDown
         @sdl_event.sym == sym
       end
     end
@@ -89,7 +90,7 @@ module Stylet
     # draw_rect の場合、デフォルトだと幅+1ドット描画されるため -1 してある
     # draw_rect(0, 0, 0, 0) で 1 ドット表示されてしまう
     #
-    def draw_rect4(x, y, w, h, color: :foreground, fill: false, alpha: nil, surface: @screen)
+    def draw_rect4(x, y, w, h, color: :foreground, fill: false, alpha: nil, surface: @renderer)
       return if w.zero? || h.zero?
       color = Palette.fetch(color)
       # raise "w, h は正を指定するように" if w < 0 || h < 0
@@ -97,7 +98,12 @@ module Stylet
         if alpha
           surface.draw_rect(x, y, w.abs - 1, h.abs - 1, color, true, alpha)
         else
-          surface.fill_rect(x, y, w.abs, h.abs, color)
+
+          # surface.fill_rect(x, y, w.abs, h.abs, color)
+          #
+          # surface.draw_blend_mode = background_blend_mode
+          surface.draw_color = color
+          surface.fill_rect(SDL2::Rect.new(x, y, w.abs, h.abs))
         end
       else
         surface.draw_rect(x, y, w.abs - 1, h.abs - 1, color, false, alpha)
@@ -135,8 +141,8 @@ module Stylet
       if Stylet.production
       else
         list += [
-          "SE:#{SDL::Mixer.playing_channels}/#{SE.allocated_channels}",
-          "M#{SDL::Mixer.play_music? ? 1 : 0}",
+          # "SE:#{SDL2::Mixer.playing_channels}/#{SE.allocated_channels}",
+          # "M#{SDL2::Mixer.play_music? ? 1 : 0}",
           "#{@srect.w}x#{@srect.h}",
           app_state,
         ]
@@ -166,13 +172,19 @@ module Stylet
 
     def screen_open
       screen_destroy    # 既存サーフェスを破棄しないとGCの際に落ちる
-      @screen = SDL::Screen.open(*Stylet.config.screen_size, Stylet.config.color_depth, screen_flags)
-      @srect = Rect2.new(@screen.w, @screen.h)
+      # @screen = SDL2::Screen.open(*Stylet.config.screen_size, Stylet.config.color_depth, screen_flags)
+      # @srect = Rect2.new(@screen.w, @screen.h)
+
+      pos = SDL2::Window::POS_CENTERED
+      @screen = SDL2::Window.create("(Title)", pos, pos, *Stylet.config.screen_size, screen_flags)
+      @srect = Rect2.new(*@screen.size)
+
+      @renderer = @screen.create_renderer(-1, Stylet.config.renderer_flags)
     end
 
     def screen_destroy
       if @screen
-        unless @screen.destroyed?
+        unless @screen.destroy?
           @screen.destroy
         end
         @screen = nil
@@ -181,28 +193,43 @@ module Stylet
 
     def screen_flags
       flags = Stylet.config.screen_flags
-      flags |= SDL::FULLSCREEN if Stylet.config.full_screen
+      if Stylet.config.full_screen
+        flags |= SDL2::Window::Flags::FULLSCREEN
+        # flags |= SDL2::Window::Flags::FULLSCREEN_DESKTOP
+      end
       flags
     end
 
     def screen_info_check
-      logger.debug "SGE: #{SDL.respond_to?(:auto_lock).inspect}"
+      # logger.debug "SGE: #{SDL2.respond_to?(:auto_lock).inspect}"
 
       # フルスクリーンで利用可能なサイズ
-      logger.debug "SDL::Screen.list_modes # => #{SDL::Screen.list_modes(SDL::FULLSCREEN | SDL::HWSURFACE).inspect}"
+      SDL2::Display.displays.each do |display|
+        logger.debug display.name
+        logger.debug display.current_mode
+        logger.debug display.desktop_mode
+      end
+
+      # logger.debug "SDL2::Screen.list_modes # => #{SDL2::Screen.list_modes(SDL2::FULLSCREEN | SDL2::HWSURFACE).inspect}"
 
       # 画面情報
-      logger.debug "SDL::Screen.info # => #{SDL::Screen.info.inspect}"
+      # logger.debug "SDL2::Screen.info # => #{SDL2::Screen.info.inspect}"
     end
 
     def app_state
       app_state_list = {
-        SDL::Event::APPMOUSEFOCUS => "M",
-        SDL::Event::APPINPUTFOCUS => "K",
-        SDL::Event::APPACTIVE     => "A",
+        # SDL2::Event::APPMOUSEFOCUS => "M",
+        # SDL2::Event::APPINPUTFOCUS => "K",
+        # SDL2::Event::APPACTIVE     => "A",
+        
+        # SDL2::Event::Window::ENTER        => "M",
+        # SDL2::Event::Window::FOCUS_GAINED => "K",
+        # SDL2::Event::Window::SHOWN        => "A",
+
+
       }
       app_state_list.collect { |k, v|
-        if (SDL::Event.app_state & k).nonzero?
+        if (SDL2::Event.app_state & k).nonzero?
           v
         end
       }.join
@@ -227,7 +254,7 @@ module Stylet
 
     def background_clear
       if @backgroud_image
-        SDL::Surface.blit(@backgroud_image, @srect.x, @srect.y, @srect.w, @srect.h, @screen, 0, 0)
+        SDL2::Surface.blit(@backgroud_image, @srect.x, @srect.y, @srect.w, @srect.h, @screen, 0, 0)
       else
         super
       end
@@ -237,7 +264,7 @@ module Stylet
       if v = Stylet.config.background_image
         file = Pathname(v)
         if file.exist?
-          bin = SDL::Surface.load(file.to_s)
+          bin = SDL2::Surface.load(file.to_s)
           bin.display_format
         end
       end

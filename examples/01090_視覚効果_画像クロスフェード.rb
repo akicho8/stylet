@@ -7,7 +7,7 @@ class App < Stylet::Base
 
   setup do
     @images = Pathname.glob(Pathname("assets/bg*.png").expand_path).collect do |file|
-      SDL::Surface.load(file.to_s).display_format
+      SDL2::Surface.load(file.to_s).display_format
     end
     @index = 0
     @alpha = 0
@@ -17,10 +17,10 @@ class App < Stylet::Base
     a = @images[(@index + 0).modulo(@images.size)]
     b = @images[(@index + 1).modulo(@images.size)]
 
-    a.set_alpha(SDL::SRCALPHA, 255)
+    a.set_alpha(SDL2::SRCALPHA, 255)
     screen.put(a, 0, 0)
 
-    b.set_alpha(SDL::SRCALPHA, @alpha)
+    b.set_alpha(SDL2::SRCALPHA, @alpha)
     screen.put(b, 0, 0)
 
     @alpha += 4

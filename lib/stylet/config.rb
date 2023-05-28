@@ -10,9 +10,13 @@ module Stylet
   config.fps              = nil
   config.full_screen      = false
   config.color_depth      = 16
-  config.screen_flags     = SDL::HWSURFACE | SDL::DOUBLEBUF | SDL::HWACCEL | SDL::RESIZABLE
-  # config.screen_flags   = SDL::HWSURFACE | SDL::DOUBLEBUF | SDL::HWACCEL | SDL::RESIZABLE # SDL::NOFRAME
-  # config.screen_flags   = SDL::HWSURFACE | SDL::DOUBLEBUF | SDL::HWACCEL | SDL::RESIZABLE | SDL::SRCALPHA
+  config.screen_flags     = 0
+  # config.screen_flags     = SDL2::HWSURFACE | SDL2::DOUBLEBUF | SDL2::HWACCEL | SDL2::RESIZABLE
+  # config.screen_flags   = SDL2::HWSURFACE | SDL2::DOUBLEBUF | SDL2::HWACCEL | SDL2::RESIZABLE # SDL2::NOFRAME
+  # config.screen_flags   = SDL2::HWSURFACE | SDL2::DOUBLEBUF | SDL2::HWACCEL | SDL2::RESIZABLE | SDL2::SRCALPHA
+
+  config.renderer_flags   =  SDL2::Renderer::Flags::ACCELERATED | SDL2::Renderer::Flags::PRESENTVSYNC
+
   config.background_image = nil # "background.bmp"
 
   # Font
@@ -33,7 +37,7 @@ module Stylet
 
   # etc.
   config.production       = false
-  config.production_keys  = [SDL::Key::K0] # [SDL::Key::RETURN]
-  config.pause_keys       = [SDL::Key::SPACE]
+  config.production_keys  = [SDL2::Key::Scan::K0] # [SDL2::Key::Scan::RETURN]
+  config.pause_keys       = [SDL2::Key::Scan::SPACE]
   config.optparse_skip    = false
 end

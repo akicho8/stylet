@@ -184,7 +184,7 @@ module BulletTrigger
     super
     bt = ext_button.btR1
 
-    if bt.trigger? || Stylet.context.key_down?(SDL::Key::B)
+    if bt.trigger? || Stylet.context.key_down?(SDL2::Key::Scan::B)
       if @bullet_count < @bullet_max
         @speed -= 0.8           # 玉を打つと反動で下がる。(BUG: 横に向けて砲台を打っているときに後車するのはおかしい)
         Stylet.context.objects << Bullet.new(self, @pos.clone, @cannon_dir, 8)
@@ -368,7 +368,7 @@ class App < Stylet::Base
 
     self.title = "戦車 vs 戦車"
     cursor.display = false
-    SDL::Mouse.hide
+    SDL2::Mouse.hide
   end
 
   def reset_objects
@@ -384,7 +384,7 @@ class App < Stylet::Base
   setup :reset_objects
 
   update do
-    if Stylet.context.key_down?(SDL::Key::R) || ((joy = joys.first) && joy.button(0) && joy.button(3))
+    if Stylet.context.key_down?(SDL2::Key::Scan::R) || ((joy = joys.first) && joy.button(0) && joy.button(3))
       reset_objects
     end
     @ships.each(&:update)

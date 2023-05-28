@@ -5,14 +5,14 @@ module Stylet
     delegate :fps, :to => "Stylet.config"
 
     def initialize
-      @old_time = SDL.get_ticks
+      @old_time = SDL2.get_ticks
     end
 
     def delay
       return unless fps
 
       loop do
-        now = SDL.get_ticks
+        now = SDL2.get_ticks
         if now > @old_time + 1000.0 / fps
           @old_time = now
           break

@@ -9,8 +9,8 @@ class App < Stylet::Base
   setup do
     @cursor.display = false
 
-    @map_tip = SDL::Surface.load("../assets/images/dlmap/castle2.png")
-    @map_tip.set_color_key(SDL::SRCCOLORKEY, 0)
+    @map_tip = SDL2::Surface.load("../assets/images/dlmap/castle2.png")
+    @map_tip.set_color_key(SDL2::SRCCOLORKEY, 0)
     @map_tip = @map_tip.display_format
     @tip = vec2[16, 16]
 
@@ -64,7 +64,7 @@ class App < Stylet::Base
     if info[:base]
       draw_tip(info[:base], x, y)
     end
-    SDL.blit_surface(@map_tip, @tip.x * src.x, @tip.y * src.y, @tip.x, @tip.y, screen, x * @tip.x, y * @tip.y)
+    SDL2.blit_surface(@map_tip, @tip.x * src.x, @tip.y * src.y, @tip.x, @tip.y, screen, x * @tip.x, y * @tip.y)
   end
 
   run

@@ -5,7 +5,7 @@ module Stylet2
     def setup
       super
 
-      @fps = 0
+      @fps = 1
       @fps_counter = 0
       @old_ticks = SDL2.get_ticks
     end

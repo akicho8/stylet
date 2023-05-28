@@ -33,13 +33,13 @@ module Stylet
     def initialize
       @free_ms = 1000.0
 
-      @old_time = SDL.get_ticks
+      @old_time = SDL2.get_ticks
       @total_ms = 0
     end
 
     def benchmark
       @total_ms += Benchmark.ms { yield }
-      now = SDL.get_ticks
+      now = SDL2.get_ticks
       if now >= @old_time + 1000.0
         @old_time = now
         @free_ms = @total_ms

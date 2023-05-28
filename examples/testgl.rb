@@ -2,13 +2,13 @@ require "sdl"
 require "pathname"
 require "opengl"
 
-SDL.init(SDL::INIT_VIDEO)
-SDL::GL.set_attr(SDL::GL_RED_SIZE, 5)
-SDL::GL.set_attr(SDL::GL_GREEN_SIZE, 5)
-SDL::GL.set_attr(SDL::GL_BLUE_SIZE, 5)
-SDL::GL.set_attr(SDL::GL_DEPTH_SIZE, 16)
-SDL::GL.set_attr(SDL::GL_DOUBLEBUFFER, 1)
-SDL::Screen.open(640, 480, 16, SDL::OPENGL)
+SDL2.init(SDL2::INIT_VIDEO)
+SDL2::GL.set_attr(SDL2::GL_RED_SIZE, 5)
+SDL2::GL.set_attr(SDL2::GL_GREEN_SIZE, 5)
+SDL2::GL.set_attr(SDL2::GL_BLUE_SIZE, 5)
+SDL2::GL.set_attr(SDL2::GL_DEPTH_SIZE, 16)
+SDL2::GL.set_attr(SDL2::GL_DOUBLEBUFFER, 1)
+SDL2::Screen.open(640, 480, 16, SDL2::OPENGL)
 
 GL::Viewport(0, 0, 640, 480)
 GL::MatrixMode(GL::PROJECTION)
@@ -24,12 +24,12 @@ GL::ShadeModel(GL::SMOOTH)
 loop do
   sleep(0.01)
 
-  while event = SDL::Event2.poll
+  while event = SDL2::Event2.poll
     case event
-    when SDL::Event2::Quit
+    when SDL2::Event2::Quit
       exit
-    when SDL::Event2::KeyDown
-      if event.sym == SDL::Key::ESCAPE || event.sym == SDL::Key::Q
+    when SDL2::Event2::KeyDown
+      if event.sym == SDL2::Key::Scan::ESCAPE || event.sym == SDL2::Key::Scan::Q
         exit
       end
     end
@@ -54,24 +54,24 @@ loop do
   GL::MatrixMode(GL::MODELVIEW)
   # GL::Rotate(0.5, 0.5, 0.5, 0.5) # ここを有効にするとなんか知らんが回転する
 
-  SDL::GL.swap_buffers
+  SDL2::GL.swap_buffers
 end
 exit
 
-# # a sample with ruby-opengl and Ruby/SDL
+# # a sample with ruby-opengl and Ruby/SDL2
 # require 'sdl'
 # require 'gl'
 #
 # include Gl
 #
-# # initialize SDL and opengl
-# SDL.init SDL::INIT_VIDEO
-# SDL::GL.set_attr SDL::GL_RED_SIZE,5
-# SDL::GL.set_attr SDL::GL_GREEN_SIZE,5
-# SDL::GL.set_attr SDL::GL_BLUE_SIZE,5
-# SDL::GL.set_attr SDL::GL_DEPTH_SIZE,16
-# SDL::GL.set_attr SDL::GL_DOUBLEBUFFER,1
-# SDL::Screen.open 640,400,16,SDL::OPENGL
+# # initialize SDL2 and opengl
+# SDL2.init SDL2::INIT_VIDEO
+# SDL2::GL.set_attr SDL2::GL_RED_SIZE,5
+# SDL2::GL.set_attr SDL2::GL_GREEN_SIZE,5
+# SDL2::GL.set_attr SDL2::GL_BLUE_SIZE,5
+# SDL2::GL.set_attr SDL2::GL_DEPTH_SIZE,16
+# SDL2::GL.set_attr SDL2::GL_DOUBLEBUFFER,1
+# SDL2::Screen.open 640,400,16,SDL2::OPENGL
 #
 # glViewport( 0, 0, 640, 400 );
 # glMatrixMode( GL_PROJECTION );
@@ -111,9 +111,9 @@ exit
 #
 # loop do
 #
-#   while event = SDL::Event2.poll
+#   while event = SDL2::Event2.poll
 #     case event
-#     when SDL::Event2::Quit, SDL::Event2::KeyDown
+#     when SDL2::Event2::Quit, SDL2::Event2::KeyDown
 #       exit
 #     end
 #   end
@@ -223,6 +223,6 @@ exit
 #   glMatrixMode(GL_MODELVIEW);
 #   glRotate(5.0, 1.0, 1.0, 1.0);
 #
-#   SDL::GL.swap_buffers
+#   SDL2::GL.swap_buffers
 #
 # end

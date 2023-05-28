@@ -6,7 +6,7 @@ class App < Stylet::Base
 
   setup do
     @area_rc = vec2[srect.w / 2, srect.h / 2] # 表示エリアの横縦幅
-    @image = SDL::Surface.load("assets/bg960x480_green_ruins.png").display_format
+    @image = SDL2::Surface.load("assets/bg960x480_green_ruins.png").display_format
   end
 
   update do

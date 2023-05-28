@@ -15,7 +15,7 @@ module Stylet
     end
 
     def self.create(object)
-      name = SDL::Joystick.index_name(object.index).strip
+      name = SDL2::Joystick.index_name(object.index).strip
       key = adapter_assigns[name] || :ps3_standard
       adapter = "#{key}_adapter"
       require_relative "joystick_adapters/#{adapter}"
@@ -69,7 +69,7 @@ module Stylet
     # ハードウェアの値をそのまま返すシリーズ
     begin
       def name
-        SDL::Joystick.index_name(@object.index)
+        SDL2::Joystick.index_name(@object.index)
       end
 
       def raw_active_button_numbers

@@ -4,8 +4,8 @@ require "stylet/version"
 Gem::Specification.new do |s|
   s.name          = "stylet"
   s.version       = Stylet::VERSION
-  s.summary       = "Simple SDL library"
-  s.description   = "Simple SDL library description"
+  s.summary       = "Simple SDL2 library"
+  s.description   = "Simple SDL2 library description"
   s.author        = "akicho8"
   s.homepage      = "http://github.com/akicho8/stylet"
   s.email         = "akicho8@gmail.com"
@@ -15,8 +15,7 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency "rsdl"
-  s.add_dependency "rubysdl"
+  s.add_dependency "ruby-sdl2"
   s.add_dependency "activesupport"
   s.add_dependency "activemodel"
   s.add_dependency "i18n"

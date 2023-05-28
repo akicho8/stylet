@@ -41,7 +41,7 @@ gem install rubysdl -- --enable-bundled-sge
 
 # gem git_install ohai/rubysdl -- --enable-bundled-sge
 
-# Ruby/SDL 附属の SGE を使う
+# Ruby/SDL2 附属の SGE を使う
 # gem install rubysdl -- --enable-bundled-sge
 
 # これは Gemfile 用
@@ -51,15 +51,15 @@ bundle config --local build.rubysdl --enable-bundled-sge
 bundle config | grep sge
 
 # 確認
-ruby -r sdl -e 'p SDL::VERSION'
-ruby -r sdl -e 'p [:ttf, SDL.constants.include?(:TTF)]'
-ruby -r sdl -e 'p [:mixer, SDL.constants.include?(:Mixer)]'
-ruby -r sdl -e 'p [:sge, SDL.respond_to?(:auto_lock)]'
-# ruby -r sdl -e 'p [:sge, SDL.defined?(:CollisionMap)]'
+ruby -r sdl -e 'p SDL2::VERSION'
+ruby -r sdl -e 'p [:ttf, SDL2.constants.include?(:TTF)]'
+ruby -r sdl -e 'p [:mixer, SDL2.constants.include?(:Mixer)]'
+ruby -r sdl -e 'p [:sge, SDL2.respond_to?(:auto_lock)]'
+# ruby -r sdl -e 'p [:sge, SDL2.defined?(:CollisionMap)]'
 
 bundle install
 
 # ↓これが動かなくなった
-rsdl -r sdl -e 'SDL.init(SDL::INIT_EVERYTHING); SDL.set_video_mode(640, 480, 16, SDL::SWSURFACE); sleep(3)'
+rsdl -r sdl -e 'SDL2.init(SDL2::INIT_EVERYTHING); SDL2.set_video_mode(640, 480, 16, SDL2::SWSURFACE); sleep(3)'
 
 # rsdl -r stylet -e 'Stylet.run { vputs "Hello, world." }'

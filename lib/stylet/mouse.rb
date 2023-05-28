@@ -11,7 +11,12 @@ module Stylet
 
     def polling
       super
-      @mouse.update { SDL::Mouse.state }
+
+      # p SDL2::Mouse.state
+      @mouse.update do
+        state = SDL2::Mouse.state
+        [state.x, state.y, state.pressed?(1), state.pressed?(2), state.pressed?(3)]
+      end
     end
 
     # moved?           移動した？

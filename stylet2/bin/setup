@@ -1,3 +1,4 @@
 #!/bin/sh
 brew reinstall sdl2
+gem i rubysdl2
 

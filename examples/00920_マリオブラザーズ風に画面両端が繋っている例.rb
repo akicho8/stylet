@@ -10,8 +10,8 @@ class App < Stylet::Base
   setup do
     @cursor.display = false
 
-    s = SDL::Surface.load("assets/mario.png")
-    s.set_color_key(SDL::SRCCOLORKEY, 0)
+    s = SDL2::Surface.load("assets/mario.png")
+    s.set_color_key(SDL2::SRCCOLORKEY, 0)
     @image = s.display_format
     @pos = vec2[srect.min_x, srect.center.y]
   end

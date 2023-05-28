@@ -37,8 +37,8 @@ module Sprite
   end
 
   def surface_load(filename, mask: true)
-    s = SDL::Surface.load(filename.to_s)
-    s.set_color_key(SDL::SRCCOLORKEY, 0) if mask
+    s = SDL2::Surface.load(filename.to_s)
+    s.set_color_key(SDL2::SRCCOLORKEY, 0) if mask
     s.display_format
   end
 end
@@ -121,7 +121,7 @@ class Coin < ObjectX
   def update
     return unless Stylet.context.active_x_range.include?(x)
     return unless Stylet.context.active_y_range.include?(y)
-    SDL::Surface.blit(@image, (Stylet.context.frame_counter / 8).modulo(@anim_count) * (@image.w / @anim_count), 0, @rc.w, @rc.h, screen, *(@pos - Stylet.context.camera_offset - @rc.half_wh))
+    SDL2::Surface.blit(@image, (Stylet.context.frame_counter / 8).modulo(@anim_count) * (@image.w / @anim_count), 0, @rc.w, @rc.h, screen, *(@pos - Stylet.context.camera_offset - @rc.half_wh))
   end
 end
 
@@ -651,12 +651,12 @@ class App < Stylet::Base
 
     @players = []
 
-    # s = SDL::Surface.load("assets/bg960x480.png")
-    # s = SDL::Surface.load("assets/bg_sf2.png")
+    # s = SDL2::Surface.load("assets/bg960x480.png")
+    # s = SDL2::Surface.load("assets/bg_sf2.png")
     # @scene_main_bg = Sprite.surface_load("assets/bg960x640.png", :mask => false)
 
     # if false
-    #   s = SDL::Surface.load("assets/bg800x480.png")
+    #   s = SDL2::Surface.load("assets/bg800x480.png")
     #   @scene_bg2 = s.display_format
     # end
 
@@ -670,7 +670,7 @@ class App < Stylet::Base
     Stylet::SE.load("assets/nc45878_buu.ogg", volume: 0.5)
 
     @cursor.display = false
-    SDL::Mouse.hide
+    SDL2::Mouse.hide
 
     @stage_file = Pathname("stage_infos.rb").expand_path
 
@@ -705,7 +705,7 @@ class App < Stylet::Base
       end
     end
     if @state == :stg_loop
-      if @coins.empty? || key_down?(SDL::Key::N)
+      if @coins.empty? || key_down?(SDL2::Key::Scan::N)
         @state = :stg_clear
         @state_counter = 0
       end
@@ -723,7 +723,7 @@ class App < Stylet::Base
     end
     if @state == :edit_mode
       if @state_counter == 0
-        SDL::Mixer.pause_music
+        SDL2::Mixer.pause_music
 
         # @players.each{|player|@objects.delete(player)}
         # @players.clear
@@ -821,8 +821,8 @@ class App < Stylet::Base
         end
       end
 
-      if key_down?(SDL::Key::N) || key_down?(SDL::Key::P)
-        @stg_index += (key_down?(SDL::Key::N) ? 1 : 0) - (key_down?(SDL::Key::P) ? 1 : 0)
+      if key_down?(SDL2::Key::Scan::N) || key_down?(SDL2::Key::Scan::P)
+        @stg_index += (key_down?(SDL2::Key::Scan::N) ? 1 : 0) - (key_down?(SDL2::Key::Scan::P) ? 1 : 0)
         edit_func_stage_reload
       end
 
@@ -833,17 +833,17 @@ class App < Stylet::Base
       # @camera.x += (Stylet.context.ext_button.btL1.repeat_0or1 - Stylet.context.ext_button.btR1.repeat_0or1)
       # @camera.y += (Stylet.context.ext_button.btL1.repeat_0or1 - Stylet.context.ext_button.btR1.repeat_0or1)
 
-      if key_down?(SDL::Key::S)
+      if key_down?(SDL2::Key::Scan::S)
         edit_func_stage_save
       end
 
-      if key_down?(SDL::Key::E) || ext_button.btPS.trigger?
+      if key_down?(SDL2::Key::Scan::E) || ext_button.btPS.trigger?
         @state = :stg_loop
         @state_counter = 0
-        SDL::Mixer.resume_music
+        SDL2::Mixer.resume_music
       end
     else
-      if key_down?(SDL::Key::E) || ext_button.btPS.trigger?
+      if key_down?(SDL2::Key::Scan::E) || ext_button.btPS.trigger?
         @state = :edit_mode
         @state_counter = -1
       end
@@ -851,7 +851,7 @@ class App < Stylet::Base
 
     dputs "#{@state}: #{@state_counter}"
 
-    if key_down?(SDL::Key::R)
+    if key_down?(SDL2::Key::Scan::R)
       # edit_func_stage_reload
       @state = :stg_set
       @state_counter = -1
@@ -1033,7 +1033,7 @@ class App < Stylet::Base
     # if @scene_bg2
     #   ox = (@scene_bg2.w - srect.w).to_f / (virtual_rect.w - srect.w) * camera_offset.x
     #   oy = (@scene_bg2.h - srect.h).to_f / (virtual_rect.h - srect.h) * camera_offset.y
-    #   SDL::Surface.blit(@scene_bg2, ox, oy, srect.w, srect.h / 2, @screen, 0, 0)
+    #   SDL2::Surface.blit(@scene_bg2, ox, oy, srect.w, srect.h / 2, @screen, 0, 0)
     # end
     #
     if @bg_mode == :background
@@ -1051,14 +1051,14 @@ class App < Stylet::Base
       ox = (@scene_main_bg.w - srect.w).to_f / (virtual_rect.w - srect.w) * camera_offset.x
       oy = (@scene_main_bg.h - srect.h).to_f / (virtual_rect.h - srect.h) * camera_offset.y
       begin
-        SDL::Surface.blit(@scene_main_bg, ox, oy, srect.w, srect.h, @screen, 0, 0)
+        SDL2::Surface.blit(@scene_main_bg, ox, oy, srect.w, srect.h, @screen, 0, 0)
       rescue RangeError
       end
     end
     if @bg_mode == :ff_effect
       # FF7で敵に遭遇したときの画面エフェクト
-      screen.set_alpha(SDL::SRCALPHA, 128)
-      SDL::Surface.transform_blit(screen, screen, 1, 1.05, 1.05, *srect.center, *srect.center, SDL::Surface::TRANSFORM_AA | SDL::Surface::TRANSFORM_SAFE)
+      screen.set_alpha(SDL2::SRCALPHA, 128)
+      SDL2::Surface.transform_blit(screen, screen, 1, 1.05, 1.05, *srect.center, *srect.center, SDL2::Surface::TRANSFORM_AA | SDL2::Surface::TRANSFORM_SAFE)
     end
   end
 
@@ -1176,7 +1176,7 @@ class App < Stylet::Base
       @scene_main_bg = Sprite.surface_load("assets/bg960x640_town.png", :mask => false)
       if false
         # モーションブラー効果
-        @scene_main_bg.set_alpha(SDL::SRCALPHA, 64)
+        @scene_main_bg.set_alpha(SDL2::SRCALPHA, 64)
         @scene_main_bg = @scene_main_bg.display_format
       end
     end
@@ -1216,7 +1216,7 @@ class App < Stylet::Base
     end
 
     if @state == :edit_mode
-      SDL::Mixer.pause_music
+      SDL2::Mixer.pause_music
     end
   end
 
