@@ -1,7 +1,7 @@
 # -*- coding: utf-8; compile-command: "bundle exec ruby sdl2_benchmark.rb" -*-
 require "bundler/setup"
 require "sdl2"
-CELL_N = 4
+CELL_N = 20
 SDL2.init(SDL2::INIT_EVERYTHING)
 flags = 0
 # flags |= SDL2::Window::Flags::FULLSCREEN
@@ -25,7 +25,7 @@ seconds.times do
     if SDL2.get_ticks >= t
       break
     end
-    renderer.draw_color = rand(2).zero? ? [0, 0, 255] : [255, 255, 255]
+    renderer.draw_color = [rand(256), rand(256), rand(256)]
     renderer.fill_rect(SDL2::Rect.new(w * rand(CELL_N), h * rand(CELL_N), w, h))
     i += 1
   end
